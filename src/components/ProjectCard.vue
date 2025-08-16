@@ -1,0 +1,111 @@
+<template>
+  <RouterLink :to="`/proyectos/${project.id}`" class="block transition-transform duration-200 hover:scale-105">
+    <BaseCard hover>
+      <template #image>
+        <div class="relative">
+          <img 
+            :src="project.cover_image_url" 
+            :alt="project.name"
+            class="w-full h-48 object-cover"
+            loading="lazy"
+          />
+          <div class="absolute top-3 left-3">
+            <span :class="getTypeColorClass(project.type)" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">
+              {{ project.type }}
+            </span>
+          </div>
+          <div class="absolute top-3 right-3">
+            <span :class="getStatusColorClass(project.status)" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">
+              {{ project.status }}
+            </span>
+          </div>
+        </div>
+      </template>
+
+    <div class="space-y-3">
+      <div>
+        <h3 class="text-lg font-semibold text-gray-900 line-clamp-2">
+          {{ project.name }}
+        </h3>
+        <p class="text-sm text-gray-600 mt-2 line-clamp-3">
+          {{ project.description }}
+        </p>
+      </div>
+
+      <div class="flex items-center justify-between text-sm text-gray-600">
+        <div class="flex items-center space-x-1">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+          </svg>
+          <span>{{ project.property_count }} propiedades</span>
+        </div>
+
+        <div v-if="project.agent" class="text-xs">
+          {{ project.agent.name }}
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-gray-200">
+        <BaseButton variant="primary" class="w-full">
+          Ver Proyecto
+        </BaseButton>
+      </div>
+    </div>
+    </BaseCard>
+  </RouterLink>
+</template>
+
+<script setup lang="ts">
+import { RouterLink } from 'vue-router'
+import type { Project } from '@/types'
+import BaseCard from './BaseCard.vue'
+import BaseButton from './BaseButton.vue'
+
+interface Props {
+  project: Project
+}
+
+defineProps<Props>()
+
+const getTypeColorClass = (type: string): string => {
+  switch (type) {
+    case 'Turísticos':
+      return 'bg-blue-100 text-blue-800'
+    case 'Campestres':
+      return 'bg-green-100 text-green-800'
+    case 'Urbanos':
+      return 'bg-yellow-100 text-yellow-800'
+    default:
+      return 'bg-gray-100 text-gray-800'
+  }
+}
+
+const getStatusColorClass = (status: string): string => {
+  switch (status) {
+    case 'Disponible':
+      return 'bg-green-100 text-green-800'
+    case 'Reservado':
+      return 'bg-yellow-100 text-yellow-800'
+    case 'Vendido':
+      return 'bg-red-100 text-red-800'
+    default:
+      return 'bg-gray-100 text-gray-800'
+  }
+}
+</script>
+
+<style scoped>
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+</style>
