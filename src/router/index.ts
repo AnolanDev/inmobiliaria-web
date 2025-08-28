@@ -28,22 +28,6 @@ const router = createRouter({
       }
     },
     {
-      path: '/propiedades',
-      name: 'properties',
-      component: () => import('@/views/PropertiesPage.vue'),
-      meta: {
-        title: 'Propiedades - Inmobiliaria'
-      }
-    },
-    {
-      path: '/propiedades/:id',
-      name: 'property-detail',
-      component: () => import('@/views/PropertyDetailPage.vue'),
-      meta: {
-        title: 'Detalle de la Propiedad - Inmobiliaria'
-      }
-    },
-    {
       path: '/agentes',
       name: 'agents',
       component: () => import('@/views/AgentsPage.vue'),
@@ -65,6 +49,14 @@ const router = createRouter({
       component: () => import('@/views/ContactPage.vue'),
       meta: {
         title: 'Contacto - Inmobiliaria'
+      }
+    },
+    {
+      path: '/blog',
+      name: 'blog',
+      component: () => import('@/views/BlogPage.vue'),
+      meta: {
+        title: 'Blog - Tierra Soñada'
       }
     },
     {

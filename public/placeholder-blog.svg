@@ -1,0 +1,46 @@
+<svg width="600" height="400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="skyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#87CEEB;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#E0F6FF;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="grassGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#90EE90;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#228B22;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Sky -->
+  <rect width="600" height="250" fill="url(#skyGradient)"/>
+  
+  <!-- Mountains -->
+  <polygon points="0,180 150,120 300,140 450,100 600,130 600,250 0,250" fill="#8FBC8F"/>
+  <polygon points="100,200 250,140 400,160 600,140 600,250 100,250" fill="#9ACD32"/>
+  
+  <!-- Grass -->
+  <rect y="250" width="600" height="150" fill="url(#grassGradient)"/>
+  
+  <!-- Trees -->
+  <circle cx="120" cy="230" r="25" fill="#228B22"/>
+  <rect x="115" y="230" width="10" height="30" fill="#8B4513"/>
+  
+  <circle cx="480" cy="240" r="30" fill="#32CD32"/>
+  <rect x="475" y="240" width="10" height="35" fill="#8B4513"/>
+  
+  <!-- Sun -->
+  <circle cx="500" cy="80" r="30" fill="#FFD700"/>
+  
+  <!-- Clouds -->
+  <ellipse cx="200" cy="60" rx="25" ry="15" fill="white" opacity="0.8"/>
+  <ellipse cx="220" cy="60" rx="30" ry="18" fill="white" opacity="0.8"/>
+  <ellipse cx="210" cy="45" rx="20" ry="12" fill="white" opacity="0.8"/>
+  
+  <!-- Text overlay -->
+  <rect x="50" y="320" width="500" height="60" fill="rgba(0,0,0,0.7)" rx="10"/>
+  <text x="300" y="345" text-anchor="middle" fill="white" font-family="Arial" font-size="18" font-weight="bold">
+    5 Razones para Invertir en Lotes Campestres
+  </text>
+  <text x="300" y="365" text-anchor="middle" fill="#90EE90" font-family="Arial" font-size="14">
+    Tu inversión perfecta en la naturaleza
+  </text>
+</svg>

@@ -1,0 +1,54 @@
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="skyBg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#87CEEB;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#E0F6FF;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Sky background -->
+  <rect width="400" height="300" fill="url(#skyBg)"/>
+  
+  <!-- Power lines poles -->
+  <rect x="80" y="50" width="4" height="120" fill="#8B4513"/>
+  <rect x="320" y="60" width="4" height="110" fill="#8B4513"/>
+  
+  <!-- Power lines -->
+  <path d="M 84 80 Q 200 100 320 90" stroke="#333" stroke-width="2" fill="none"/>
+  <path d="M 84 90 Q 200 110 320 100" stroke="#333" stroke-width="2" fill="none"/>
+  <path d="M 84 100 Q 200 120 320 110" stroke="#333" stroke-width="2" fill="none"/>
+  
+  <!-- Water pipe -->
+  <rect x="150" y="180" width="100" height="8" fill="#4169E1" rx="4"/>
+  <rect x="140" y="176" width="10" height="16" fill="#4169E1" rx="5"/>
+  <rect x="260" y="176" width="10" height="16" fill="#4169E1" rx="5"/>
+  
+  <!-- Water drops -->
+  <circle cx="155" cy="200" r="3" fill="#00BFFF"/>
+  <circle cx="245" cy="205" r="2" fill="#00BFFF"/>
+  
+  <!-- Internet/WiFi tower -->
+  <rect x="200" y="120" width="6" height="40" fill="#2F2F2F"/>
+  <rect x="197" y="115" width="12" height="3" fill="#2F2F2F"/>
+  <rect x="194" y="110" width="18" height="3" fill="#2F2F2F"/>
+  
+  <!-- WiFi signals -->
+  <path d="M 185 105 Q 203 95 221 105" stroke="#25D366" stroke-width="2" fill="none"/>
+  <path d="M 188 108 Q 203 100 218 108" stroke="#25D366" stroke-width="2" fill="none"/>
+  <path d="M 191 111 Q 203 105 215 111" stroke="#25D366" stroke-width="2" fill="none"/>
+  
+  <!-- House -->
+  <rect x="50" y="150" width="60" height="40" fill="#8B4513"/>
+  <polygon points="50,150 80,130 110,150" fill="#B22222"/>
+  <rect x="65" y="165" width="12" height="20" fill="#654321"/>
+  <rect x="85" y="160" width="15" height="10" fill="#87CEEB"/>
+  
+  <!-- Title -->
+  <rect x="20" y="220" width="360" height="60" fill="rgba(255,255,255,0.9)" rx="8"/>
+  <text x="200" y="245" text-anchor="middle" fill="#2F2F2F" font-family="Arial" font-size="16" font-weight="bold">
+    Servicios Incluidos
+  </text>
+  <text x="200" y="265" text-anchor="middle" fill="#666" font-family="Arial" font-size="12">
+    Energía, agua y conectividad garantizados
+  </text>
+</svg>

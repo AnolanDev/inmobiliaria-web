@@ -1,0 +1,60 @@
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="roadGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#696969;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#808080;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#696969;stop-opacity:1" />
+    </linearGradient>
+    <radialGradient id="mapPin" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#FF4444;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#CC0000;stop-opacity:1" />
+    </radialGradient>
+  </defs>
+  
+  <!-- Sky -->
+  <rect width="400" height="200" fill="#87CEEB"/>
+  
+  <!-- Hills in distance -->
+  <polygon points="0,160 100,120 200,140 300,110 400,130 400,200 0,200" fill="#9ACD32"/>
+  <polygon points="50,180 150,140 250,160 350,130 400,140 400,200 50,200" fill="#90EE90"/>
+  
+  <!-- Road -->
+  <polygon points="0,250 50,200 350,200 400,250 400,300 0,300" fill="url(#roadGradient)"/>
+  
+  <!-- Road lines -->
+  <rect x="0" y="240" width="20" height="4" fill="white"/>
+  <rect x="40" y="235" width="20" height="4" fill="white"/>
+  <rect x="80" y="230" width="20" height="4" fill="white"/>
+  <rect x="120" y="225" width="20" height="4" fill="white"/>
+  <rect x="160" y="220" width="20" height="4" fill="white"/>
+  <rect x="200" y="215" width="20" height="4" fill="white"/>
+  <rect x="240" y="210" width="20" height="4" fill="white"/>
+  <rect x="280" y="205" width="20" height="4" fill="white"/>
+  
+  <!-- Trees along road -->
+  <circle cx="30" cy="190" r="12" fill="#228B22"/>
+  <rect x="27" y="190" width="6" height="15" fill="#8B4513"/>
+  
+  <circle cx="370" cy="185" r="15" fill="#32CD32"/>
+  <rect x="367" y="185" width="6" height="18" fill="#8B4513"/>
+  
+  <!-- Map pin -->
+  <ellipse cx="300" cy="155" rx="15" ry="20" fill="url(#mapPin)"/>
+  <circle cx="300" cy="150" r="8" fill="white"/>
+  <circle cx="300" cy="150" r="4" fill="#FF4444"/>
+  
+  <!-- Distance indicator -->
+  <rect x="80" y="100" width="120" height="30" fill="rgba(255,255,255,0.9)" rx="15"/>
+  <text x="140" y="118" text-anchor="middle" fill="#25D366" font-family="Arial" font-size="14" font-weight="bold">
+    45 min
+  </text>
+  
+  <!-- Title -->
+  <rect x="20" y="220" width="360" height="60" fill="rgba(255,255,255,0.9)" rx="8"/>
+  <text x="200" y="245" text-anchor="middle" fill="#2F2F2F" font-family="Arial" font-size="16" font-weight="bold">
+    Ubicación Privilegiada
+  </text>
+  <text x="200" y="265" text-anchor="middle" fill="#666" font-family="Arial" font-size="12">
+    A solo 45 minutos del centro de la ciudad
+  </text>
+</svg>
