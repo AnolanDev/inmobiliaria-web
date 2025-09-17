@@ -86,7 +86,8 @@
       <!-- Copyright -->
       <div class="immobilia-footer-bottom">
         <div class="immobilia-footer-copyright">
-          <p>&copy; 2024 Tierra Soñada. Todos los derechos reservados.</p>
+          <p class="immobilia-footer-creator">Created by: <span class="immobilia-creator-name">Gustavo Olivera</span></p>
+          <p>&copy; 2025 Tierra Soñada. All rights reserved.</p>
         </div>
         <div class="immobilia-footer-legal">
           <a href="/privacidad">Política de Privacidad</a>
@@ -103,9 +104,21 @@
 .immobilia-footer-section {
   background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
   color: white;
-  padding: 40px 0 20px 0;
+  padding: 2rem 0 1.5rem 0;
   position: relative;
   overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .immobilia-footer-section {
+    padding: 2.5rem 0 1.5rem 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .immobilia-footer-section {
+    padding: 3rem 0 1.5rem 0;
+  }
 }
 
 .immobilia-footer-section::before {
@@ -121,14 +134,40 @@
 .immobilia-footer-content {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 1rem;
+}
+
+@media (min-width: 768px) {
+  .immobilia-footer-content {
+    padding: 0 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .immobilia-footer-content {
+    padding: 0 2rem;
+  }
 }
 
 .immobilia-footer-main {
   display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 40px;
-  margin-bottom: 30px;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 768px) {
+  .immobilia-footer-main {
+    grid-template-columns: 1fr 2fr;
+    gap: 2.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .immobilia-footer-main {
+    gap: 3rem;
+    margin-bottom: 2.5rem;
+  }
 }
 
 /* Brand section */
@@ -208,8 +247,27 @@
 /* Links section */
 .immobilia-footer-links {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 40px;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 480px) {
+  .immobilia-footer-links {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  .immobilia-footer-links {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .immobilia-footer-links {
+    gap: 2.5rem;
+  }
 }
 
 .immobilia-footer-column h4 {
@@ -253,24 +311,35 @@
   margin: 32px 0;
 }
 
-/* Bottom section */
-.immobilia-footer-bottom {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 16px;
-}
 
 .immobilia-footer-copyright {
   font-size: 14px;
   opacity: 0.7;
 }
 
-.immobilia-footer-legal {
-  display: flex;
-  gap: 24px;
+.immobilia-footer-creator {
+  font-size: 12px;
+  margin-bottom: 0.5rem;
+  opacity: 0.7;
 }
+
+@media (min-width: 768px) {
+  .immobilia-footer-creator {
+    font-size: 13px;
+  }
+}
+
+.immobilia-creator-name {
+  color: #25D366;
+  font-weight: 500;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.immobilia-creator-name:hover {
+  opacity: 0.8;
+}
+
 
 .immobilia-footer-legal a {
   color: rgba(255, 255, 255, 0.7);
@@ -283,26 +352,33 @@
   color: #25D366;
 }
 
-/* Mobile responsive */
-@media (max-width: 768px) {
-  .immobilia-footer-main {
-    grid-template-columns: 1fr;
-    gap: 32px;
-  }
-  
-  .immobilia-footer-links {
-    grid-template-columns: 1fr;
-    gap: 24px;
-  }
-  
+/* Responsive bottom section */
+.immobilia-footer-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
   .immobilia-footer-bottom {
-    flex-direction: column;
-    text-align: center;
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
   }
-  
+}
+
+.immobilia-footer-legal {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
   .immobilia-footer-legal {
-    flex-wrap: wrap;
-    justify-content: center;
+    gap: 1.5rem;
   }
 }
 </style>

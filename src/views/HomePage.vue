@@ -1,9 +1,12 @@
 <template>
   <AppLayout>
     <div class="immobilia-homepage">
-      <!-- Loading State -->
-      <div v-if="loading" class="flex items-center justify-center min-h-screen bg-white text-gray-900">
-        <div class="text-xl">Cargando proyectos...</div>
+      <!-- Enhanced Loading State -->
+      <div v-if="loading" class="immobilia-loading-container">
+        <div class="immobilia-loading-content">
+          <div class="immobilia-loading-spinner"></div>
+          <p class="immobilia-loading-text">Cargando proyectos...</p>
+        </div>
       </div>
 
       <!-- Project Sections -->
@@ -11,36 +14,46 @@
       
       <!-- SECCIÓN 1: SLIDER FULLSCREEN CON TODOS LOS PROYECTOS -->
       <div class="immobilia-slider-section">
-        <div class="immobilia-slider-container" ref="sliderContainer">
+        <div 
+          class="immobilia-slider-container" 
+          ref="sliderContainer"
+          @touchstart="handleTouchStart"
+          @touchend="handleTouchEnd"
+          role="region"
+          aria-label="Proyectos destacados"
+          aria-live="polite"
+        >
           <div 
             v-for="(project, index) in projects" 
             :key="project.id"
             class="immobilia-slide"
             :class="{ active: currentSlide === index }"
-            :style="{ backgroundImage: `url(${project.cover_image_url || '/placeholder-project.svg'})` }"
           >
-            <!-- Overlay -->
-            <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+            <!-- Imagen completa con lazy loading -->
+            <img 
+              :src="getImageUrl(project.cover_image_url)" 
+              :alt="`Proyecto inmobiliario ${project.name}`"
+              class="immobilia-slide-image immobilia-clickable-image"
+              loading="lazy"
+              :decoding="index === 0 ? 'sync' : 'async'"
+              @click="openImageModal(project.cover_image_url, projects.map(p => p.cover_image_url).filter(Boolean))"
+            />
             
             <!-- Content -->
             <div class="immobilia-hero-content">
-              <h1 class="immobilia-title">
-                {{ project.name }}
-              </h1>
-              
               <!-- Tesla-style buttons -->
               <div class="immobilia-button-group">
                 <button 
                   @click="goToProject(project.id)"
-                  :class="getButtonClass(project.id)"
-                  class="immobilia-btn"
+                  class="immobilia-btn immobilia-btn-universal"
+                  :aria-label="`Ver detalles del proyecto ${project.name}`"
                 >
                   Ver Detalles
                 </button>
                 <button 
                   @click="goToProjects()"
-                  :class="getButtonClass(project.id)"
-                  class="immobilia-btn"
+                  class="immobilia-btn immobilia-btn-universal"
+                  aria-label="Ver todos los proyectos"
                 >
                   Proyectos
                 </button>
@@ -85,18 +98,22 @@
       <!-- SECCIÓN 2: DOS PROYECTOS LADO A LADO -->
       <div class="immobilia-dual-section" v-if="projects.length >= 2">
         <div class="immobilia-dual-left">
-          <div 
-            class="immobilia-dual-project"
-            :style="{ backgroundImage: `url(${projects[0]?.cover_image_url || '/placeholder-project.svg'})` }"
-          >
-            <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+          <div class="immobilia-dual-project">
+            <!-- Imagen con object-fit para mejor control -->
+            <img 
+              :src="getImageUrl(projects[0]?.cover_image_url)" 
+              :alt="`Proyecto inmobiliario ${projects[0]?.name}`"
+              class="immobilia-dual-image immobilia-clickable-image"
+              loading="lazy"
+              @click="openImageModal(projects[0]?.cover_image_url, projects.map(p => p.cover_image_url).filter(Boolean))"
+            />
+            <!-- Botones centrados -->
             <div class="immobilia-dual-content">
-              <h2 class="immobilia-dual-title">{{ projects[0]?.name }}</h2>
               <div class="immobilia-button-group">
-                <button @click="goToProject(projects[0]?.id)" :class="getButtonClass(projects[0]?.id)" class="immobilia-btn">
+                <button @click="goToProject(projects[0]?.id)" class="immobilia-btn immobilia-btn-universal">
                   Ver Detalles
                 </button>
-                <button @click="goToProjects()" :class="getButtonClass(projects[0]?.id)" class="immobilia-btn">
+                <button @click="goToProjects()" class="immobilia-btn immobilia-btn-universal">
                   Proyectos
                 </button>
               </div>
@@ -104,18 +121,22 @@
           </div>
         </div>
         <div class="immobilia-dual-right">
-          <div 
-            class="immobilia-dual-project"
-            :style="{ backgroundImage: `url(${projects[1]?.cover_image_url || '/placeholder-project.svg'})` }"
-          >
-            <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+          <div class="immobilia-dual-project">
+            <!-- Imagen con object-fit para mejor control -->
+            <img 
+              :src="getImageUrl(projects[1]?.cover_image_url)" 
+              :alt="`Proyecto inmobiliario ${projects[1]?.name}`"
+              class="immobilia-dual-image immobilia-clickable-image"
+              loading="lazy"
+              @click="openImageModal(projects[1]?.cover_image_url, projects.map(p => p.cover_image_url).filter(Boolean))"
+            />
+            <!-- Botones centrados -->
             <div class="immobilia-dual-content">
-              <h2 class="immobilia-dual-title">{{ projects[1]?.name }}</h2>
               <div class="immobilia-button-group">
-                <button @click="goToProject(projects[1]?.id)" :class="getButtonClass(projects[1]?.id)" class="immobilia-btn">
+                <button @click="goToProject(projects[1]?.id)" class="immobilia-btn immobilia-btn-universal">
                   Ver Detalles
                 </button>
-                <button @click="goToProjects()" :class="getButtonClass(projects[1]?.id)" class="immobilia-btn">
+                <button @click="goToProjects()" class="immobilia-btn immobilia-btn-universal">
                   Proyectos
                 </button>
               </div>
@@ -127,15 +148,23 @@
       <!-- SECCIÓN 3: BLOG PUBLICITARIO -->
       <section class="immobilia-blog-section">
         <div class="immobilia-blog-container">
-          <div class="immobilia-blog-header">
+          <!-- Header optimizado -->
+          <header class="immobilia-blog-header">
             <h2 class="immobilia-blog-title">Descubre Tu Nuevo Estilo de Vida</h2>
             <p class="immobilia-blog-subtitle">Conoce las últimas novedades y beneficios de vivir en Tierra Soñada</p>
-          </div>
+          </header>
 
+          <!-- Content grid responsive -->
           <div class="immobilia-blog-content">
-            <div class="immobilia-blog-featured">
+            <!-- Artículo destacado -->
+            <article class="immobilia-blog-featured">
               <div class="immobilia-blog-image">
-                <img src="/placeholder-blog.svg" alt="Vida campestre" class="immobilia-blog-main-img" />
+                <img 
+                  src="/placeholder-blog.svg" 
+                  alt="Vida campestre en lotes Tierra Soñada" 
+                  class="immobilia-blog-main-img"
+                  loading="lazy"
+                />
                 <div class="immobilia-blog-overlay">
                   <span class="immobilia-blog-badge">Destacado</span>
                 </div>
@@ -152,41 +181,62 @@
                   <span class="immobilia-blog-date">📅 15 Dic 2024</span>
                   <span class="immobilia-blog-read-time">⏱️ 5 min lectura</span>
                 </div>
-                <button class="immobilia-blog-btn">Leer Artículo</button>
+                <button class="immobilia-blog-btn" aria-label="Leer artículo sobre inversión en lotes campestres">
+                  Leer Artículo
+                </button>
               </div>
-            </div>
+            </article>
 
+            <!-- Grid de tarjetas -->
             <div class="immobilia-blog-grid">
               <article class="immobilia-blog-card">
                 <div class="immobilia-blog-card-image">
-                  <img src="/placeholder-blog-2.svg" alt="Financiación" />
+                  <img 
+                    src="/placeholder-blog-2.svg" 
+                    alt="Planes de financiación flexibles"
+                    loading="lazy"
+                  />
                 </div>
                 <div class="immobilia-blog-card-content">
                   <h4>Financiación Flexible</h4>
                   <p>Planes de pago que se adaptan a tu presupuesto</p>
-                  <span class="immobilia-blog-card-link">Conoce más →</span>
+                  <button class="immobilia-blog-card-link" aria-label="Conocer más sobre financiación">
+                    Conoce más →
+                  </button>
                 </div>
               </article>
 
               <article class="immobilia-blog-card">
                 <div class="immobilia-blog-card-image">
-                  <img src="/placeholder-blog-3.svg" alt="Servicios" />
+                  <img 
+                    src="/placeholder-blog-3.svg" 
+                    alt="Servicios públicos incluidos"
+                    loading="lazy"
+                  />
                 </div>
                 <div class="immobilia-blog-card-content">
                   <h4>Servicios Incluidos</h4>
                   <p>Energía, agua y conectividad garantizados</p>
-                  <span class="immobilia-blog-card-link">Ver servicios →</span>
+                  <button class="immobilia-blog-card-link" aria-label="Ver servicios incluidos">
+                    Ver servicios →
+                  </button>
                 </div>
               </article>
 
               <article class="immobilia-blog-card">
                 <div class="immobilia-blog-card-image">
-                  <img src="/placeholder-blog-4.svg" alt="Ubicación" />
+                  <img 
+                    src="/placeholder-blog-4.svg" 
+                    alt="Ubicación privilegiada cerca de la ciudad"
+                    loading="lazy"
+                  />
                 </div>
                 <div class="immobilia-blog-card-content">
                   <h4>Ubicación Privilegiada</h4>
                   <p>A solo 45 minutos del centro de la ciudad</p>
-                  <span class="immobilia-blog-card-link">Ver ubicación →</span>
+                  <button class="immobilia-blog-card-link" aria-label="Ver ubicación en el mapa">
+                    Ver ubicación →
+                  </button>
                 </div>
               </article>
             </div>
@@ -437,6 +487,66 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal de galería de imágenes -->
+    <Teleport to="body">
+      <div 
+        v-if="isModalOpen" 
+        class="immobilia-image-modal"
+        @click="closeModal"
+        @touchstart="handleModalTouchStart"
+        @touchend="handleModalTouchEnd"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Galería de imágenes"
+      >
+        <div class="immobilia-modal-content" @click.stop>
+          <!-- Imagen principal -->
+          <img 
+            :src="modalImages[currentModalImage]" 
+            :alt="`Imagen ${currentModalImage + 1} de ${modalImages.length}`"
+            class="immobilia-modal-image"
+          />
+          
+          <!-- Botones de navegación -->
+          <button 
+            @click="prevModalImage" 
+            class="immobilia-modal-nav immobilia-modal-prev"
+            aria-label="Imagen anterior"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M15 18l-6-6 6-6"/>
+            </svg>
+          </button>
+          
+          <button 
+            @click="nextModalImage" 
+            class="immobilia-modal-nav immobilia-modal-next"
+            aria-label="Imagen siguiente"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 18l6-6-6-6"/>
+            </svg>
+          </button>
+          
+          <!-- Botón cerrar -->
+          <button 
+            @click="closeModal" 
+            class="immobilia-modal-close"
+            aria-label="Cerrar galería"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+          </button>
+          
+          <!-- Contador -->
+          <div class="immobilia-modal-counter">
+            {{ currentModalImage + 1 }} / {{ modalImages.length }}
+          </div>
+        </div>
+      </div>
+    </Teleport>
   </AppLayout>
 </template>
 
@@ -456,6 +566,11 @@ const currentSlide = ref(0)
 const sliderContainer = ref(null)
 const animatedStats = ref([0, 0, 0, 0])
 const imageButtonClasses = ref<{[key: number]: string}>({})
+
+// Modal gallery state
+const isModalOpen = ref(false)
+const currentModalImage = ref(0)
+const modalImages = ref<string[]>([])
 
 // Campestre section data
 const campestresStats = ref([
@@ -481,6 +596,18 @@ const goToProject = (projectId: number) => {
 
 const goToProjects = () => {
   router.push('/proyectos')
+}
+
+// Helper function to convert absolute URLs to relative for development
+const getImageUrl = (url: string): string => {
+  if (!url) return '/placeholder-project.svg'
+  
+  // In development, convert absolute URLs to relative
+  if (import.meta.env.DEV && url.includes('app.tierrasonada.com')) {
+    return url.replace('https://app.tierrasonada.com', '').replace('http://app.tierrasonada.com', '')
+  }
+  
+  return url
 }
 
 const scrollToSection = (index: number) => {
@@ -525,6 +652,141 @@ const prevSlide = () => {
 
 const goToSlide = (index: number) => {
   currentSlide.value = index
+}
+
+// Touch gesture support for mobile
+let touchStartX = 0
+let touchEndX = 0
+let modalTouchStartX = 0
+let modalTouchEndX = 0
+
+const handleTouchStart = (e: TouchEvent) => {
+  touchStartX = e.changedTouches[0].screenX
+}
+
+const handleTouchEnd = (e: TouchEvent) => {
+  touchEndX = e.changedTouches[0].screenX
+  handleSwipeGesture()
+}
+
+const handleModalTouchStart = (e: TouchEvent) => {
+  modalTouchStartX = e.changedTouches[0].screenX
+}
+
+const handleModalTouchEnd = (e: TouchEvent) => {
+  modalTouchEndX = e.changedTouches[0].screenX
+  handleModalSwipeGesture()
+}
+
+const handleModalSwipeGesture = () => {
+  const swipeThreshold = 50
+  const swipeDistance = modalTouchStartX - modalTouchEndX
+  
+  if (Math.abs(swipeDistance) > swipeThreshold) {
+    if (swipeDistance > 0) {
+      // Swipe left - next image
+      nextModalImage()
+    } else {
+      // Swipe right - previous image
+      prevModalImage()
+    }
+  }
+}
+
+const handleSwipeGesture = () => {
+  const swipeThreshold = 50 // minimum distance for swipe
+  const swipeDistance = touchStartX - touchEndX
+  
+  if (Math.abs(swipeDistance) > swipeThreshold) {
+    if (swipeDistance > 0) {
+      // Swipe left - next slide
+      nextSlide()
+    } else {
+      // Swipe right - previous slide
+      prevSlide()
+    }
+  }
+}
+
+// Modal gallery functions
+const getFullImageUrl = (url: string): string => {
+  if (!url) return '/placeholder-project.svg'
+  
+  // For modal, always return the full URL without modifications
+  if (import.meta.env.DEV && url.includes('app.tierrasonada.com')) {
+    return url.replace('https://app.tierrasonada.com', '').replace('http://app.tierrasonada.com', '')
+  }
+  
+  return url
+}
+
+const openImageModal = (imageUrl: string, allImages: string[]) => {
+  modalImages.value = allImages.map(img => getFullImageUrl(img))
+  currentModalImage.value = modalImages.value.findIndex(img => img === getFullImageUrl(imageUrl))
+  isModalOpen.value = true
+  document.body.style.overflow = 'hidden'
+}
+
+const closeModal = () => {
+  isModalOpen.value = false
+  document.body.style.overflow = 'unset'
+}
+
+const nextModalImage = () => {
+  if (currentModalImage.value < modalImages.value.length - 1) {
+    currentModalImage.value++
+  } else {
+    currentModalImage.value = 0
+  }
+}
+
+const prevModalImage = () => {
+  if (currentModalImage.value > 0) {
+    currentModalImage.value--
+  } else {
+    currentModalImage.value = modalImages.value.length - 1
+  }
+}
+
+// Keyboard navigation support
+const handleKeydown = (event: KeyboardEvent) => {
+  if (isModalOpen.value) {
+    // Modal navigation
+    switch (event.key) {
+      case 'ArrowLeft':
+        event.preventDefault()
+        prevModalImage()
+        break
+      case 'ArrowRight':
+        event.preventDefault()
+        nextModalImage()
+        break
+      case 'Escape':
+        event.preventDefault()
+        closeModal()
+        break
+    }
+  } else {
+    // Slider navigation
+    switch (event.key) {
+      case 'ArrowLeft':
+        event.preventDefault()
+        prevSlide()
+        break
+      case 'ArrowRight':
+        event.preventDefault()
+        nextSlide()
+        break
+      case 'Home':
+        event.preventDefault()
+        goToSlide(0)
+        break
+      case 'End':
+        event.preventDefault()
+        goToSlide(projects.value.length - 1)
+        break
+    }
+  }
 }
 
 // Immersive section functions
@@ -609,7 +871,7 @@ const analyzeProjectImages = async () => {
   for (const project of projects.value) {
     if (project.cover_image_url) {
       try {
-        const isLightImage = await analyzeImageBrightness(project.cover_image_url)
+        const isLightImage = await analyzeImageBrightness(getImageUrl(project.cover_image_url))
         imageButtonClasses.value[project.id] = isLightImage ? 'immobilia-btn-light' : 'immobilia-btn-dark'
       } catch (e) {
         // Default to dark button if analysis fails
@@ -657,10 +919,9 @@ const handleScroll = () => {
 // Lifecycle
 onMounted(async () => {
   await fetchProjects()
-  // Analyze images after projects are loaded
-  await analyzeProjectImages()
   
   window.addEventListener('scroll', handleScroll)
+  window.addEventListener('keydown', handleKeydown)
   startAutoSlider()
   
   // Animate stats when page loads
@@ -672,7 +933,11 @@ onMounted(async () => {
 // Cleanup
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll)
+  window.removeEventListener('keydown', handleKeydown)
   stopAutoSlider()
+  if (isModalOpen.value) {
+    closeModal()
+  }
 })
 </script>
 
@@ -724,12 +989,20 @@ onUnmounted(() => {
   /* Additional styles for right column if needed */
 }
 
-/* SECCIÓN 1: SLIDER STYLES */
+/* SECCIÓN 1: SLIDER STYLES - Mobile First */
 .immobilia-slider-section {
   position: relative;
   height: 100vh;
+  min-height: 450px;
   overflow: hidden;
-  margin-bottom: 20px;
+  margin-bottom: 1rem;
+}
+
+@media (min-width: 768px) {
+  .immobilia-slider-section {
+    min-height: 600px;
+    margin-bottom: 1.25rem;
+  }
 }
 
 .immobilia-slider-container {
@@ -744,9 +1017,6 @@ onUnmounted(() => {
   left: 0;
   width: 100%;
   height: 100%;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
   opacity: 0;
   transform: translateX(100%);
   transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -754,6 +1024,27 @@ onUnmounted(() => {
   align-items: center;
   justify-content: center;
   z-index: 1;
+  background-color: #f8f9fa;
+}
+
+.immobilia-slide-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  padding: 1rem;
+}
+
+@media (min-width: 768px) {
+  .immobilia-slide-image {
+    padding: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .immobilia-slide-image {
+    padding: 2rem;
+  }
 }
 
 .immobilia-slide:first-child {
@@ -831,43 +1122,121 @@ onUnmounted(() => {
 }
 
 /* SECCIÓN 2: DUAL PROJECT STYLES */
+/* SECCIÓN 2: DUAL PROJECT STYLES - Mobile First */
 .immobilia-dual-section {
   display: flex;
-  height: 100vh;
-  margin-bottom: 20px;
-  margin-left: 16px;
-  margin-right: 16px;
-  gap: 16px;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 0 1rem 2rem 1rem;
   background-color: #ffffff;
+}
+
+@media (min-width: 640px) {
+  .immobilia-dual-section {
+    gap: 1.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .immobilia-dual-section {
+    flex-direction: row;
+    height: 70vh;
+    min-height: 500px;
+    gap: 1rem;
+    margin: 0 1rem 2rem 1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .immobilia-dual-section {
+    margin: 0 1.5rem 3rem 1.5rem;
+    gap: 1.5rem;
+    height: 80vh;
+    min-height: 600px;
+  }
 }
 
 .immobilia-dual-left,
 .immobilia-dual-right {
   flex: 1;
   position: relative;
+  min-height: 40vh;
+}
+
+@media (min-width: 480px) {
+  .immobilia-dual-left,
+  .immobilia-dual-right {
+    min-height: 45vh;
+  }
+}
+
+@media (min-width: 640px) {
+  .immobilia-dual-left,
+  .immobilia-dual-right {
+    min-height: 50vh;
+  }
+}
+
+@media (min-width: 768px) {
+  .immobilia-dual-left,
+  .immobilia-dual-right {
+    min-height: auto;
+  }
 }
 
 .immobilia-dual-project {
+  position: relative;
   width: 100%;
   height: 100%;
-  background-size: cover;
-  background-position: center;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.5s ease;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  background-color: #f8f9fa;
+  transition: transform 0.3s ease;
+}
+
+@media (min-width: 768px) {
+  .immobilia-dual-project {
+    border-radius: 0;
+    transition: transform 0.5s ease;
+  }
 }
 
 .immobilia-dual-project:hover {
   transform: scale(1.02);
 }
 
+/* Imagen responsive con object-fit */
+.immobilia-dual-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  padding: 1rem;
+}
+
+@media (min-width: 768px) {
+  .immobilia-dual-image {
+    object-fit: cover;
+    padding: 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .immobilia-dual-image {
+    object-fit: contain;
+    padding: 1.5rem;
+  }
+}
+
 .immobilia-dual-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   text-align: center;
-  color: white;
   z-index: 10;
-  position: relative;
+  max-width: 90%;
+  padding: 1rem;
 }
 
 .immobilia-dual-title {
@@ -885,55 +1254,139 @@ onUnmounted(() => {
   letter-spacing: 2px;
 }
 
-/* SECCIÓN 3: BLOG PUBLICITARIO STYLES */
+/* SECCIÓN 3: BLOG PUBLICITARIO STYLES - Mobile First */
 .immobilia-blog-section {
   background-color: #ffffff;
-  padding: 40px 0;
-  min-height: 50vh;
-  margin-bottom: 20px;
+  padding: 2rem 0;
+  margin-bottom: 1rem;
+}
+
+@media (min-width: 768px) {
+  .immobilia-blog-section {
+    padding: 3rem 0;
+    margin-bottom: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .immobilia-blog-section {
+    padding: 4rem 0;
+    margin-bottom: 2rem;
+    min-height: 50vh;
+  }
 }
 
 .immobilia-blog-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 1rem;
+}
+
+@media (min-width: 768px) {
+  .immobilia-blog-container {
+    padding: 0 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .immobilia-blog-container {
+    padding: 0 2rem;
+  }
 }
 
 .immobilia-blog-header {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 768px) {
+  .immobilia-blog-header {
+    margin-bottom: 2.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .immobilia-blog-header {
+    margin-bottom: 3rem;
+  }
 }
 
 .immobilia-blog-title {
-  font-size: 40px;
+  font-size: 1.875rem;
   font-weight: 600;
   color: #1a1a1a;
-  margin-bottom: 16px;
+  margin-bottom: 1rem;
   line-height: 1.2;
 }
 
+@media (min-width: 768px) {
+  .immobilia-blog-title {
+    font-size: 2.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .immobilia-blog-title {
+    font-size: 2.5rem;
+  }
+}
+
 .immobilia-blog-subtitle {
-  font-size: 18px;
+  font-size: 1rem;
   color: #666;
   max-width: 600px;
   margin: 0 auto;
   line-height: 1.5;
 }
 
+@media (min-width: 768px) {
+  .immobilia-blog-subtitle {
+    font-size: 1.125rem;
+  }
+}
+
 .immobilia-blog-content {
   display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 32px;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
   align-items: start;
+}
+
+@media (min-width: 768px) {
+  .immobilia-blog-content {
+    gap: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .immobilia-blog-content {
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+  }
 }
 
 .immobilia-blog-featured {
   display: flex;
+  flex-direction: column;
   background: white;
-  border-radius: 16px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   overflow: hidden;
   transition: transform 0.3s ease;
+}
+
+@media (min-width: 768px) {
+  .immobilia-blog-featured {
+    flex-direction: row;
+    border-radius: 1rem;
+    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.1);
+  }
+}
+
+@media (min-width: 1024px) {
+  .immobilia-blog-featured {
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  }
 }
 
 .immobilia-blog-featured:hover {
@@ -1970,26 +2423,51 @@ onUnmounted(() => {
   }
 }
 
+/* Mobile-First Button Styles */
 .immobilia-btn {
-  padding: 14px 28px;
-  font-weight: 400;
-  font-size: 13px;
+  /* Mobile base styles */
+  padding: 0.875rem 1.5rem;
+  font-weight: 500;
+  font-size: 0.875rem;
   line-height: 1.4;
-  letter-spacing: 0.5px;
-  border: 1px solid;
-  border-radius: 0;
-  min-width: 160px;
-  height: auto;
-  text-transform: uppercase;
-  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  letter-spacing: 0.025em;
+  border: 2px solid;
+  border-radius: 0.5rem;
+  min-width: 100%;
+  height: 3rem;
+  text-transform: none;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   text-decoration: none;
-  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
   position: relative;
   overflow: hidden;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (min-width: 640px) {
+  .immobilia-btn {
+    min-width: 10rem;
+    font-size: 0.8125rem;
+    padding: 0.75rem 1.75rem;
+    height: 2.75rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .immobilia-btn {
+    min-width: 10rem;
+    font-size: 0.8125rem;
+    padding: 0.875rem 1.75rem;
+    height: auto;
+    border-radius: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.03125em;
+  }
 }
 
 .immobilia-btn-primary {
@@ -2044,8 +2522,8 @@ onUnmounted(() => {
 .immobilia-btn-light {
   background-color: transparent;
   border-color: rgba(255, 255, 255, 0.4);
-  color: #ffffff;
-  backdrop-filter: blur(15px);
+  color: rgba(255, 255, 255, 0.87);
+  backdrop-filter: blur(10px);
 }
 
 .immobilia-btn-light::before {
@@ -2060,11 +2538,11 @@ onUnmounted(() => {
 }
 
 .immobilia-btn-light:hover {
-  background-color: rgba(0, 0, 0, 0.3);
-  border-color: rgba(255, 255, 255, 0.8);
-  color: #ffffff;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 1);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
 .immobilia-btn-light:hover::before {
@@ -2072,10 +2550,10 @@ onUnmounted(() => {
 }
 
 .immobilia-btn-dark {
-  background-color: transparent;
-  border-color: rgba(0, 0, 0, 0.4);
-  color: rgba(0, 0, 0, 0.9);
-  backdrop-filter: blur(15px);
+  background-color: rgba(255, 255, 255, 0.9);
+  border-color: rgba(255, 255, 255, 0.9);
+  color: rgba(23, 26, 32, 0.87);
+  backdrop-filter: blur(10px);
 }
 
 .immobilia-btn-dark::before {
@@ -2090,14 +2568,45 @@ onUnmounted(() => {
 }
 
 .immobilia-btn-dark:hover {
-  background-color: rgba(255, 255, 255, 0.3);
-  border-color: rgba(0, 0, 0, 0.8);
-  color: rgba(0, 0, 0, 1);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 1);
+  border-color: rgba(255, 255, 255, 1);
+  color: rgba(23, 26, 32, 1);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
 }
 
 .immobilia-btn-dark:hover::before {
+  left: 100%;
+}
+
+/* Botón universal transparente - siempre consistente */
+.immobilia-btn-universal {
+  background-color: transparent;
+  border-color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+}
+
+.immobilia-btn-universal::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+  transition: left 0.6s ease;
+}
+
+.immobilia-btn-universal:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 1);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.immobilia-btn-universal:hover::before {
   left: 100%;
 }
 
@@ -2345,10 +2854,151 @@ body {
   @apply text-black bg-gray-100;
 }
 
+/* Hero Content Positioning - Centro de imagen */
+.immobilia-hero-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 10;
+  max-width: 95%;
+  padding: 1rem;
+}
+
+@media (min-width: 768px) {
+  .immobilia-hero-content {
+    max-width: 90%;
+    padding: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .immobilia-hero-content {
+    max-width: 80%;
+    padding: 2rem;
+  }
+}
+
+.immobilia-button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: center;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .immobilia-button-group {
+    flex-direction: row;
+    justify-content: center;
+    gap: 1rem;
+  }
+}
+
+/* Loading States */
+.immobilia-loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.immobilia-loading-content {
+  text-align: center;
+  padding: 2rem;
+}
+
+.immobilia-loading-spinner {
+  width: 3rem;
+  height: 3rem;
+  margin: 0 auto 1.5rem;
+  border: 3px solid #e9ecef;
+  border-top: 3px solid #25D366;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.immobilia-loading-text {
+  color: #6c757d;
+  font-size: 1.125rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Button Micro-interactions */
+.immobilia-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.immobilia-btn:active {
+  transform: translateY(0);
+  transition: all 0.1s ease;
+}
+
+.immobilia-btn:focus-visible {
+  outline: 2px solid #25D366;
+  outline-offset: 2px;
+}
+
+/* Slide transition enhancement */
+.immobilia-slide {
+  will-change: transform, opacity;
+}
+
+.immobilia-slide.active {
+  animation: slideIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
+  .immobilia-slider-section {
+    height: 100vh;
+    min-height: 500px;
+  }
+  
+  .immobilia-slide-image {
+    object-fit: contain;
+    padding: 20px;
+  }
+  
   .immobilia-btn {
-    @apply min-w-[180px] px-6 py-2 text-xs;
+    @apply min-w-[160px] px-4 py-2 text-xs;
+  }
+  
+  .immobilia-title {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .immobilia-hero-content {
+    bottom: 40px;
+    max-width: 95%;
+    padding: 0 20px;
+  }
+  
+  .immobilia-button-group {
+    gap: 0.5rem;
+    flex-direction: column;
+    align-items: center;
   }
   
   .hero-section h1 {
@@ -2357,6 +3007,229 @@ body {
   
   .hero-section p {
     @apply text-base md:text-lg;
+  }
+}
+
+@media (max-width: 480px) {
+  .immobilia-slider-section {
+    min-height: 450px;
+  }
+  
+  .immobilia-slide-image {
+    padding: 15px;
+  }
+  
+  .immobilia-title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .immobilia-hero-content {
+    bottom: 30px;
+  }
+}
+
+/* Clickable images cursor */
+.immobilia-clickable-image {
+  cursor: pointer;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.immobilia-clickable-image:hover {
+  transform: scale(1.02);
+  opacity: 0.9;
+}
+
+/* Modal Gallery Styles */
+.immobilia-image-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(10px);
+  animation: modalFadeIn 0.3s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.immobilia-modal-content {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 4rem 5rem 4rem;
+  box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+  .immobilia-modal-content {
+    padding: 4rem 6rem 6rem 6rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .immobilia-modal-content {
+    padding: 4rem 8rem 6rem 8rem;
+  }
+}
+
+.immobilia-modal-image {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  object-position: center;
+  border-radius: 0.5rem;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+  animation: imageZoomIn 0.4s ease-out;
+  /* Preserve quality */
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  /* Block any parent transforms */
+  transform-origin: center center;
+}
+
+@keyframes imageZoomIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Navigation buttons */
+.immobilia-modal-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  z-index: 10;
+}
+
+@media (min-width: 768px) {
+  .immobilia-modal-nav {
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+}
+
+.immobilia-modal-nav:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.8);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.immobilia-modal-prev {
+  left: 1rem;
+}
+
+.immobilia-modal-next {
+  right: 1rem;
+}
+
+@media (min-width: 768px) {
+  .immobilia-modal-prev {
+    left: 2rem;
+  }
+  
+  .immobilia-modal-next {
+    right: 2rem;
+  }
+}
+
+.immobilia-modal-nav svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+/* Close button */
+.immobilia-modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  z-index: 10;
+}
+
+@media (min-width: 768px) {
+  .immobilia-modal-close {
+    width: 3rem;
+    height: 3rem;
+  }
+}
+
+.immobilia-modal-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.8);
+  transform: scale(1.1);
+}
+
+.immobilia-modal-close svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+/* Counter */
+.immobilia-modal-counter {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@media (min-width: 768px) {
+  .immobilia-modal-counter {
+    font-size: 1rem;
+    padding: 0.75rem 1.5rem;
   }
 }
 
