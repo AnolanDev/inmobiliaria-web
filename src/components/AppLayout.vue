@@ -4,7 +4,7 @@
     <AppHeader />
 
     <!-- Main Content -->
-    <main style="padding-top: 56px; min-height: calc(100vh - 56px);">
+    <main style="padding-top: 20px; min-height: calc(100vh - 20px);">
       <slot />
     </main>
 

@@ -41,8 +41,15 @@ export const useProjectsStore = defineStore('projects', () => {
     try {
       currentProject.value = await apiService.getProject(id)
     } catch (err: any) {
-      error.value = err.response?.data?.message || 'Error al cargar proyecto'
+      if (err.response?.status === 404) {
+        error.value = 'Proyecto no encontrado'
+      } else if (err.response?.status === 500) {
+        error.value = 'Error del servidor al cargar el proyecto'
+      } else {
+        error.value = err.response?.data?.message || 'Error al cargar proyecto'
+      }
       console.error('Error fetching project:', err)
+      currentProject.value = null
     } finally {
       loading.value = false
     }

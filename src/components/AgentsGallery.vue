@@ -1,100 +1,80 @@
 <template>
-  <AppLayout>
-    <!-- GALERÍA DE AGENTES ESTILO HOMEPAGE -->
-    <section class="agents-gallery-hero" v-if="agents.length > 0">
-      <div class="agents-container-full">
-        <!-- Header de la galería -->
-        <div class="gallery-header">
-          <h2 class="gallery-title">Todo Nuestro Equipo</h2>
-          <p class="gallery-subtitle">Conoce a todos los profesionales que te acompañarán en tu inversión</p>
-        </div>
-        
-        <!-- Grid de agentes -->
-        <div class="agents-grid">
-          <div 
-            v-for="agent in agents" 
-            :key="agent.id"
-            class="agent-card"
-            @click="openAgentDetail(agent)"
-          >
-            <!-- Image container with agent click -->
-            <div class="agent-image-container">
-              <img 
-                :src="getImageUrl(agent.profile_picture_url || '/placeholder-agent.svg')" 
-                :alt="agent.name"
-                class="agent-image"
-                loading="lazy"
-              />
-              <div class="image-overlay">
-                <div class="agent-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                    <circle cx="12" cy="7" r="4"/>
-                  </svg>
-                  <span>Ver Perfil</span>
-                </div>
+  <div class="agents-gallery-hero" v-if="agents.length > 0">
+    <div class="agents-container-full">
+      <!-- Header de la galería -->
+      <div class="gallery-header">
+        <h2 class="gallery-title">Nuestro Equipo de Expertos</h2>
+        <p class="gallery-subtitle">Conoce a los profesionales que te acompañarán en tu inversión</p>
+      </div>
+      
+      <!-- Grid de agentes -->
+      <div class="agents-grid">
+        <div 
+          v-for="agent in agents" 
+          :key="agent.id"
+          class="agent-card"
+          @click="openAgentDetail(agent)"
+        >
+          <!-- Image container with agent click -->
+          <div class="agent-image-container">
+            <img 
+              :src="getImageUrl(agent.profile_picture_url || '/placeholder-agent.svg')" 
+              :alt="agent.name"
+              class="agent-image"
+              loading="lazy"
+            />
+            <div class="image-overlay">
+              <div class="agent-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <span>Ver Perfil</span>
               </div>
             </div>
-            
-            <!-- Agent information below image -->
-            <div class="agent-info-section">
-              <h2 class="agent-title">{{ agent.name }}</h2>
-              <div class="agent-details">
-                <p class="agent-type" v-if="agent.type">{{ agent.type }}</p>
-                <p class="agent-phone" v-if="agent.phone">{{ agent.phone }}</p>
-                <p class="agent-email" v-if="agent.email">{{ agent.email }}</p>
-              </div>
+          </div>
+          
+          <!-- Agent information below image -->
+          <div class="agent-info-section">
+            <h2 class="agent-title">{{ agent.name }}</h2>
+            <div class="agent-details">
+              <p class="agent-type" v-if="agent.type">{{ agent.type }}</p>
+              <p class="agent-phone" v-if="agent.phone">{{ agent.phone }}</p>
+              <p class="agent-email" v-if="agent.email">{{ agent.email }}</p>
             </div>
           </div>
         </div>
       </div>
-    </section>
-
-    <!-- Loading State -->
-    <div v-else-if="loading" class="loading-gallery">
-      <div class="loading-content">
-        <div class="loading-spinner"></div>
-        <p class="loading-text">Cargando agentes...</p>
-      </div>
-    </div>
-    
-    <!-- Error State -->
-    <div v-else-if="error" class="error-gallery">
-      <div class="error-content">
-        <svg class="error-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 15.5c-.77.833.192 2.5 1.732 2.5z"></path>
-        </svg>
-        <p class="error-message">{{ error }}</p>
-        <button @click="agentsStore.fetchAgents()" class="retry-btn">
-          Reintentar
+      
+      <!-- Botón para ver todos los agentes -->
+      <div class="gallery-footer">
+        <button @click="$emit('viewAllAgents')" class="gallery-btn-all">
+          <span>Conocer Todo el Equipo</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
         </button>
       </div>
     </div>
-    
-    <!-- Empty State -->
-    <div v-else class="empty-gallery">
-      <div class="empty-content">
-        <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-        </svg>
-        <p class="empty-message">No se encontraron agentes disponibles.</p>
-        <p class="empty-submessage">Vuelve pronto para conocer a nuestro equipo.</p>
-      </div>
-    </div>
-  </AppLayout>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { useAgentsStore } from '@/stores/agents'
-import { storeToRefs } from 'pinia'
-import AppLayout from '@/components/AppLayout.vue'
 import type { Agent } from '@/types'
 
+interface Props {
+  agents: Agent[]
+}
+
+const props = defineProps<Props>()
+
+const emit = defineEmits<{
+  viewAgent: [id: number]
+  viewAllAgents: []
+}>()
+
 const router = useRouter()
-const agentsStore = useAgentsStore()
-const { agents, loading, error } = storeToRefs(agentsStore)
 
 // Helper function to convert absolute URLs to relative for development
 const getImageUrl = (url: string): string => {
@@ -109,13 +89,10 @@ const getImageUrl = (url: string): string => {
 }
 
 const openAgentDetail = (agent: Agent) => {
-  // Navigate to agent detail page
+  // Emit event to parent and navigate
+  emit('viewAgent', agent.id)
   router.push(`/agentes/${agent.id}`)
 }
-
-onMounted(() => {
-  agentsStore.fetchAgents()
-})
 </script>
 
 <style scoped>
@@ -334,147 +311,50 @@ onMounted(() => {
   margin: 0;
 }
 
-/* Loading State */
-.loading-gallery {
-  width: calc(100vw - 80px);
-  min-height: 80vh;
-  position: relative;
-  margin-left: calc(-50vw + 50% + 40px);
-  margin-top: 40px;
-  margin-right: 40px;
-  background: linear-gradient(135deg, #f0f2f5 0%, #e8ebed 50%, #dfe3e6 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 0;
-  border-radius: 20px;
-}
-
-.loading-content {
+/* Botón principal para ver todos */
+.gallery-footer {
   text-align: center;
-  color: #2c3e50;
-}
-
-.loading-spinner {
-  width: 60px;
-  height: 60px;
-  border: 4px solid rgba(102, 126, 234, 0.1);
-  border-left: 4px solid #667eea;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin: 0 auto 20px;
-}
-
-.loading-text {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 1.1rem;
-  font-weight: 500;
-  margin: 0;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-/* Error State */
-.error-gallery {
-  width: calc(100vw - 80px);
-  min-height: 80vh;
-  position: relative;
-  margin-left: calc(-50vw + 50% + 40px);
   margin-top: 40px;
-  margin-right: 40px;
-  background: linear-gradient(135deg, #f0f2f5 0%, #e8ebed 50%, #dfe3e6 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 0;
-  border-radius: 20px;
 }
 
-.error-content {
-  text-align: center;
-  color: #dc3545;
-  max-width: 400px;
-}
-
-.error-icon {
-  width: 60px;
-  height: 60px;
-  margin: 0 auto 20px;
-}
-
-.error-message {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 1.1rem;
-  font-weight: 500;
-  margin: 0 0 20px;
-}
-
-.retry-btn {
+.gallery-btn-all {
   background: linear-gradient(135deg, #667eea, #764ba2);
   color: white;
   border: none;
-  padding: 12px 24px;
-  border-radius: 25px;
+  padding: 16px 40px;
+  border-radius: 50px;
   font-family: 'Montserrat', sans-serif;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-}
-
-.retry-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-}
-
-/* Empty State */
-.empty-gallery {
-  width: calc(100vw - 80px);
-  min-height: 80vh;
-  position: relative;
-  margin-left: calc(-50vw + 50% + 40px);
-  margin-top: 40px;
-  margin-right: 40px;
-  background: linear-gradient(135deg, #f0f2f5 0%, #e8ebed 50%, #dfe3e6 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 0;
-  border-radius: 20px;
-}
-
-.empty-content {
-  text-align: center;
-  color: #6c757d;
-  max-width: 400px;
-}
-
-.empty-icon {
-  width: 60px;
-  height: 60px;
-  margin: 0 auto 20px;
-}
-
-.empty-message {
-  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
   font-size: 1.1rem;
-  font-weight: 500;
-  margin: 0 0 10px;
-  color: #2c3e50;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
 }
 
-.empty-submessage {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.95rem;
-  margin: 0;
+.gallery-btn-all:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+  background: linear-gradient(135deg, #5a6fd8, #6a42a0);
+}
+
+.gallery-btn-all svg {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.3s ease;
+}
+
+.gallery-btn-all:hover svg {
+  transform: translateX(5px);
 }
 
 /* Responsive design para agentes */
 @media (max-width: 768px) {
-  .agents-gallery-hero, .loading-gallery, .error-gallery, .empty-gallery {
+  .agents-gallery-hero {
     width: calc(100vw - 40px);
     margin-left: calc(-50vw + 50% + 20px);
     margin-right: 20px;
@@ -517,7 +397,7 @@ onMounted(() => {
 }
 
 @media (max-width: 480px) {
-  .agents-gallery-hero, .loading-gallery, .error-gallery, .empty-gallery {
+  .agents-gallery-hero {
     width: calc(100vw - 30px);
     margin-left: calc(-50vw + 50% + 15px);
     margin-right: 15px;

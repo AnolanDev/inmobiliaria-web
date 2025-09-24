@@ -30,8 +30,15 @@ export const useAgentsStore = defineStore('agents', () => {
     try {
       currentAgent.value = await apiService.getAgent(id)
     } catch (err: any) {
-      error.value = err.response?.data?.message || 'Error al cargar agente'
+      if (err.response?.status === 404) {
+        error.value = 'Agente no encontrado'
+      } else if (err.response?.status === 500) {
+        error.value = 'Error del servidor al cargar el agente'
+      } else {
+        error.value = err.response?.data?.message || 'Error al cargar agente'
+      }
       console.error('Error fetching agent:', err)
+      currentAgent.value = null
     } finally {
       loading.value = false
     }

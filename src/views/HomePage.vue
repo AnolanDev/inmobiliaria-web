@@ -2,148 +2,43 @@
   <AppLayout>
     <div class="immobilia-homepage">
       <!-- Enhanced Loading State -->
-      <div v-if="loading" class="immobilia-loading-container">
+      <div v-if="isLoading" class="immobilia-loading-container">
         <div class="immobilia-loading-content">
           <div class="immobilia-loading-spinner"></div>
-          <p class="immobilia-loading-text">Cargando proyectos...</p>
+          <p class="immobilia-loading-text">Cargando proyectos y agentes...</p>
         </div>
       </div>
 
-      <!-- Project Sections -->
+      <!-- Error State -->
+      <div v-else-if="localError" class="immobilia-error-container">
+        <div class="immobilia-error-content">
+          <svg class="immobilia-error-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 15.5c-.77.833.192 2.5 1.732 2.5z"></path>
+          </svg>
+          <p class="immobilia-error-message">{{ localError }}</p>
+          <button @click="retryLoading" class="immobilia-retry-btn">
+            Reintentar
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Content -->
       <div v-else class="relative">
       
-      <!-- SECCIÓN 1: SLIDER FULLSCREEN CON TODOS LOS PROYECTOS -->
-      <div class="immobilia-slider-section">
-        <div 
-          class="immobilia-slider-container" 
-          ref="sliderContainer"
-          @touchstart="handleTouchStart"
-          @touchend="handleTouchEnd"
-          role="region"
-          aria-label="Proyectos destacados"
-          aria-live="polite"
-        >
-          <div 
-            v-for="(project, index) in projects" 
-            :key="project.id"
-            class="immobilia-slide"
-            :class="{ active: currentSlide === index }"
-          >
-            <!-- Imagen completa con lazy loading -->
-            <img 
-              :src="getImageUrl(project.cover_image_url)" 
-              :alt="`Proyecto inmobiliario ${project.name}`"
-              class="immobilia-slide-image immobilia-clickable-image"
-              loading="lazy"
-              :decoding="index === 0 ? 'sync' : 'async'"
-              @click="openImageModal(project.cover_image_url, projects.map(p => p.cover_image_url).filter(Boolean))"
-            />
-            
-            <!-- Content -->
-            <div class="immobilia-hero-content">
-              <!-- Tesla-style buttons -->
-              <div class="immobilia-button-group">
-                <button 
-                  @click="goToProject(project.id)"
-                  class="immobilia-btn immobilia-btn-universal"
-                  :aria-label="`Ver detalles del proyecto ${project.name}`"
-                >
-                  Ver Detalles
-                </button>
-                <button 
-                  @click="goToProjects()"
-                  class="immobilia-btn immobilia-btn-universal"
-                  aria-label="Ver todos los proyectos"
-                >
-                  Proyectos
-                </button>
-              </div>
-            </div>
-          </div>
+      <!-- SECCIÓN 1: GALERÍA MODERNA DE PROYECTOS -->
+      <ProjectGallery 
+        :projects="projects"
+        :show-particles="true"
+        @view-project="goToProject"
+        @view-all-projects="goToProjects"
+      />
 
-          <!-- Slider Controls -->
-          <button @click="prevSlide" class="immobilia-slider-btn immobilia-slider-prev">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-            </svg>
-          </button>
-          <button @click="nextSlide" class="immobilia-slider-btn immobilia-slider-next">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-            </svg>
-          </button>
-
-          <!-- Slider Indicators -->
-          <div class="immobilia-slider-indicators">
-            <button 
-              v-for="(project, index) in projects"
-              :key="`indicator-${project.id}`"
-              @click="goToSlide(index)"
-              class="immobilia-slider-indicator"
-              :class="{ active: currentSlide === index }"
-            ></button>
-          </div>
-
-          <!-- Scroll indicator -->
-          <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white opacity-75">
-            <div class="animate-bounce">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-              </svg>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- SECCIÓN 2: DOS PROYECTOS LADO A LADO -->
-      <div class="immobilia-dual-section" v-if="projects.length >= 2">
-        <div class="immobilia-dual-left">
-          <div class="immobilia-dual-project">
-            <!-- Imagen con object-fit para mejor control -->
-            <img 
-              :src="getImageUrl(projects[0]?.cover_image_url)" 
-              :alt="`Proyecto inmobiliario ${projects[0]?.name}`"
-              class="immobilia-dual-image immobilia-clickable-image"
-              loading="lazy"
-              @click="openImageModal(projects[0]?.cover_image_url, projects.map(p => p.cover_image_url).filter(Boolean))"
-            />
-            <!-- Botones centrados -->
-            <div class="immobilia-dual-content">
-              <div class="immobilia-button-group">
-                <button @click="goToProject(projects[0]?.id)" class="immobilia-btn immobilia-btn-universal">
-                  Ver Detalles
-                </button>
-                <button @click="goToProjects()" class="immobilia-btn immobilia-btn-universal">
-                  Proyectos
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="immobilia-dual-right">
-          <div class="immobilia-dual-project">
-            <!-- Imagen con object-fit para mejor control -->
-            <img 
-              :src="getImageUrl(projects[1]?.cover_image_url)" 
-              :alt="`Proyecto inmobiliario ${projects[1]?.name}`"
-              class="immobilia-dual-image immobilia-clickable-image"
-              loading="lazy"
-              @click="openImageModal(projects[1]?.cover_image_url, projects.map(p => p.cover_image_url).filter(Boolean))"
-            />
-            <!-- Botones centrados -->
-            <div class="immobilia-dual-content">
-              <div class="immobilia-button-group">
-                <button @click="goToProject(projects[1]?.id)" class="immobilia-btn immobilia-btn-universal">
-                  Ver Detalles
-                </button>
-                <button @click="goToProjects()" class="immobilia-btn immobilia-btn-universal">
-                  Proyectos
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <!-- SECCIÓN 2: GALERÍA DE AGENTES -->
+      <AgentsGallery 
+        :agents="agents"
+        @view-agent="goToAgent"
+        @view-all-agents="goToAgents"
+      />
 
       <!-- SECCIÓN 3: BLOG PUBLICITARIO -->
       <section class="immobilia-blog-section">
@@ -551,19 +446,27 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, computed } from 'vue'
+import { onMounted, onUnmounted, ref, computed, watch } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import AppLayout from '@/components/AppLayout.vue'
+import ProjectGallery from '@/components/ProjectGallery.vue'
+import AgentsGallery from '@/components/AgentsGallery.vue'
 import { useProjectsStore } from '@/stores/projects'
+import { useAgentsStore } from '@/stores/agents'
 
 const router = useRouter()
 const projectsStore = useProjectsStore()
+const agentsStore = useAgentsStore()
+
+// Estado local optimizado
+const projects = ref([])
+const agents = ref([])
+const isLoading = ref(true)
+const localError = ref<string | null>(null)
 
 // Reactive data
 const currentSection = ref(0)
 const mobileMenuOpen = ref(false)
-const currentSlide = ref(0)
-const sliderContainer = ref(null)
 const animatedStats = ref([0, 0, 0, 0])
 const imageButtonClasses = ref<{[key: number]: string}>({})
 
@@ -580,14 +483,55 @@ const campestresStats = ref([
   { value: 1200, label: 'Árboles Nativos' }
 ])
 
-// Computed properties
-const projects = computed(() => projectsStore.projects)
-const loading = computed(() => projectsStore.loading)
-const error = computed(() => projectsStore.error)
+// Computed properties for backward compatibility
+const loading = computed(() => isLoading.value)
+const error = computed(() => localError.value)
 
-// Methods
+// Optimized data fetching methods with caching strategy
 const fetchProjects = async () => {
-  await projectsStore.fetchProjects()
+  console.log('fetchProjects called')
+  
+  try {
+    // Check if we already have projects in store cache
+    if (projectsStore.projects.length > 0) {
+      console.log('Using cached projects from store')
+      projects.value = projectsStore.projects
+      return
+    }
+    
+    // If no cache, fetch from API
+    console.log('Fetching projects from API...')
+    await projectsStore.fetchProjects()
+    projects.value = projectsStore.projects
+    console.log('Projects loaded:', projects.value.length)
+    
+  } catch (err) {
+    console.error('Error fetching projects:', err)
+    localError.value = 'Error al cargar proyectos'
+  }
+}
+
+const fetchAgents = async () => {
+  console.log('fetchAgents called')
+  
+  try {
+    // Check if we already have agents in store cache
+    if (agentsStore.agents.length > 0) {
+      console.log('Using cached agents from store')
+      agents.value = agentsStore.agents
+      return
+    }
+    
+    // If no cache, fetch from API
+    console.log('Fetching agents from API...')
+    await agentsStore.fetchAgents()
+    agents.value = agentsStore.agents
+    console.log('Agents loaded:', agents.value.length)
+    
+  } catch (err) {
+    console.error('Error fetching agents:', err)
+    localError.value = 'Error al cargar agentes'
+  }
 }
 
 const goToProject = (projectId: number) => {
@@ -596,6 +540,57 @@ const goToProject = (projectId: number) => {
 
 const goToProjects = () => {
   router.push('/proyectos')
+}
+
+const goToAgent = (agentId: number) => {
+  router.push(`/agentes/${agentId}`)
+}
+
+const goToAgents = () => {
+  router.push('/agentes')
+}
+
+// Retry loading function
+const retryLoading = async () => {
+  console.log('Retrying data loading...')
+  isLoading.value = true
+  localError.value = null
+  
+  try {
+    // Clear any cached data and force fresh load
+    projects.value = []
+    agents.value = []
+    
+    // Fetch fresh data
+    const [projectsResult, agentsResult] = await Promise.allSettled([
+      projectsStore.fetchProjects(),
+      agentsStore.fetchAgents()
+    ])
+    
+    // Update local state
+    if (projectsResult.status === 'fulfilled') {
+      projects.value = projectsStore.projects
+    }
+    
+    if (agentsResult.status === 'fulfilled') {
+      agents.value = agentsStore.agents
+    }
+    
+    console.log('Retry completed. Projects:', projects.value.length, 'Agents:', agents.value.length)
+    
+  } catch (err) {
+    console.error('Retry failed:', err)
+    localError.value = 'Error al recargar los datos'
+  } finally {
+    isLoading.value = false
+  }
+}
+
+// Gallery functions
+
+const openProjectDetail = (project: any) => {
+  // Abrir modal o navegar al proyecto
+  goToProject(project.id)
 }
 
 // Helper function to convert absolute URLs to relative for development
@@ -633,41 +628,10 @@ const closeMobileMenu = () => {
   mobileMenuOpen.value = false
 }
 
-// Slider functions
-const nextSlide = () => {
-  if (currentSlide.value < projects.value.length - 1) {
-    currentSlide.value++
-  } else {
-    currentSlide.value = 0
-  }
-}
 
-const prevSlide = () => {
-  if (currentSlide.value > 0) {
-    currentSlide.value--
-  } else {
-    currentSlide.value = projects.value.length - 1
-  }
-}
-
-const goToSlide = (index: number) => {
-  currentSlide.value = index
-}
-
-// Touch gesture support for mobile
-let touchStartX = 0
-let touchEndX = 0
+// Touch gesture support for modal
 let modalTouchStartX = 0
 let modalTouchEndX = 0
-
-const handleTouchStart = (e: TouchEvent) => {
-  touchStartX = e.changedTouches[0].screenX
-}
-
-const handleTouchEnd = (e: TouchEvent) => {
-  touchEndX = e.changedTouches[0].screenX
-  handleSwipeGesture()
-}
 
 const handleModalTouchStart = (e: TouchEvent) => {
   modalTouchStartX = e.changedTouches[0].screenX
@@ -693,20 +657,6 @@ const handleModalSwipeGesture = () => {
   }
 }
 
-const handleSwipeGesture = () => {
-  const swipeThreshold = 50 // minimum distance for swipe
-  const swipeDistance = touchStartX - touchEndX
-  
-  if (Math.abs(swipeDistance) > swipeThreshold) {
-    if (swipeDistance > 0) {
-      // Swipe left - next slide
-      nextSlide()
-    } else {
-      // Swipe right - previous slide
-      prevSlide()
-    }
-  }
-}
 
 // Modal gallery functions
 const getFullImageUrl = (url: string): string => {
@@ -764,26 +714,6 @@ const handleKeydown = (event: KeyboardEvent) => {
       case 'Escape':
         event.preventDefault()
         closeModal()
-        break
-    }
-  } else {
-    // Slider navigation
-    switch (event.key) {
-      case 'ArrowLeft':
-        event.preventDefault()
-        prevSlide()
-        break
-      case 'ArrowRight':
-        event.preventDefault()
-        nextSlide()
-        break
-      case 'Home':
-        event.preventDefault()
-        goToSlide(0)
-        break
-      case 'End':
-        event.preventDefault()
-        goToSlide(projects.value.length - 1)
         break
     }
   }
@@ -884,21 +814,6 @@ const analyzeProjectImages = async () => {
   }
 }
 
-// Auto-slider
-let sliderInterval: NodeJS.Timeout | null = null
-
-const startAutoSlider = () => {
-  sliderInterval = setInterval(() => {
-    nextSlide()
-  }, 5000) // Change slide every 5 seconds
-}
-
-const stopAutoSlider = () => {
-  if (sliderInterval) {
-    clearInterval(sliderInterval)
-    sliderInterval = null
-  }
-}
 
 // Scroll tracking
 const handleScroll = () => {
@@ -917,12 +832,40 @@ const handleScroll = () => {
 }
 
 // Lifecycle
+// Optimized onMounted with parallel loading and caching
 onMounted(async () => {
-  await fetchProjects()
+  console.log('HomePage mounted - starting optimized data loading')
+  isLoading.value = true
+  localError.value = null
   
+  try {
+    // Load both datasets in parallel for maximum performance
+    const [projectsResult, agentsResult] = await Promise.allSettled([
+      fetchProjects(),
+      fetchAgents()
+    ])
+    
+    // Check for any rejected promises
+    if (projectsResult.status === 'rejected') {
+      console.error('Projects loading failed:', projectsResult.reason)
+    }
+    
+    if (agentsResult.status === 'rejected') {
+      console.error('Agents loading failed:', agentsResult.reason)
+    }
+    
+    console.log('Data loading completed. Projects:', projects.value.length, 'Agents:', agents.value.length)
+    
+  } catch (err) {
+    console.error('Critical error in onMounted:', err)
+    localError.value = 'Error crítico al cargar la página'
+  } finally {
+    isLoading.value = false
+  }
+  
+  // Setup event listeners
   window.addEventListener('scroll', handleScroll)
   window.addEventListener('keydown', handleKeydown)
-  startAutoSlider()
   
   // Animate stats when page loads
   setTimeout(() => {
@@ -930,11 +873,25 @@ onMounted(async () => {
   }, 1000)
 })
 
+// Watch for store changes to keep local state in sync
+watch(() => projectsStore.projects, (newProjects) => {
+  if (newProjects.length > 0 && projects.value.length === 0) {
+    console.log('Syncing projects from store update')
+    projects.value = newProjects
+  }
+}, { immediate: true })
+
+watch(() => agentsStore.agents, (newAgents) => {
+  if (newAgents.length > 0 && agents.value.length === 0) {
+    console.log('Syncing agents from store update')
+    agents.value = newAgents
+  }
+}, { immediate: true })
+
 // Cleanup
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll)
   window.removeEventListener('keydown', handleKeydown)
-  stopAutoSlider()
   if (isModalOpen.value) {
     closeModal()
   }
@@ -989,147 +946,6 @@ onUnmounted(() => {
   /* Additional styles for right column if needed */
 }
 
-/* SECCIÓN 1: SLIDER STYLES - Mobile First */
-.immobilia-slider-section {
-  position: relative;
-  height: 100vh;
-  min-height: 450px;
-  overflow: hidden;
-  margin-bottom: 1rem;
-}
-
-@media (min-width: 768px) {
-  .immobilia-slider-section {
-    min-height: 600px;
-    margin-bottom: 1.25rem;
-  }
-}
-
-.immobilia-slider-container {
-  position: relative;
-  height: 100%;
-  width: 100%;
-}
-
-.immobilia-slide {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  transform: translateX(100%);
-  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1;
-  background-color: #f8f9fa;
-}
-
-.immobilia-slide-image {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: center;
-  padding: 1rem;
-}
-
-@media (min-width: 768px) {
-  .immobilia-slide-image {
-    padding: 1.5rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .immobilia-slide-image {
-    padding: 2rem;
-  }
-}
-
-.immobilia-slide:first-child {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-.immobilia-slide.active {
-  opacity: 1;
-  transform: translateX(0);
-  z-index: 2;
-}
-
-.immobilia-slider-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 15;
-  background: rgba(255, 255, 255, 0.2);
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  color: white;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-}
-
-.immobilia-slider-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
-  border-color: rgba(255, 255, 255, 0.6);
-  transform: translateY(-50%) scale(1.1);
-}
-
-.immobilia-slider-prev {
-  left: 40px;
-}
-
-.immobilia-slider-next {
-  right: 100px;
-}
-
-.immobilia-slider-indicators {
-  position: absolute;
-  bottom: 120px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 16px;
-  z-index: 15;
-}
-
-.immobilia-slider-indicator {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.5);
-  background: transparent;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.immobilia-slider-indicator.active {
-  background: rgba(255, 255, 255, 1);
-  border-color: rgba(255, 255, 255, 1);
-}
-
-.immobilia-slider-indicator:hover {
-  border-color: rgba(255, 255, 255, 0.8);
-  transform: scale(1.2);
-}
-
-/* SECCIÓN 2: DUAL PROJECT STYLES */
-/* SECCIÓN 2: DUAL PROJECT STYLES - Mobile First */
-.immobilia-dual-section {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin: 0 1rem 2rem 1rem;
-  background-color: #ffffff;
-}
 
 @media (min-width: 640px) {
   .immobilia-dual-section {
@@ -1143,13 +959,13 @@ onUnmounted(() => {
     height: 70vh;
     min-height: 500px;
     gap: 1rem;
-    margin: 0 1rem 2rem 1rem;
+    margin: 20px 1rem 1rem 1rem;
   }
 }
 
 @media (min-width: 1024px) {
   .immobilia-dual-section {
-    margin: 0 1.5rem 3rem 1.5rem;
+    margin: 20px 1.5rem 1.5rem 1.5rem;
     gap: 1.5rem;
     height: 80vh;
     min-height: 600px;
@@ -1257,21 +1073,21 @@ onUnmounted(() => {
 /* SECCIÓN 3: BLOG PUBLICITARIO STYLES - Mobile First */
 .immobilia-blog-section {
   background-color: #ffffff;
-  padding: 2rem 0;
-  margin-bottom: 1rem;
+  padding: 1rem 0;
+  margin: 40px 0 1rem 0;
 }
 
 @media (min-width: 768px) {
   .immobilia-blog-section {
-    padding: 3rem 0;
-    margin-bottom: 1.5rem;
+    padding: 2rem 0;
+    margin: 20px 0 1rem 0;
   }
 }
 
 @media (min-width: 1024px) {
   .immobilia-blog-section {
-    padding: 4rem 0;
-    margin-bottom: 2rem;
+    padding: 2.5rem 0;
+    margin: 20px 0 1rem 0;
     min-height: 50vh;
   }
 }
@@ -2925,6 +2741,61 @@ body {
   font-size: 1.125rem;
   font-weight: 500;
   margin: 0;
+}
+
+/* Error State Styles */
+.immobilia-error-container {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  padding: 40px 20px;
+}
+
+.immobilia-error-content {
+  text-align: center;
+  max-width: 400px;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.immobilia-error-icon {
+  width: 60px;
+  height: 60px;
+  color: #dc3545;
+  margin: 0 auto 20px;
+}
+
+.immobilia-error-message {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #2c3e50;
+  margin: 0 0 30px;
+  line-height: 1.4;
+}
+
+.immobilia-retry-btn {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 25px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.immobilia-retry-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
 @keyframes spin {
