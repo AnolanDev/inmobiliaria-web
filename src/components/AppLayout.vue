@@ -4,7 +4,7 @@
     <AppHeader />
 
     <!-- Main Content -->
-    <main style="padding-top: 20px; min-height: calc(100vh - 20px);">
+    <main class="main-content">
       <slot />
     </main>
 
@@ -19,7 +19,24 @@ import AppFooter from './AppFooter.vue'
 </script>
 
 <style scoped>
-main {
+.main-content {
+  padding-top: clamp(72px, 10vw, 80px); /* Responsive padding for fixed header */
+  min-height: calc(100vh - clamp(72px, 10vw, 80px));
   background-color: #ffffff;
+}
+
+/* Ensure proper spacing on mobile devices */
+@media (max-width: 768px) {
+  .main-content {
+    padding-top: 68px; /* Account for mobile header height */
+    min-height: calc(100vh - 68px);
+  }
+}
+
+@media (max-width: 480px) {
+  .main-content {
+    padding-top: 64px; /* Exact mobile header height */
+    min-height: calc(100vh - 64px);
+  }
 }
 </style>

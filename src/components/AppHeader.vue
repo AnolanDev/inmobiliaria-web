@@ -70,7 +70,9 @@
         <!-- Mobile menu button -->
         <button 
           @click="toggleMobileMenu"
-          class="md:hidden p-2 rounded-md text-gray-600 hover:text-black hover:bg-gray-100 transition-colors"
+          class="md:hidden p-2 rounded-md text-gray-600 hover:text-black hover:bg-gray-100 transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
+          :aria-expanded="mobileMenuOpen"
+          aria-label="Toggle navigation menu"
         >
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path v-if="!mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
@@ -80,8 +82,8 @@
       </div>
 
       <!-- Mobile Navigation -->
-      <div v-if="mobileMenuOpen" class="md:hidden border-t border-gray-200">
-        <div class="px-2 pt-2 pb-3 space-y-1">
+      <div v-if="mobileMenuOpen" class="md:hidden border-t border-gray-200 bg-white">
+        <div class="px-2 pt-3 pb-4 space-y-2 max-h-[80vh] overflow-y-auto">
           <RouterLink 
             to="/" 
             class="immobilia-mobile-nav-link"
@@ -145,19 +147,23 @@ const closeMobileMenu = () => {
   top: 0;
   left: 0;
   right: 0;
-  height: 56px;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  height: clamp(64px, 8vw, 72px);
+  background: rgba(255, 255, 255, 0.97);
+  backdrop-filter: blur(24px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   z-index: 1000;
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: 0 1px 20px rgba(0, 0, 0, 0.08);
+  /* Mobile-first optimizations */
+  -webkit-backdrop-filter: blur(24px);
+  will-change: transform;
 }
 
 .immobilia-header-content {
   height: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 clamp(16px, 4vw, 24px);
 }
 
 .immobilia-header-inner {
@@ -175,35 +181,65 @@ const closeMobileMenu = () => {
 }
 
 .immobilia-logo-img {
-  height: 40px;
+  height: clamp(36px, 6vw, 44px);
   width: auto;
-  transition: transform 0.3s ease;
+  transition: all 0.3s ease;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
 .immobilia-logo:hover .immobilia-logo-img {
-  transform: scale(1.05);
+  transform: scale(1.03);
+  filter: drop-shadow(0 4px 8px rgba(102, 126, 234, 0.2));
 }
 
-@media (max-width: 768px) {
+/* Touch-friendly mobile optimization */
+@media (max-width: 480px) {
   .immobilia-logo-img {
-    height: 36px;
+    height: 32px;
+  }
+  
+  .immobilia-logo {
+    min-width: 44px; /* Touch target size */
+    min-height: 44px;
+    display: flex;
+    align-items: center;
   }
 }
 
 .immobilia-nav-link {
-  color: rgba(23, 26, 32, 0.6);
+  color: rgba(23, 26, 32, 0.65);
   text-decoration: none;
   font-weight: 500;
-  font-size: 14px;
+  font-size: 15px;
   line-height: 20px;
-  padding: 12px 0;
-  transition: color 0.3s ease;
+  padding: 12px 16px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
   position: relative;
 }
 
-.immobilia-nav-link:hover,
+.immobilia-nav-link:hover {
+  color: rgba(23, 26, 32, 0.9);
+  background: rgba(102, 126, 234, 0.05);
+  transform: translateY(-1px);
+}
+
 .immobilia-nav-link.router-link-active {
-  color: rgba(23, 26, 32, 1);
+  color: #667eea;
+  background: rgba(102, 126, 234, 0.1);
+  font-weight: 600;
+}
+
+.immobilia-nav-link.router-link-active::after {
+  content: '';
+  position: absolute;
+  bottom: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  background: #667eea;
+  border-radius: 50%;
 }
 
 
@@ -211,17 +247,19 @@ const closeMobileMenu = () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   color: rgba(23, 26, 32, 0.6);
   text-decoration: none;
-  border-radius: 50%;
-  transition: all 0.3s ease;
+  border-radius: 8px;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  border: 1px solid transparent;
 }
 
 .immobilia-header-social:hover {
-  transform: scale(1.1);
-  background: rgba(0, 0, 0, 0.05);
+  transform: translateY(-2px);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .immobilia-header-social[href*="linkedin"]:hover {
@@ -246,19 +284,31 @@ const closeMobileMenu = () => {
 
 .immobilia-mobile-nav-link {
   display: block;
-  padding: 12px 16px;
-  border-radius: 6px;
-  font-size: 16px;
+  padding: clamp(14px, 3vw, 16px) clamp(16px, 4vw, 20px);
+  border-radius: 8px;
+  font-size: clamp(16px, 4vw, 18px);
   font-weight: 500;
   color: rgba(23, 26, 32, 0.7);
   text-decoration: none;
   transition: all 0.3s ease;
+  /* Touch-friendly tap targets */
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.immobilia-mobile-nav-link:hover,
+.immobilia-mobile-nav-link:hover {
+  color: rgba(23, 26, 32, 0.9);
+  background: rgba(102, 126, 234, 0.05);
+  transform: translateX(4px);
+}
+
 .immobilia-mobile-nav-link.router-link-active {
-  color: #25D366;
-  background: rgba(37, 211, 102, 0.1);
+  color: #667eea;
+  background: rgba(102, 126, 234, 0.1);
+  border-left: 4px solid #667eea;
+  padding-left: calc(clamp(16px, 4vw, 20px) - 4px);
 }
 
 @media (max-width: 768px) {

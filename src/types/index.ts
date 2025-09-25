@@ -17,6 +17,9 @@ export interface Project {
   type: string
   status: string
   property_count: number
+  city?: string
+  state?: string
+  location?: string
   cover_image: string
   gallery: string[]
   videos: string[]

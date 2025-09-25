@@ -34,7 +34,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const cardClasses = computed(() => {
-  const base = 'bg-white rounded-xl border border-gray-200 overflow-hidden'
+  const base = 'bg-white rounded-xl border border-gray-200 overflow-hidden transform transition-all duration-300'
   
   const shadows = {
     none: '',
@@ -43,7 +43,7 @@ const cardClasses = computed(() => {
     lg: 'shadow-lg'
   }
   
-  const hover = props.hover ? 'hover:shadow-lg transition-shadow duration-200' : ''
+  const hover = props.hover ? 'hover:shadow-xl hover:-translate-y-1 transition-all duration-300' : ''
   
   return [base, shadows[props.shadow], hover].join(' ')
 })
@@ -56,6 +56,9 @@ const contentClasses = computed(() => {
     lg: 'p-8'
   }
   
-  return paddings[props.padding]
+  // Mobile-first responsive padding
+  const mobilePadding = 'px-4 py-4 sm:px-6 sm:py-6'
+  
+  return props.padding === 'md' ? mobilePadding : paddings[props.padding]
 })
 </script>

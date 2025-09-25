@@ -407,12 +407,14 @@ watch(agent, (newAgent) => {
   align-items: center;
   justify-content: center;
   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  padding: clamp(2rem, 5vw, 4rem) clamp(1rem, 4vw, 2rem);
 }
 
 .not-found-content {
   text-align: center;
   color: #6c757d;
   max-width: 400px;
+  width: 100%;
 }
 
 .not-found-icon {
@@ -423,15 +425,16 @@ watch(agent, (newAgent) => {
 
 .not-found-message {
   font-family: 'Montserrat', sans-serif;
-  font-size: 1.1rem;
+  font-size: clamp(1rem, 2.5vw, 1.1rem);
   font-weight: 500;
-  margin: 0 0 20px;
+  margin: 0 0 clamp(1rem, 3vw, 1.25rem);
   color: #2c3e50;
+  line-height: 1.4;
 }
 
-/* Back Navigation */
+/* Back Navigation - Responsive */
 .back-navigation {
-  padding: 80px 40px 20px 40px;
+  padding: clamp(60px, 12vw, 80px) clamp(1rem, 4vw, 2.5rem) clamp(1rem, 3vw, 1.25rem) clamp(1rem, 4vw, 2.5rem);
   display: flex;
   justify-content: flex-end;
 }
@@ -439,15 +442,15 @@ watch(agent, (newAgent) => {
 .back-btn {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: clamp(6px, 1.5vw, 8px);
   background: rgba(255, 255, 255, 0.95);
   border: 2px solid rgba(102, 126, 234, 0.2);
   color: #667eea;
-  padding: 10px 20px;
+  padding: clamp(8px, 2vw, 10px) clamp(16px, 4vw, 20px);
   border-radius: 25px;
   font-family: 'Montserrat', sans-serif;
   font-weight: 500;
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 2vw, 0.9rem);
   cursor: pointer;
   transition: all 0.3s ease;
   backdrop-filter: blur(20px);
@@ -455,6 +458,7 @@ watch(agent, (newAgent) => {
   z-index: 100;
   position: relative;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  white-space: nowrap;
 }
 
 .back-btn:hover {
@@ -465,23 +469,37 @@ watch(agent, (newAgent) => {
 }
 
 .back-btn svg {
-  width: 18px;
-  height: 18px;
+  width: clamp(16px, 4vw, 18px);
+  height: clamp(16px, 4vw, 18px);
+  flex-shrink: 0;
 }
 
 /* Agent Hero Section */
 .agent-hero {
-  padding: 40px;
-  margin-bottom: 40px;
+  padding: clamp(1.5rem, 5vw, 2.5rem);
+  margin-bottom: clamp(2rem, 5vw, 2.5rem);
 }
 
 .hero-content {
   max-width: 1200px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 400px 1fr;
-  gap: 60px;
+  grid-template-columns: 1fr;
+  gap: clamp(2rem, 5vw, 4rem);
   align-items: start;
+}
+
+/* Progressive enhancement para pantallas más grandes */
+@media (min-width: 768px) {
+  .hero-content {
+    grid-template-columns: 1fr 1.2fr;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-content {
+    grid-template-columns: 400px 1fr;
+  }
 }
 
 .agent-image-section {
@@ -491,8 +509,11 @@ watch(agent, (newAgent) => {
 .main-image-container {
   position: relative;
   width: 100%;
-  height: 500px;
-  border-radius: 20px;
+  aspect-ratio: 4/5;
+  height: auto;
+  min-height: clamp(300px, 60vh, 500px);
+  max-height: 600px;
+  border-radius: clamp(12px, 3vw, 20px);
   overflow: hidden;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
   background: white;
@@ -507,8 +528,8 @@ watch(agent, (newAgent) => {
 
 .agent-info-section {
   background: rgba(255, 255, 255, 0.95);
-  border-radius: 20px;
-  padding: 40px;
+  border-radius: clamp(12px, 3vw, 20px);
+  padding: clamp(1.5rem, 5vw, 2.5rem);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(0, 0, 0, 0.1);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
@@ -520,22 +541,23 @@ watch(agent, (newAgent) => {
 
 .agent-name {
   font-family: 'Roboto', sans-serif;
-  font-size: 2.5rem;
+  font-size: clamp(1.8rem, 5vw, 2.5rem);
   font-weight: 300;
   color: #2c3e50;
-  margin: 0 0 10px 0;
+  margin: 0 0 clamp(0.5rem, 2vw, 0.75rem) 0;
   line-height: 1.2;
-  letter-spacing: 1px;
+  letter-spacing: clamp(0.5px, 0.1em, 1px);
 }
 
 .agent-type {
   font-family: 'Montserrat', sans-serif;
-  font-size: 1.1rem;
+  font-size: clamp(0.9rem, 2.5vw, 1.1rem);
   font-weight: 500;
   color: #667eea;
   margin: 0;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: clamp(0.5px, 0.1em, 1px);
+  line-height: 1.3;
 }
 
 .contact-info {
@@ -565,52 +587,58 @@ watch(agent, (newAgent) => {
 
 .contact-link {
   font-family: 'Montserrat', sans-serif;
-  font-size: 1rem;
+  font-size: clamp(0.875rem, 2.5vw, 1rem);
   font-weight: 500;
   color: #2c3e50;
   text-decoration: none;
   transition: all 0.3s ease;
+  line-height: 1.4;
+  word-break: break-word;
 }
 
 .contact-link:hover {
   color: #667eea;
 }
 
-/* Social Media */
+/* Social Media - Responsive */
 .social-media {
-  margin-bottom: 30px;
+  margin-bottom: clamp(1.5rem, 4vw, 2rem);
 }
 
 .social-media h3 {
   font-family: 'Roboto', sans-serif;
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
   font-weight: 500;
   color: #2c3e50;
-  margin: 0 0 15px 0;
+  margin: 0 0 clamp(0.75rem, 2vw, 1rem) 0;
+  line-height: 1.3;
 }
 
 .social-links {
   display: flex;
-  gap: 15px;
+  gap: clamp(0.75rem, 2vw, 1rem);
+  flex-wrap: wrap;
 }
 
 .social-link {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 15px;
+  gap: clamp(6px, 1.5vw, 8px);
+  padding: clamp(8px, 2vw, 10px) clamp(12px, 3vw, 15px);
   border-radius: 25px;
   text-decoration: none;
   font-family: 'Montserrat', sans-serif;
   font-weight: 500;
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 2vw, 0.9rem);
   transition: all 0.3s ease;
   border: 2px solid transparent;
+  min-width: fit-content;
 }
 
 .social-link svg {
-  width: 18px;
-  height: 18px;
+  width: clamp(16px, 4vw, 18px);
+  height: clamp(16px, 4vw, 18px);
+  flex-shrink: 0;
 }
 
 .social-link.facebook {
@@ -646,48 +674,60 @@ watch(agent, (newAgent) => {
   border-color: #0077b5;
 }
 
-/* Stats Section */
+/* Stats Section - Responsive */
 .stats-section {
   display: flex;
-  gap: 30px;
+  gap: clamp(1rem, 4vw, 2rem);
+  flex-wrap: wrap;
+  justify-content: flex-start;
 }
 
 .stat-item {
   text-align: center;
   background: linear-gradient(135deg, #667eea, #764ba2);
   color: white;
-  padding: 20px;
-  border-radius: 15px;
-  min-width: 120px;
+  padding: clamp(1rem, 4vw, 1.25rem);
+  border-radius: clamp(12px, 3vw, 15px);
+  min-width: clamp(100px, 20vw, 120px);
+  flex: 0 1 auto;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(102, 126, 234, 0.4);
 }
 
 .stat-number {
   font-family: 'Roboto', sans-serif;
-  font-size: 2rem;
+  font-size: clamp(1.5rem, 4vw, 2rem);
   font-weight: 700;
-  margin-bottom: 5px;
+  margin-bottom: clamp(0.25rem, 1vw, 0.375rem);
+  line-height: 1.2;
 }
 
 .stat-label {
   font-family: 'Montserrat', sans-serif;
-  font-size: 0.9rem;
+  font-size: clamp(0.75rem, 2vw, 0.9rem);
   font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: clamp(0.3px, 0.1em, 0.5px);
+  line-height: 1.3;
 }
 
-/* Biography Section */
+/* Biography Section - Responsive */
 .agent-biography {
-  padding: 0 40px 40px;
-  margin-bottom: 40px;
+  padding: 0 clamp(1rem, 4vw, 2.5rem) clamp(2rem, 5vw, 2.5rem);
+  margin-bottom: clamp(2rem, 5vw, 2.5rem);
 }
 
 .biography-container {
   max-width: 1200px;
   margin: 0 auto;
   background: rgba(255, 255, 255, 0.95);
-  border-radius: 20px;
-  padding: 40px;
+  border-radius: clamp(12px, 3vw, 20px);
+  padding: clamp(1.5rem, 5vw, 2.5rem);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(0, 0, 0, 0.1);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
@@ -695,12 +735,13 @@ watch(agent, (newAgent) => {
 
 .section-title {
   font-family: 'Roboto', sans-serif;
-  font-size: 2rem;
+  font-size: clamp(1.5rem, 4vw, 2rem);
   font-weight: 300;
   color: #2c3e50;
-  margin: 0 0 25px 0;
+  margin: 0 0 clamp(1rem, 3vw, 1.5rem) 0;
   position: relative;
-  letter-spacing: 1px;
+  letter-spacing: clamp(0.5px, 0.1em, 1px);
+  line-height: 1.3;
 }
 
 .section-title::after {
@@ -716,24 +757,24 @@ watch(agent, (newAgent) => {
 
 .biography-text {
   font-family: 'Montserrat', sans-serif;
-  font-size: 1.1rem;
+  font-size: clamp(0.95rem, 2.5vw, 1.1rem);
   line-height: 1.8;
   color: #5a6c7d;
   margin: 0;
   text-align: justify;
 }
 
-/* Properties Section */
+/* Properties Section - Responsive */
 .agent-properties {
-  padding: 0 40px 40px;
+  padding: 0 clamp(1rem, 4vw, 2.5rem) clamp(2rem, 5vw, 2.5rem);
 }
 
 .properties-container {
   max-width: 1200px;
   margin: 0 auto;
   background: rgba(255, 255, 255, 0.95);
-  border-radius: 20px;
-  padding: 40px;
+  border-radius: clamp(12px, 3vw, 20px);
+  padding: clamp(1.5rem, 5vw, 2.5rem);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(0, 0, 0, 0.1);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
@@ -741,30 +782,49 @@ watch(agent, (newAgent) => {
 
 .properties-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 30px;
-  margin-top: 30px;
+  grid-template-columns: 1fr;
+  gap: clamp(1.5rem, 4vw, 2rem);
+  margin-top: clamp(1.5rem, 4vw, 2rem);
+}
+
+/* Progressive enhancement para properties grid */
+@media (min-width: 640px) {
+  .properties-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .properties-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: clamp(2rem, 4vw, 2.5rem);
+  }
 }
 
 .property-card {
   background: white;
-  border-radius: 15px;
+  border-radius: clamp(12px, 3vw, 15px);
   overflow: hidden;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
   cursor: pointer;
   border: 1px solid rgba(0, 0, 0, 0.1);
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
 }
 
 .property-card:hover {
-  transform: translateY(-5px);
+  transform: translate3d(0, -5px, 0);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
   border-color: rgba(102, 126, 234, 0.3);
 }
 
 .property-image-container {
   position: relative;
-  height: 200px;
+  width: 100%;
+  aspect-ratio: 16/10;
+  height: auto;
+  min-height: clamp(160px, 25vw, 200px);
   overflow: hidden;
 }
 
@@ -772,6 +832,7 @@ watch(agent, (newAgent) => {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
   transition: transform 0.3s ease;
 }
 
@@ -781,115 +842,135 @@ watch(agent, (newAgent) => {
 
 .property-price {
   position: absolute;
-  top: 15px;
-  right: 15px;
+  top: clamp(12px, 3vw, 15px);
+  right: clamp(12px, 3vw, 15px);
   background: linear-gradient(135deg, #667eea, #764ba2);
   color: white;
-  padding: 8px 15px;
+  padding: clamp(6px, 2vw, 8px) clamp(12px, 3vw, 15px);
   border-radius: 20px;
   font-family: 'Montserrat', sans-serif;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: clamp(0.75rem, 2vw, 0.9rem);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  line-height: 1.3;
 }
 
 .property-info {
-  padding: 20px;
+  padding: clamp(1rem, 4vw, 1.25rem);
 }
 
 .property-title {
   font-family: 'Roboto', sans-serif;
-  font-size: 1.1rem;
+  font-size: clamp(1rem, 2.5vw, 1.1rem);
   font-weight: 500;
   color: #2c3e50;
-  margin: 0 0 8px 0;
-  line-height: 1.3;
+  margin: 0 0 clamp(0.5rem, 2vw, 0.75rem) 0;
+  line-height: 1.4;
+  letter-spacing: 0.3px;
 }
 
 .property-location {
   font-family: 'Montserrat', sans-serif;
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 2vw, 0.9rem);
   color: #6c757d;
-  margin: 0 0 12px 0;
+  margin: 0 0 clamp(0.75rem, 2vw, 1rem) 0;
+  line-height: 1.4;
 }
 
 .property-details {
   display: flex;
-  gap: 12px;
+  gap: clamp(0.5rem, 2vw, 0.75rem);
   flex-wrap: wrap;
 }
 
 .property-detail {
   font-family: 'Montserrat', sans-serif;
-  font-size: 0.8rem;
+  font-size: clamp(0.7rem, 2vw, 0.8rem);
   color: #667eea;
   background: rgba(102, 126, 234, 0.1);
-  padding: 4px 10px;
+  padding: clamp(3px, 1vw, 4px) clamp(8px, 2vw, 10px);
   border-radius: 12px;
   font-weight: 500;
+  line-height: 1.3;
+  white-space: nowrap;
 }
 
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .hero-content {
-    grid-template-columns: 1fr;
-    gap: 30px;
+/* Responsive Design Moderno */
+
+/* Mobile devices: Hasta 479px */
+@media (max-width: 479px) {
+  .back-navigation {
+    padding: clamp(60px, 15vw, 80px) clamp(1rem, 4vw, 1.25rem) clamp(1rem, 4vw, 1.25rem);
   }
-
-  .main-image-container {
-    height: 400px;
-  }
-
-  .agent-name {
-    font-size: 2rem;
-  }
-
-  .section-title {
-    font-size: 1.5rem;
-  }
-
-  .properties-grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-
-
+  
   .social-links {
     flex-direction: column;
-    gap: 10px;
+    align-items: stretch;
   }
-
+  
   .social-link {
     justify-content: center;
+    text-align: center;
+  }
+  
+  .stats-section {
+    justify-content: center;
+  }
+  
+  .stat-item {
+    flex: 1 1 auto;
+    max-width: 150px;
   }
 }
 
-@media (max-width: 480px) {
+/* Small mobile: 375px+ */
+@media (min-width: 375px) and (max-width: 479px) {
+  .social-link {
+    padding: clamp(10px, 3vw, 12px) clamp(16px, 5vw, 20px);
+  }
+}
+
+/* Large mobile: 480px+ */
+@media (min-width: 480px) and (max-width: 639px) {
+  .social-links {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+  
+  .stats-section {
+    justify-content: flex-start;
+  }
+}
+
+/* Tablet portrait: 640px+ */
+@media (min-width: 640px) and (max-width: 767px) {
+  .hero-content {
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+  }
+  
+  .main-image-container {
+    max-height: 400px;
+  }
+}
+
+/* Tablet landscape: 768px+ */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .hero-content {
+    grid-template-columns: 1fr 1.3fr;
+  }
+  
+  .social-links {
+    gap: 1.25rem;
+  }
+}
+
+/* Desktop: 1024px+ */
+@media (min-width: 1024px) {
   .back-navigation {
-    padding: 80px 20px 20px 20px;
-  }
-
-
-  .agent-hero,
-  .agent-biography,
-  .agent-properties {
-    padding-left: 20px;
-    padding-right: 20px;
-  }
-
-  .agent-info-section,
-  .biography-container,
-  .properties-container {
-    padding: 25px;
-  }
-
-  .agent-name {
-    font-size: 1.8rem;
-  }
-
-  .section-title {
-    font-size: 1.3rem;
+    padding: clamp(80px, 8vw, 100px) clamp(2rem, 5vw, 2.5rem) clamp(1.5rem, 4vw, 2rem) clamp(2rem, 5vw, 2.5rem);
   }
 }
 </style>
