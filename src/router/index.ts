@@ -53,10 +53,18 @@ const router = createRouter({
     },
     {
       path: '/blog',
-      name: 'blog',
-      component: () => import('@/views/BlogPage.vue'),
+      name: 'blogs',
+      component: () => import('@/views/BlogsPage.vue'),
       meta: {
-        title: 'Blog - Tierra Soñada'
+        title: 'Blog - Inmobiliaria'
+      }
+    },
+    {
+      path: '/blog/:id',
+      name: 'blog-detail',
+      component: () => import('@/views/BlogDetailPage.vue'),
+      meta: {
+        title: 'Artículo - Inmobiliaria'
       }
     },
     {

@@ -150,6 +150,32 @@ export interface AuthResponse {
   admin_url: string
 }
 
+// Blog types
+export interface Blog {
+  id: number
+  title: string
+  slug: string
+  content: string
+  excerpt: string
+  featured_image: string
+  featured_image_url: string
+  gallery: string[]
+  gallery_urls: string[]
+  author_name: string
+  author_avatar?: string
+  category: string
+  tags: string[]
+  published_at: string
+  reading_time?: number
+  views_count?: number
+  is_featured: boolean
+  status: 'published' | 'draft' | 'scheduled'
+  meta_title?: string
+  meta_description?: string
+  created_at: string
+  updated_at: string
+}
+
 // Search and filter types
 export interface PropertyFilters {
   project_id?: number
@@ -169,4 +195,16 @@ export interface ProjectFilters {
   location?: string
   min_price?: number
   max_price?: number
+}
+
+export interface BlogFilters {
+  category?: string
+  tag?: string
+  author?: string
+  featured?: boolean
+  page?: number
+  per_page?: number
+  include?: string
+  with?: string
+  fields?: string
 }

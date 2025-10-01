@@ -4,13 +4,15 @@ import type {
   Project, 
   Property, 
   Agent, 
+  Blog,
   FilterOptions,
   ContactForm,
   AppointmentForm,
   LoginForm,
   AuthResponse,
   PropertyFilters,
-  ProjectFilters
+  ProjectFilters,
+  BlogFilters
 } from '@/types'
 
 class ApiService {
@@ -82,6 +84,36 @@ class ApiService {
 
   async getAgent(id: number): Promise<Agent> {
     const response: AxiosResponse<Agent> = await this.client.get(`/public/agents/${id}`)
+    return response.data
+  }
+
+  // Blogs API
+  async getBlogs(filters?: BlogFilters): Promise<ApiResponse<Blog[]>> {
+    const response: AxiosResponse<ApiResponse<Blog[]>> = await this.client.get('/public/blogs', {
+      params: filters
+    })
+    return response.data
+  }
+
+  async getBlog(id: number): Promise<Blog>
+  async getBlog(slug: string): Promise<Blog>
+  async getBlog(idOrSlug: number | string): Promise<Blog> {
+    const response: AxiosResponse<Blog> = await this.client.get(`/public/blogs/${idOrSlug}`)
+    return response.data
+  }
+
+  async getFeaturedBlogs(): Promise<Blog[]> {
+    const response: AxiosResponse<Blog[]> = await this.client.get('/public/blogs/featured')
+    return response.data
+  }
+
+  async getBlogCategories(): Promise<string[]> {
+    const response: AxiosResponse<string[]> = await this.client.get('/public/blogs/categories')
+    return response.data
+  }
+
+  async getBlogTags(): Promise<string[]> {
+    const response: AxiosResponse<string[]> = await this.client.get('/public/blogs/tags')
     return response.data
   }
 
