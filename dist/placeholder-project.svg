@@ -1,0 +1,74 @@
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="skyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#87CEEB;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#E0F6FF;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="grassGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#90EE90;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#228B22;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Sky -->
+  <rect width="800" height="400" fill="url(#skyGrad)"/>
+  
+  <!-- Mountains -->
+  <polygon points="0,300 200,200 400,220 600,180 800,210 800,400 0,400" fill="#8FBC8F"/>
+  
+  <!-- Grass fields -->
+  <rect y="400" width="800" height="200" fill="url(#grassGrad)"/>
+  
+  <!-- Property lots -->
+  <rect x="100" y="450" width="80" height="60" fill="none" stroke="#25D366" stroke-width="3" stroke-dasharray="5,5"/>
+  <rect x="200" y="450" width="80" height="60" fill="none" stroke="#25D366" stroke-width="3" stroke-dasharray="5,5"/>
+  <rect x="300" y="450" width="80" height="60" fill="none" stroke="#25D366" stroke-width="3" stroke-dasharray="5,5"/>
+  <rect x="400" y="450" width="80" height="60" fill="none" stroke="#25D366" stroke-width="3" stroke-dasharray="5,5"/>
+  <rect x="500" y="450" width="80" height="60" fill="none" stroke="#25D366" stroke-width="3" stroke-dasharray="5,5"/>
+  <rect x="600" y="450" width="80" height="60" fill="none" stroke="#25D366" stroke-width="3" stroke-dasharray="5,5"/>
+  
+  <!-- Second row of lots -->
+  <rect x="150" y="530" width="80" height="60" fill="none" stroke="#20B858" stroke-width="3" stroke-dasharray="5,5"/>
+  <rect x="250" y="530" width="80" height="60" fill="none" stroke="#20B858" stroke-width="3" stroke-dasharray="5,5"/>
+  <rect x="350" y="530" width="80" height="60" fill="none" stroke="#20B858" stroke-width="3" stroke-dasharray="5,5"/>
+  <rect x="450" y="530" width="80" height="60" fill="none" stroke="#20B858" stroke-width="3" stroke-dasharray="5,5"/>
+  <rect x="550" y="530" width="80" height="60" fill="none" stroke="#20B858" stroke-width="3" stroke-dasharray="5,5"/>
+  
+  <!-- Trees scattered around -->
+  <circle cx="80" cy="420" r="20" fill="#228B22"/>
+  <rect x="75" y="420" width="10" height="25" fill="#8B4513"/>
+  
+  <circle cx="750" cy="430" r="25" fill="#32CD32"/>
+  <rect x="745" y="430" width="10" height="30" fill="#8B4513"/>
+  
+  <circle cx="350" cy="410" r="18" fill="#228B22"/>
+  <rect x="347" y="410" width="8" height="22" fill="#8B4513"/>
+  
+  <!-- Access road -->
+  <rect x="0" y="480" width="100" height="20" fill="#696969"/>
+  <rect x="680" y="480" width="120" height="20" fill="#696969"/>
+  
+  <!-- Sun -->
+  <circle cx="700" cy="100" r="40" fill="#FFD700"/>
+  
+  <!-- Clouds -->
+  <ellipse cx="150" cy="80" rx="30" ry="18" fill="white" opacity="0.8"/>
+  <ellipse cx="180" cy="80" rx="35" ry="22" fill="white" opacity="0.8"/>
+  <ellipse cx="165" cy="60" rx="25" ry="15" fill="white" opacity="0.8"/>
+  
+  <!-- Project title -->
+  <rect x="200" y="50" width="400" height="80" fill="rgba(0,0,0,0.7)" rx="10"/>
+  <text x="400" y="80" text-anchor="middle" fill="white" font-family="Arial" font-size="24" font-weight="bold">
+    Tierra Soñada
+  </text>
+  <text x="400" y="105" text-anchor="middle" fill="#90EE90" font-family="Arial" font-size="16">
+    Lotes Campestres Premium
+  </text>
+  
+  <!-- Lot labels -->
+  <text x="140" y="485" text-anchor="middle" fill="#25D366" font-family="Arial" font-size="12" font-weight="bold">A1</text>
+  <text x="240" y="485" text-anchor="middle" fill="#25D366" font-family="Arial" font-size="12" font-weight="bold">A2</text>
+  <text x="340" y="485" text-anchor="middle" fill="#25D366" font-family="Arial" font-size="12" font-weight="bold">A3</text>
+  <text x="190" y="565" text-anchor="middle" fill="#20B858" font-family="Arial" font-size="12" font-weight="bold">B1</text>
+  <text x="290" y="565" text-anchor="middle" fill="#20B858" font-family="Arial" font-size="12" font-weight="bold">B2</text>
+</svg>
