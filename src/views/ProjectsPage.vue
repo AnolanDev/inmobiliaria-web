@@ -150,7 +150,7 @@ const getImageUrl = (url: string): string => {
   if (!url) return "/placeholder-project.svg";
 
   // In development, convert absolute URLs to relative
-  if (import.meta.env.DEV && url.includes("app.tierrasonada.com")) {
+  if (url.includes("app.tierrasonada.com")) {
     return url
       .replace("https://app.tierrasonada.com", "")
       .replace("http://app.tierrasonada.com", "");

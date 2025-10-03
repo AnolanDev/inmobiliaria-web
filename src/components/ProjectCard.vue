@@ -138,12 +138,12 @@ interface Props {
 
 defineProps<Props>();
 
-// Helper function to convert absolute URLs to relative for development - same as ProjectsPage
+// Helper function to convert absolute URLs to relative for both development and production
 const getProxyImageUrl = (url: string | null | undefined): string => {
   if (!url) return "/placeholder-project.svg";
 
-  // In development, convert absolute URLs to relative
-  if (import.meta.env.DEV && url.includes("app.tierrasonada.com")) {
+  // Convert absolute URLs to relative for both dev and production
+  if (url.includes("app.tierrasonada.com")) {
     return url
       .replace("https://app.tierrasonada.com", "")
       .replace("http://app.tierrasonada.com", "");

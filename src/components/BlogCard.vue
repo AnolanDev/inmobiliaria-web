@@ -227,7 +227,7 @@ const blogImageUrl = computed(() => {
   if (!imageUrl) return "";
 
   // In development, convert absolute URLs to relative for proxy
-  if (import.meta.env.DEV && imageUrl.includes("app.tierrasonada.com")) {
+  if (imageUrl.includes("app.tierrasonada.com")) {
     return imageUrl
       .replace("https://app.tierrasonada.com", "")
       .replace("http://app.tierrasonada.com", "");

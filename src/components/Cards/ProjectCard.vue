@@ -276,8 +276,8 @@ const galleryCount = computed(() => {
 const getImageUrl = (url: string | null | undefined): string => {
   if (!url) return "/placeholder-project.svg";
 
-  // In development, convert absolute URLs to relative
-  if (import.meta.env.DEV && url.includes("app.tierrasonada.com")) {
+  // Convert absolute URLs to relative
+  if (url.includes("app.tierrasonada.com")) {
     const convertedUrl = url
       .replace("https://app.tierrasonada.com", "")
       .replace("http://app.tierrasonada.com", "");

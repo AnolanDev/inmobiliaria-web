@@ -163,7 +163,7 @@ const emit = defineEmits<{
 const getImageUrl = (url: string | null | undefined): string => {
   if (!url) return "/placeholder-project.svg";
   
-  if (import.meta.env.DEV && url.includes("app.tierrasonada.com")) {
+  if (url.includes("app.tierrasonada.com")) {
     const convertedUrl = url
       .replace("https://app.tierrasonada.com", "")
       .replace("http://app.tierrasonada.com", "");

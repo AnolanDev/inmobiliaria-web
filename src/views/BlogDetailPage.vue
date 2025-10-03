@@ -370,8 +370,8 @@ const getImageUrl = computed(() => {
     if (!url)
       return "https://via.placeholder.com/800x400/f3f4f6/6b7280?text=Blog+Image";
 
-    // In development, convert absolute URLs to relative for proxy
-    if (import.meta.env.DEV && url.includes("app.tierrasonada.com")) {
+    // Convert absolute URLs to relative for proxy
+    if (url.includes("app.tierrasonada.com")) {
       return url
         .replace("https://app.tierrasonada.com", "")
         .replace("http://app.tierrasonada.com", "");
