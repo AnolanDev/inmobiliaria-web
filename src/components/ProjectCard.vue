@@ -140,15 +140,23 @@ defineProps<Props>();
 
 // Helper function to convert absolute URLs to relative for both development and production
 const getProxyImageUrl = (url: string | null | undefined): string => {
-  if (!url) return "/placeholder-project.svg";
+  console.log('🔍 ProjectCard getProxyImageUrl input:', url);
+  
+  if (!url) {
+    console.log('❌ ProjectCard: No URL, using placeholder');
+    return "/placeholder-project.svg";
+  }
 
   // Convert absolute URLs to relative for both dev and production
   if (url.includes("app.tierrasonada.com")) {
-    return url
+    const convertedUrl = url
       .replace("https://app.tierrasonada.com", "")
       .replace("http://app.tierrasonada.com", "");
+    console.log('🔄 ProjectCard URL conversion:', url, '→', convertedUrl);
+    return convertedUrl;
   }
 
+  console.log('✅ ProjectCard: URL unchanged:', url);
   return url;
 };
 
