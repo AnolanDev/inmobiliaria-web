@@ -159,7 +159,7 @@ const emit = defineEmits<{
   'view-details': [];
 }>();
 
-// Smart URL conversion for development proxy
+// Smart URL conversion for both development and production
 const getImageUrl = (url: string | null | undefined): string => {
   console.log('🔍 FeatureCard getImageUrl input:', url);
   
@@ -168,11 +168,18 @@ const getImageUrl = (url: string | null | undefined): string => {
     return "/placeholder-project.svg";
   }
   
+  // In production, use original URLs directly - proxy doesn't work
+  if (import.meta.env.PROD) {
+    console.log('🚀 FeatureCard PRODUCTION: Using original URL:', url);
+    return url;
+  }
+  
+  // In development, use proxy conversion
   if (url.includes("app.tierrasonada.com")) {
     const convertedUrl = url
       .replace("https://app.tierrasonada.com", "")
       .replace("http://app.tierrasonada.com", "");
-    console.log('🔄 FeatureCard URL conversion:', url, '→', convertedUrl);
+    console.log('🔄 FeatureCard DEV: URL conversion:', url, '→', convertedUrl);
     return convertedUrl;
   }
   
