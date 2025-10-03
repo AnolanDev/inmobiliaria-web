@@ -2,43 +2,59 @@
   <div class="project-gallery-hero">
     <!-- Three project cards with images and info below -->
     <div class="projects-container">
-      <div 
-        v-for="(project, index) in visibleProjects" 
+      <div
+        v-for="(project, index) in visibleProjects"
         :key="project.id"
         class="project-card"
       >
         <!-- Image container with project click -->
         <div class="project-image-container" @click="openProjectModal(project)">
-          <img 
-            :src="getImageUrl(project.cover_image_url)" 
+          <img
+            :src="getImageUrl(project.cover_image_url)"
             :alt="project.name"
             class="project-image"
             loading="lazy"
           />
           <div class="image-overlay">
             <div class="project-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                <circle cx="12" cy="12" r="3"/>
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />
               </svg>
               <span>Ver Proyecto</span>
             </div>
           </div>
         </div>
-        
+
         <!-- Project information below image -->
         <div class="project-info-section" @click="openProjectModal(project)">
           <h2 class="project-title">{{ project.name }}</h2>
           <div class="project-details">
             <p class="project-type" v-if="project.type">{{ project.type }}</p>
-            <p class="project-location" v-if="project.city || project.state || project.location">
-              <svg class="location-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                <circle cx="12" cy="10" r="3"/>
+            <p
+              class="project-location"
+              v-if="project.city || project.state || project.location"
+            >
+              <svg
+                class="location-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                <circle cx="12" cy="10" r="3" />
               </svg>
               <span v-if="project.location">{{ project.location }}</span>
               <span v-else>
-                <span v-if="project.city">{{ project.city }}</span><span v-if="project.city && project.state">, </span><span v-if="project.state">{{ project.state }}</span>
+                <span v-if="project.city">{{ project.city }}</span
+                ><span v-if="project.city && project.state">, </span
+                ><span v-if="project.state">{{ project.state }}</span>
               </span>
             </p>
           </div>
@@ -47,31 +63,41 @@
     </div>
 
     <!-- Navigation arrows for rotating projects -->
-    <button 
+    <button
       v-if="projects.length > 3"
-      @click="rotateLeft" 
+      @click="rotateLeft"
       class="nav-arrow nav-left"
       aria-label="Proyectos anteriores"
     >
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M15 18l-6-6 6-6"/>
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <path d="M15 18l-6-6 6-6" />
       </svg>
     </button>
-    
-    <button 
+
+    <button
       v-if="projects.length > 3"
-      @click="rotateRight" 
+      @click="rotateRight"
       class="nav-arrow nav-right"
       aria-label="Proyectos siguientes"
     >
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M9 18l6-6-6-6"/>
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <path d="M9 18l6-6-6-6" />
       </svg>
     </button>
 
     <!-- Dots indicator -->
     <div class="dots-indicator" v-if="projects.length > 3">
-      <button 
+      <button
         v-for="(dot, index) in totalPages"
         :key="index"
         @click="goToPage(index, $event)"
@@ -81,21 +107,35 @@
     </div>
 
     <!-- Project Modal -->
-    <div v-if="projectModalOpen" class="project-modal" @click="closeProjectModal">
+    <div
+      v-if="projectModalOpen"
+      class="project-modal"
+      @click="closeProjectModal"
+    >
       <div class="modal-container" @click.stop>
         <!-- Modal Header -->
         <div class="modal-header">
           <div class="modal-back-navigation">
             <button @click="closeProjectModal" class="modal-back-btn">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M19 12H5M12 19l-7-7 7-7"/>
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M19 12H5M12 19l-7-7 7-7" />
               </svg>
               <span>Volver</span>
             </button>
           </div>
           <button @click="closeProjectModal" class="modal-close-btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M18 6L6 18M6 6l12 12"/>
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M18 6L6 18M6 6l12 12" />
             </svg>
           </button>
         </div>
@@ -108,49 +148,68 @@
               <!-- Project Image Gallery -->
               <div class="modal-project-image-section">
                 <div class="modal-main-image-container">
-                  <img 
-                    :src="getImageUrl(currentModalImage)" 
+                  <img
+                    :src="getImageUrl(currentModalImage)"
                     :alt="selectedProject?.name"
                     class="modal-project-main-image"
                   />
-                  
+
                   <!-- Image Navigation -->
-                  <button 
+                  <button
                     v-if="projectImages.length > 1"
-                    @click="prevImage" 
+                    @click="prevImage"
                     class="modal-image-nav-btn modal-image-nav-prev"
                   >
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M15 18l-6-6 6-6"/>
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path d="M15 18l-6-6 6-6" />
                     </svg>
                   </button>
-                  
-                  <button 
+
+                  <button
                     v-if="projectImages.length > 1"
-                    @click="nextImage" 
+                    @click="nextImage"
                     class="modal-image-nav-btn modal-image-nav-next"
                   >
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M9 18l6-6-6-6"/>
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path d="M9 18l6-6-6-6" />
                     </svg>
                   </button>
-                  
+
                   <!-- Image Counter -->
-                  <div v-if="projectImages.length > 1" class="modal-image-counter">
+                  <div
+                    v-if="projectImages.length > 1"
+                    class="modal-image-counter"
+                  >
                     {{ currentImageIndex + 1 }} / {{ projectImages.length }}
                   </div>
                 </div>
-                
+
                 <!-- Thumbnails -->
-                <div v-if="projectImages.length > 1" class="modal-thumbnails-container">
-                  <div 
-                    v-for="(image, index) in projectImages" 
+                <div
+                  v-if="projectImages.length > 1"
+                  class="modal-thumbnails-container"
+                >
+                  <div
+                    v-for="(image, index) in projectImages"
                     :key="index"
                     class="modal-thumbnail-item"
                     :class="{ active: currentImageIndex === index }"
                     @click="selectImage(index)"
                   >
-                    <img :src="getImageUrl(image)" :alt="`${selectedProject?.name} - ${index + 1}`" />
+                    <img
+                      :src="getImageUrl(image)"
+                      :alt="`${selectedProject?.name} - ${index + 1}`"
+                    />
                   </div>
                 </div>
               </div>
@@ -160,46 +219,76 @@
                 <div class="professional-content">
                   <!-- Project Title -->
                   <div class="project-title-section">
-                    <h1 class="professional-title">{{ selectedProject?.name }}</h1>
+                    <h1 class="professional-title">
+                      {{ selectedProject?.name }}
+                    </h1>
                     <div class="title-divider"></div>
                   </div>
-                  
+
                   <!-- Project Brief Description -->
-                  <div class="project-description-brief" v-if="selectedProject?.description">
-                    <p>{{ selectedProject.description.length > 150 ? selectedProject.description.substring(0, 150) + '...' : selectedProject.description }}</p>
+                  <div
+                    class="project-description-brief"
+                    v-if="selectedProject?.description"
+                  >
+                    <p>
+                      {{
+                        selectedProject.description.length > 150
+                          ? selectedProject.description.substring(0, 150) +
+                            "..."
+                          : selectedProject.description
+                      }}
+                    </p>
                   </div>
-                  
+
                   <!-- Project Details - Formato como las cards -->
                   <div class="project-details-card-format">
                     <!-- Tipo de Proyecto -->
                     <div class="project-type-display">
-                      {{ selectedProject?.type || 'Turísticos' }}
+                      {{ selectedProject?.type || "Turísticos" }}
                     </div>
-                    
+
                     <!-- Ubicación completa -->
                     <div class="project-location-display">
-                      <svg class="location-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                        <circle cx="12" cy="10" r="3"/>
+                      <svg
+                        class="location-icon"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                      >
+                        <path
+                          d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"
+                        />
+                        <circle cx="12" cy="10" r="3" />
                       </svg>
-                      <span v-if="selectedProject?.location">{{ selectedProject.location }}</span>
+                      <span v-if="selectedProject?.location">{{
+                        selectedProject.location
+                      }}</span>
                       <span v-else-if="selectedProject?.city">
-                        {{ selectedProject.city }}<span v-if="selectedProject?.state">, {{ selectedProject.state }}</span>
+                        {{ selectedProject.city
+                        }}<span v-if="selectedProject?.state"
+                          >, {{ selectedProject.state }}</span
+                        >
                       </span>
                       <span v-else>Ubicación por definir</span>
                     </div>
                   </div>
-                  
+
                   <!-- CTA Section -->
                   <div class="professional-cta">
-                    <button 
+                    <button
                       @click="viewFullProject"
                       class="professional-button-elegant"
                     >
                       <span class="button-text">Explorar Proyecto</span>
                       <div class="button-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                          <path d="M5 12h14M12 5l7 7-7 7"/>
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="1.5"
+                        >
+                          <path d="M5 12h14M12 5l7 7-7 7" />
                         </svg>
                       </div>
                     </button>
@@ -208,30 +297,52 @@
               </div>
             </div>
           </section>
-          
+
           <!-- Project Description -->
-          <section class="modal-project-description-section" v-if="selectedProject?.description">
+          <section
+            class="modal-project-description-section"
+            v-if="selectedProject?.description"
+          >
             <div class="modal-description-container">
-              <h2 class="modal-section-title">Sobre {{ selectedProject.name }}</h2>
+              <h2 class="modal-section-title">
+                Sobre {{ selectedProject.name }}
+              </h2>
               <div class="modal-description-content">
-                <p class="modal-description-text">{{ selectedProject.description }}</p>
+                <p class="modal-description-text">
+                  {{ selectedProject.description }}
+                </p>
               </div>
             </div>
           </section>
 
           <!-- Related Properties -->
-          <section class="modal-properties-section" v-if="selectedProject?.properties && selectedProject.properties.length > 0">
+          <section
+            class="modal-properties-section"
+            v-if="
+              selectedProject?.properties &&
+              selectedProject.properties.length > 0
+            "
+          >
             <div class="modal-properties-container">
-              <h2 class="modal-section-title">Propiedades del Proyecto ({{ selectedProject.properties.length }})</h2>
+              <h2 class="modal-section-title">
+                Propiedades del Proyecto ({{
+                  selectedProject.properties.length
+                }})
+              </h2>
               <div class="modal-properties-grid">
-                <div 
-                  v-for="property in selectedProject.properties.slice(0, 6)" 
+                <div
+                  v-for="property in selectedProject.properties.slice(0, 6)"
                   :key="property.id"
                   class="modal-property-card"
                 >
                   <div class="property-image-container">
-                    <img 
-                      :src="getImageUrl(property.cover_image_url || '/placeholder-property.svg')" 
+                    <img
+                      :src="
+                        getImageUrl(
+                          property.cover_image_url ||
+                            '/placeholder-property.svg',
+                        )
+                      "
                       :alt="property.title"
                       class="property-image"
                     />
@@ -241,31 +352,52 @@
                   </div>
                   <div class="property-info">
                     <h4 class="property-title">{{ property.title }}</h4>
-                    <p class="property-address">{{ property.address }}, {{ property.city }}</p>
+                    <p class="property-address">
+                      {{ property.address }}, {{ property.city }}
+                    </p>
                     <div class="property-features">
                       <span class="feature" v-if="property.bedrooms">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                          <path d="M2 4v16"/>
-                          <path d="M2 8h18a2 2 0 0 1 2 2v10"/>
-                          <path d="M2 17h20"/>
-                          <path d="M6 8v9"/>
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                        >
+                          <path d="M2 4v16" />
+                          <path d="M2 8h18a2 2 0 0 1 2 2v10" />
+                          <path d="M2 17h20" />
+                          <path d="M6 8v9" />
                         </svg>
                         {{ property.bedrooms }}
                       </span>
                       <span class="feature" v-if="property.bathrooms">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                          <path d="M9 6 6.5 3.5a1.5 1.5 0 0 0-1-.5C4.683 3 4 3.683 4 4.5V17a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5"/>
-                          <line x1="10" x2="8" y1="5" y2="7"/>
-                          <line x1="2" x2="22" y1="12" y2="12"/>
-                          <line x1="7" x2="7" y1="19" y2="21"/>
-                          <line x1="17" x2="17" y1="19" y2="21"/>
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                        >
+                          <path
+                            d="M9 6 6.5 3.5a1.5 1.5 0 0 0-1-.5C4.683 3 4 3.683 4 4.5V17a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5"
+                          />
+                          <line x1="10" x2="8" y1="5" y2="7" />
+                          <line x1="2" x2="22" y1="12" y2="12" />
+                          <line x1="7" x2="7" y1="19" y2="21" />
+                          <line x1="17" x2="17" y1="19" y2="21" />
                         </svg>
                         {{ property.bathrooms }}
                       </span>
                       <span class="feature" v-if="property.area">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                          <circle cx="12" cy="10" r="3"/>
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                        >
+                          <path
+                            d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"
+                          />
+                          <circle cx="12" cy="10" r="3" />
                         </svg>
                         {{ property.area }}m²
                       </span>
@@ -273,11 +405,18 @@
                   </div>
                 </div>
               </div>
-              <div class="modal-properties-actions" v-if="selectedProject.properties.length > 6">
+              <div
+                class="modal-properties-actions"
+                v-if="selectedProject.properties.length > 6"
+              >
                 <p class="properties-note">
-                  Mostrando 6 de {{ selectedProject.properties.length }} propiedades
+                  Mostrando 6 de
+                  {{ selectedProject.properties.length }} propiedades
                 </p>
-                <button @click="$emit('viewProject', selectedProject?.id)" class="btn-view-all-properties">
+                <button
+                  @click="$emit('viewProject', selectedProject?.id)"
+                  class="btn-view-all-properties"
+                >
                   Ver Todas las Propiedades
                 </button>
               </div>
@@ -296,8 +435,8 @@
 
     <!-- Interactive particles (optional) -->
     <div class="particles-container" v-if="showParticles">
-      <div 
-        v-for="n in 15" 
+      <div
+        v-for="n in 15"
         :key="n"
         class="particle"
         :style="getParticleStyle(n)"
@@ -307,229 +446,233 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
-import { useRouter } from 'vue-router'
-import type { Project } from '@/types'
+import { ref, onMounted, computed } from "vue";
+import { useRouter } from "vue-router";
+import type { Project } from "@/types";
 
 interface Props {
-  projects: Project[]
-  showParticles?: boolean
+  projects: Project[];
+  showParticles?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  showParticles: true
-})
+  showParticles: true,
+});
 
 const emit = defineEmits<{
-  viewProject: [id: number]
-  viewAllProjects: []
-}>()
+  viewProject: [id: number];
+  viewAllProjects: [];
+}>();
 
-const router = useRouter()
-const currentPage = ref(0)
-const selectedProject = ref<Project | null>(null)
-const projectModalOpen = ref(false)
-const currentModalImage = ref('')
-const currentImageIndex = ref(0)
-const projectImages = ref<string[]>([])
+const router = useRouter();
+const currentPage = ref(0);
+const selectedProject = ref<Project | null>(null);
+const projectModalOpen = ref(false);
+const currentModalImage = ref("");
+const currentImageIndex = ref(0);
+const projectImages = ref<string[]>([]);
 
 const getImageUrl = (url: string): string => {
-  if (!url) return '/placeholder-project.svg'
-  
-  if (import.meta.env.DEV && url.includes('app.tierrasonada.com')) {
-    return url.replace('https://app.tierrasonada.com', '').replace('http://app.tierrasonada.com', '')
+  if (!url) return "/placeholder-project.svg";
+
+  if (import.meta.env.DEV && url.includes("app.tierrasonada.com")) {
+    return url
+      .replace("https://app.tierrasonada.com", "")
+      .replace("http://app.tierrasonada.com", "");
   }
-  
-  return url
-}
+
+  return url;
+};
 
 const visibleProjects = computed(() => {
-  const startIndex = currentPage.value * 3
-  return props.projects.slice(startIndex, startIndex + 3)
-})
+  const startIndex = currentPage.value * 3;
+  return props.projects.slice(startIndex, startIndex + 3);
+});
 
 const totalPages = computed(() => {
-  return Math.ceil(props.projects.length / 3)
-})
+  return Math.ceil(props.projects.length / 3);
+});
 
 const rotateLeft = (event?: Event) => {
   // Stop event propagation to prevent accidental card clicks
   if (event) {
-    event.stopPropagation()
-    event.preventDefault()
+    event.stopPropagation();
+    event.preventDefault();
   }
-  
+
   // Pause rotation temporarily to prevent DOM reconciliation issues
   if (autoRotateTimer) {
-    clearInterval(autoRotateTimer)
-    autoRotateTimer = null
+    clearInterval(autoRotateTimer);
+    autoRotateTimer = null;
   }
-  
+
   if (currentPage.value > 0) {
-    currentPage.value--
+    currentPage.value--;
   } else {
-    currentPage.value = totalPages.value - 1
+    currentPage.value = totalPages.value - 1;
   }
-  
+
   // Resume rotation after DOM updates
   setTimeout(() => {
-    startAutoRotation()
-  }, 100)
-}
+    startAutoRotation();
+  }, 100);
+};
 
 const rotateRight = () => {
   // Pause rotation temporarily to prevent DOM reconciliation issues
   if (autoRotateTimer) {
-    clearInterval(autoRotateTimer)
-    autoRotateTimer = null
+    clearInterval(autoRotateTimer);
+    autoRotateTimer = null;
   }
-  
+
   if (currentPage.value < totalPages.value - 1) {
-    currentPage.value++
+    currentPage.value++;
   } else {
-    currentPage.value = 0
+    currentPage.value = 0;
   }
-  
+
   // Resume rotation after DOM updates
   setTimeout(() => {
-    startAutoRotation()
-  }, 100)
-}
+    startAutoRotation();
+  }, 100);
+};
 
 const goToPage = (pageIndex: number, event?: Event) => {
   // Stop event propagation to prevent accidental card clicks
   if (event) {
-    event.stopPropagation()
-    event.preventDefault()
+    event.stopPropagation();
+    event.preventDefault();
   }
-  
+
   // Pause rotation when user manually navigates
   if (autoRotateTimer) {
-    clearInterval(autoRotateTimer)
-    autoRotateTimer = null
+    clearInterval(autoRotateTimer);
+    autoRotateTimer = null;
   }
-  
-  currentPage.value = pageIndex
-  
+
+  currentPage.value = pageIndex;
+
   // Resume rotation after user interaction
   setTimeout(() => {
-    startAutoRotation()
-  }, 100)
-}
+    startAutoRotation();
+  }, 100);
+};
 
 const openProjectModal = (project: Project) => {
-  selectedProject.value = project
+  selectedProject.value = project;
   // Set up project images array (cover image + gallery images)
-  const galleryImages = project.gallery_urls || project.gallery || []
-  projectImages.value = [project.cover_image_url, ...galleryImages].filter(Boolean)
-  currentModalImage.value = project.cover_image_url
-  currentImageIndex.value = 0
-  projectModalOpen.value = true
-  document.body.style.overflow = 'hidden'
-}
+  const galleryImages = project.gallery_urls || project.gallery || [];
+  projectImages.value = [project.cover_image_url, ...galleryImages].filter(
+    Boolean,
+  );
+  currentModalImage.value = project.cover_image_url;
+  currentImageIndex.value = 0;
+  projectModalOpen.value = true;
+  document.body.style.overflow = "hidden";
+};
 
 const closeProjectModal = () => {
-  projectModalOpen.value = false
-  selectedProject.value = null
-  document.body.style.overflow = 'unset'
-}
+  projectModalOpen.value = false;
+  selectedProject.value = null;
+  document.body.style.overflow = "unset";
+};
 
 const nextImage = () => {
   if (currentImageIndex.value < projectImages.value.length - 1) {
-    currentImageIndex.value++
-    currentModalImage.value = projectImages.value[currentImageIndex.value]
+    currentImageIndex.value++;
+    currentModalImage.value = projectImages.value[currentImageIndex.value];
   }
-}
+};
 
 const prevImage = () => {
   if (currentImageIndex.value > 0) {
-    currentImageIndex.value--
-    currentModalImage.value = projectImages.value[currentImageIndex.value]
+    currentImageIndex.value--;
+    currentModalImage.value = projectImages.value[currentImageIndex.value];
   }
-}
+};
 
 const selectImage = (index: number) => {
-  currentImageIndex.value = index
-  currentModalImage.value = projectImages.value[index]
-}
+  currentImageIndex.value = index;
+  currentModalImage.value = projectImages.value[index];
+};
 
 const viewFullProject = () => {
   if (selectedProject.value) {
-    const projectId = selectedProject.value.id
-    closeProjectModal()
-    router.push(`/proyectos/${projectId}`)
+    const projectId = selectedProject.value.id;
+    closeProjectModal();
+    router.push(`/proyectos/${projectId}`);
   }
-}
+};
 
 const viewAllProjects = () => {
-  closeProjectModal()
-  router.push('/proyectos')
-}
+  closeProjectModal();
+  router.push("/proyectos");
+};
 
 // Format date function
 const formatDate = (dateString: string): string => {
-  const date = new Date(dateString)
-  return date.toLocaleDateString('es-ES', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  })
-}
+  const date = new Date(dateString);
+  return date.toLocaleDateString("es-ES", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+};
 
 // Format price function
 const formatPrice = (price: number): string => {
-  if (!price) return 'Precio no disponible'
-  
-  return new Intl.NumberFormat('es-CO', {
-    style: 'currency',
-    currency: 'COP',
+  if (!price) return "Precio no disponible";
+
+  return new Intl.NumberFormat("es-CO", {
+    style: "currency",
+    currency: "COP",
     minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  }).format(price)
-}
+    maximumFractionDigits: 0,
+  }).format(price);
+};
 
 const getParticleStyle = (index: number) => {
   const random = (seed: number) => {
-    const x = Math.sin(seed) * 10000
-    return x - Math.floor(x)
-  }
-  
+    const x = Math.sin(seed) * 10000;
+    return x - Math.floor(x);
+  };
+
   return {
     left: `${random(index * 3) * 100}%`,
     top: `${random(index * 5) * 100}%`,
     animationDelay: `${random(index * 7) * 4}s`,
-    animationDuration: `${3 + random(index * 11) * 4}s`
-  }
-}
+    animationDuration: `${3 + random(index * 11) * 4}s`,
+  };
+};
 
 // Auto rotation
-let autoRotateTimer: NodeJS.Timeout | null = null
+let autoRotateTimer: NodeJS.Timeout | null = null;
 
 const startAutoRotation = () => {
-  if (props.projects.length <= 3) return
-  
+  if (props.projects.length <= 3) return;
+
   autoRotateTimer = setInterval(() => {
     // Only rotate if modal is not open
     if (!projectModalOpen.value) {
-      rotateRight()
+      rotateRight();
     }
-  }, 6000)
-}
+  }, 6000);
+};
 
 const stopAutoRotation = () => {
   if (autoRotateTimer) {
-    clearInterval(autoRotateTimer)
-    autoRotateTimer = null
+    clearInterval(autoRotateTimer);
+    autoRotateTimer = null;
   }
-}
+};
 
 onMounted(() => {
-  startAutoRotation()
-})
+  startAutoRotation();
+});
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Montserrat:wght@300;400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Montserrat:wght@300;400;500;600;700&display=swap");
 
 .project-gallery-hero {
   width: calc(100vw - 80px);
@@ -629,7 +772,11 @@ onMounted(() => {
 .image-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(30, 30, 50, 0.8));
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.7),
+    rgba(30, 30, 50, 0.8)
+  );
   display: flex;
   align-items: center;
   justify-content: center;
@@ -649,7 +796,7 @@ onMounted(() => {
   align-items: center;
   gap: 10px;
   color: white;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 0.9rem;
   font-weight: 600;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
@@ -683,7 +830,7 @@ onMounted(() => {
 }
 
 .project-title {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: clamp(1rem, 3vw, 1.2rem);
   font-weight: 500;
   margin-bottom: clamp(0.5rem, 2vw, 0.75rem);
@@ -698,7 +845,7 @@ onMounted(() => {
 }
 
 .project-description {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 0.9rem;
   line-height: 1.6;
   margin-bottom: 20px;
@@ -723,7 +870,7 @@ onMounted(() => {
 }
 
 .project-type {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: clamp(0.75rem, 2vw, 0.85rem);
   font-weight: 500;
   color: #667eea;
@@ -737,7 +884,7 @@ onMounted(() => {
 }
 
 .project-location {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: clamp(0.75rem, 2vw, 0.85rem);
   font-weight: 400;
   color: #6c757d;
@@ -757,7 +904,6 @@ onMounted(() => {
   height: 14px;
   flex-shrink: 0;
 }
-
 
 /* Navigation arrows */
 .nav-arrow {
@@ -881,7 +1027,7 @@ onMounted(() => {
 }
 
 .modal-title {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 1.8rem;
   font-weight: 500;
   color: white;
@@ -901,7 +1047,8 @@ onMounted(() => {
   align-items: center;
 }
 
-.modal-back-btn, .modal-close-btn {
+.modal-back-btn,
+.modal-close-btn {
   background: rgba(0, 0, 0, 0.05);
   border: 2px solid rgba(0, 0, 0, 0.1);
   color: #2c3e50;
@@ -912,7 +1059,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-weight: 500;
   backdrop-filter: blur(10px);
   position: relative;
@@ -936,14 +1083,16 @@ onMounted(() => {
   min-height: 40px;
 }
 
-.modal-back-btn:hover, .modal-close-btn:hover {
+.modal-back-btn:hover,
+.modal-close-btn:hover {
   background: rgba(102, 126, 234, 0.1);
   border-color: rgba(102, 126, 234, 0.3);
   color: #667eea;
   transform: scale(1.05);
 }
 
-.modal-back-btn svg, .modal-close-btn svg {
+.modal-back-btn svg,
+.modal-close-btn svg {
   width: 18px;
   height: 18px;
 }
@@ -1047,7 +1196,7 @@ onMounted(() => {
   color: white;
   padding: 8px 16px;
   border-radius: 20px;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 0.85rem;
   font-weight: 500;
   backdrop-filter: blur(10px);
@@ -1119,7 +1268,7 @@ onMounted(() => {
 }
 
 .professional-title {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: clamp(2.2rem, 4vw, 3rem);
   font-weight: 300;
   color: #1a1a1a;
@@ -1144,7 +1293,7 @@ onMounted(() => {
 }
 
 .project-description-brief p {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 1rem;
   font-weight: 300;
   color: #666666;
@@ -1164,7 +1313,7 @@ onMounted(() => {
 }
 
 .project-type-display {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: clamp(0.9rem, 2.5vw, 1rem);
   font-weight: 500;
   color: #667eea;
@@ -1175,7 +1324,7 @@ onMounted(() => {
 }
 
 .project-location-display {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: clamp(0.9rem, 2.5vw, 1rem);
   font-weight: 400;
   color: #6c757d;
@@ -1208,7 +1357,7 @@ onMounted(() => {
   color: #ffffff;
   border: 2px solid transparent;
   border-radius: 8px;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   position: relative;
@@ -1216,13 +1365,18 @@ onMounted(() => {
 }
 
 .professional-button-elegant::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
   transition: left 0.6s ease;
 }
 
@@ -1323,7 +1477,7 @@ onMounted(() => {
   .professional-button-elegant {
     padding: 18px 24px;
   }
-  
+
   .button-text {
     font-size: 1rem;
   }
@@ -1345,7 +1499,7 @@ onMounted(() => {
 }
 
 .modal-project-name {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 2rem;
   font-weight: 500;
   color: #2c3e50;
@@ -1361,11 +1515,15 @@ onMounted(() => {
 
 .modal-project-type,
 .modal-project-status {
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
+  background: linear-gradient(
+    135deg,
+    rgba(102, 126, 234, 0.2),
+    rgba(118, 75, 162, 0.2)
+  );
   color: rgba(102, 126, 234, 0.9);
   padding: 6px 16px;
   border-radius: 20px;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 0.8rem;
   font-weight: 600;
   text-transform: uppercase;
@@ -1375,7 +1533,11 @@ onMounted(() => {
 }
 
 .modal-project-status {
-  background: linear-gradient(135deg, rgba(40, 167, 69, 0.2), rgba(32, 134, 55, 0.2));
+  background: linear-gradient(
+    135deg,
+    rgba(40, 167, 69, 0.2),
+    rgba(32, 134, 55, 0.2)
+  );
   color: rgba(40, 167, 69, 0.9);
   border-color: rgba(40, 167, 69, 0.3);
 }
@@ -1420,7 +1582,7 @@ onMounted(() => {
 }
 
 .modal-detail-label {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 0.8rem;
   font-weight: 600;
   color: rgba(102, 126, 234, 0.9);
@@ -1429,7 +1591,7 @@ onMounted(() => {
 }
 
 .modal-detail-value {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 1rem;
   font-weight: 500;
   color: #2c3e50;
@@ -1449,7 +1611,7 @@ onMounted(() => {
 }
 
 .modal-section-title {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 1.5rem;
   font-weight: 500;
   color: #2c3e50;
@@ -1462,7 +1624,7 @@ onMounted(() => {
 }
 
 .modal-description-text {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 1.1rem;
   line-height: 1.6;
   color: #495057;
@@ -1477,7 +1639,7 @@ onMounted(() => {
 }
 
 .modal-section-subtitle {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 1.2rem;
   font-weight: 500;
   color: rgba(102, 126, 234, 0.9);
@@ -1519,7 +1681,7 @@ onMounted(() => {
 }
 
 .agent-name {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 1.1rem;
   font-weight: 600;
   color: #2c3e50;
@@ -1527,7 +1689,7 @@ onMounted(() => {
 }
 
 .agent-type {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 0.85rem;
   color: rgba(102, 126, 234, 0.8);
   font-weight: 500;
@@ -1542,22 +1704,25 @@ onMounted(() => {
   gap: 8px;
 }
 
-.agent-phone, .agent-email {
+.agent-phone,
+.agent-email {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 0.9rem;
   color: #495057;
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
-.agent-phone:hover, .agent-email:hover {
+.agent-phone:hover,
+.agent-email:hover {
   color: rgba(102, 126, 234, 0.9);
 }
 
-.agent-phone svg, .agent-email svg {
+.agent-phone svg,
+.agent-email svg {
   width: 16px;
   height: 16px;
   flex-shrink: 0;
@@ -1625,7 +1790,7 @@ onMounted(() => {
   color: white;
   padding: 6px 12px;
   border-radius: 20px;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 0.85rem;
   font-weight: 600;
   backdrop-filter: blur(10px);
@@ -1637,7 +1802,7 @@ onMounted(() => {
 }
 
 .property-title {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 1rem;
   font-weight: 600;
   color: #2c3e50;
@@ -1646,7 +1811,7 @@ onMounted(() => {
 }
 
 .property-address {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 0.85rem;
   color: #6c757d;
   margin: 0 0 12px 0;
@@ -1663,7 +1828,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   gap: 5px;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 0.8rem;
   color: rgba(102, 126, 234, 0.9);
   font-weight: 500;
@@ -1683,7 +1848,7 @@ onMounted(() => {
 }
 
 .properties-note {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 0.9rem;
   color: #6c757d;
   margin: 0 0 15px 0;
@@ -1691,12 +1856,16 @@ onMounted(() => {
 }
 
 .btn-view-all-properties {
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
+  background: linear-gradient(
+    135deg,
+    rgba(102, 126, 234, 0.2),
+    rgba(118, 75, 162, 0.2)
+  );
   border: 2px solid rgba(102, 126, 234, 0.4);
   color: rgba(102, 126, 234, 0.9);
   padding: 12px 24px;
   border-radius: 25px;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-weight: 600;
   font-size: 0.9rem;
   cursor: pointer;
@@ -1705,7 +1874,11 @@ onMounted(() => {
 }
 
 .btn-view-all-properties:hover {
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.3));
+  background: linear-gradient(
+    135deg,
+    rgba(102, 126, 234, 0.3),
+    rgba(118, 75, 162, 0.3)
+  );
   border-color: rgba(102, 126, 234, 0.6);
   color: white;
   transform: translateY(-2px);
@@ -1713,7 +1886,7 @@ onMounted(() => {
 }
 
 .project-full-description h3 {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 1.3rem;
   font-weight: 500;
   margin-bottom: 15px;
@@ -1721,7 +1894,7 @@ onMounted(() => {
 }
 
 .project-full-description p {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 1rem;
   line-height: 1.6;
   margin-bottom: 25px;
@@ -1729,7 +1902,7 @@ onMounted(() => {
 }
 
 .project-details h3 {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 1.3rem;
   font-weight: 500;
   margin-bottom: 15px;
@@ -1752,14 +1925,14 @@ onMounted(() => {
 }
 
 .detail-label {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-weight: 600;
   color: rgba(102, 126, 234, 0.9);
   font-size: 0.9rem;
 }
 
 .detail-value {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   color: rgba(255, 255, 255, 0.9);
   font-size: 0.9rem;
 }
@@ -1771,10 +1944,11 @@ onMounted(() => {
   margin-top: auto;
 }
 
-.btn-modal-primary, .btn-modal-secondary {
+.btn-modal-primary,
+.btn-modal-secondary {
   padding: 14px 28px;
   border-radius: 12px;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-weight: 600;
   font-size: 0.95rem;
   border: none;
@@ -1806,18 +1980,22 @@ onMounted(() => {
 }
 
 @keyframes modalFadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes modalSlideIn {
-  from { 
-    transform: scale(0.9) translateY(20px); 
-    opacity: 0; 
+  from {
+    transform: scale(0.9) translateY(20px);
+    opacity: 0;
   }
-  to { 
-    transform: scale(1) translateY(0); 
-    opacity: 1; 
+  to {
+    transform: scale(1) translateY(0);
+    opacity: 1;
   }
 }
 
@@ -1831,7 +2009,11 @@ onMounted(() => {
 .floating-element {
   position: absolute;
   border-radius: 50%;
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+  background: linear-gradient(
+    135deg,
+    rgba(102, 126, 234, 0.1),
+    rgba(118, 75, 162, 0.1)
+  );
   animation: float 8s ease-in-out infinite;
 }
 
@@ -1860,9 +2042,16 @@ onMounted(() => {
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  33% { transform: translateY(-30px) rotate(120deg); }
-  66% { transform: translateY(15px) rotate(240deg); }
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  33% {
+    transform: translateY(-30px) rotate(120deg);
+  }
+  66% {
+    transform: translateY(15px) rotate(240deg);
+  }
 }
 
 .particles-container {
@@ -1882,7 +2071,7 @@ onMounted(() => {
 }
 
 @keyframes particle-float {
-  0% { 
+  0% {
     transform: translateY(0) scale(0);
     opacity: 0;
   }
@@ -1893,7 +2082,7 @@ onMounted(() => {
   90% {
     opacity: 1;
   }
-  100% { 
+  100% {
     transform: translateY(-100vh) scale(0);
     opacity: 0;
   }
@@ -1905,31 +2094,31 @@ onMounted(() => {
     flex-direction: row;
     overflow: hidden;
   }
-  
+
   .modal-project-hero {
     flex: 1;
     min-height: auto;
     height: 100%;
   }
-  
+
   .modal-hero-content {
     flex-direction: row;
     height: 100%;
   }
-  
+
   .modal-project-image-section {
     flex: 1.2;
   }
-  
+
   .modal-project-info-section {
     flex: 0.8;
     overflow-y: auto;
   }
-  
+
   .modal-project-description-section {
     display: none; /* Hide in horizontal layout to save space */
   }
-  
+
   .modal-properties-section {
     display: none; /* Hide in horizontal layout to save space */
   }
@@ -1943,24 +2132,24 @@ onMounted(() => {
     background: rgba(0, 0, 0, 0.7);
     border: 2px solid rgba(255, 255, 255, 0.8);
   }
-  
+
   .modal-image-nav-btn:active {
     background: rgba(0, 0, 0, 0.9);
     transform: translateY(-50%) scale(0.95);
   }
-  
+
   .modal-thumbnails-container {
     padding: 15px;
     border-radius: 20px;
     background: rgba(0, 0, 0, 0.8);
   }
-  
+
   .modal-thumbnail-item {
     width: 70px;
     height: 70px;
     border-radius: 12px;
   }
-  
+
   .modal-image-counter {
     padding: 10px 16px;
     font-size: 0.9rem;
@@ -2021,138 +2210,140 @@ onMounted(() => {
     margin-right: 20px;
     padding: 30px 0;
   }
-  
+
   .projects-container {
     flex-direction: column;
     padding: 0 20px;
     gap: 40px;
   }
-  
+
   .project-card {
     max-width: 380px;
     margin: 0 auto;
     min-height: 420px;
   }
-  
+
   .project-image-container {
     min-height: 240px;
   }
-  
+
   .project-info-section {
     padding: 0;
   }
-  
+
   .project-title {
     font-size: 1.3rem;
   }
-  
+
   .project-description {
     font-size: 0.95rem;
     padding: 14px 18px;
   }
-  
-  
+
   .nav-arrow {
     display: none;
   }
-  
+
   .dots-indicator {
     bottom: 15px;
   }
-  
+
   .modal-container {
     width: min(95vw, 600px);
     height: min(calc(95vh - 80px), 800px);
     max-height: calc(95vh - 80px);
   }
-  
+
   .modal-content-wrapper {
     flex-direction: column;
     overflow-y: auto;
   }
-  
+
   .modal-project-hero {
     flex-direction: column;
     min-height: auto;
   }
-  
+
   .modal-hero-content {
     flex-direction: column;
   }
-  
+
   .modal-project-image-section {
     flex: none;
     min-height: 300px;
   }
-  
+
   .modal-main-image-container {
     min-height: 250px;
   }
-  
+
   .modal-project-info-section {
     flex: none;
     padding: 20px 15px;
   }
-  
+
   .modal-project-name {
     font-size: 1.4rem;
   }
-  
+
   .modal-project-description-section {
     padding: 20px 15px;
   }
-  
+
   .modal-properties-section {
     padding: 20px 15px;
   }
-  
+
   .modal-title {
     font-size: 1.4rem;
   }
-  
-  .project-full-description h3, .project-details h3 {
+
+  .project-full-description h3,
+  .project-details h3 {
     font-size: 1.1rem;
   }
-  
+
   .project-full-description p {
     font-size: 0.9rem;
   }
-  
+
   .modal-actions {
     flex-direction: column;
     gap: 12px;
   }
-  
-  .btn-modal-primary, .btn-modal-secondary {
+
+  .btn-modal-primary,
+  .btn-modal-secondary {
     width: 100%;
     padding: 16px;
     font-size: 1rem;
   }
-  
+
   .modal-header {
     padding: 15px 20px;
     min-height: 70px;
     overflow: visible;
   }
-  
+
   .modal-back-btn span {
     display: none;
   }
-  
-  .modal-back-btn, .modal-close-btn {
+
+  .modal-back-btn,
+  .modal-close-btn {
     z-index: 110;
     position: relative;
   }
-  
+
   .modal-back-navigation {
     z-index: 110;
   }
-  
+
   .modal-project-badges {
     justify-content: center;
     margin-bottom: 20px;
   }
-  
+
   .modal-project-details-grid {
     gap: 15px;
   }
@@ -2165,34 +2356,34 @@ onMounted(() => {
     height: min(calc(90vh - 80px), 700px);
     max-height: calc(90vh - 80px);
   }
-  
+
   .modal-hero-content {
     flex-direction: column;
   }
-  
+
   .modal-project-image-section {
     flex: none;
     min-height: 400px;
   }
-  
+
   .modal-project-info-section {
     flex: none;
     padding: 25px 20px;
   }
-  
+
   .modal-properties-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 18px;
   }
-  
+
   .modal-project-name {
     font-size: 1.6rem;
   }
-  
+
   .modal-section-title {
     font-size: 1.4rem;
   }
-  
+
   .modal-description-text {
     font-size: 1.05rem;
   }
@@ -2204,137 +2395,136 @@ onMounted(() => {
     margin-left: calc(-50vw + 50% + 10px);
     margin-right: 10px;
   }
-  
+
   .projects-container {
     padding: 0 10px;
     gap: 25px;
   }
-  
+
   .project-card {
     max-width: 100%;
     min-height: 400px;
   }
-  
+
   .project-image-container {
     min-height: 220px;
   }
-  
+
   .project-info-section {
     padding: 0;
   }
-  
+
   .project-title {
     font-size: 1.2rem;
   }
-  
+
   .project-description {
     font-size: 0.9rem;
     padding: 12px 16px;
     line-height: 1.6;
   }
-  
+
   .modal-container {
     width: min(98vw, 400px);
     height: min(calc(98vh - 80px), 700px);
     max-height: calc(98vh - 80px);
     border-radius: 12px;
   }
-  
+
   .modal-project-info-section {
     padding: 15px 10px;
   }
-  
+
   .modal-project-name {
     font-size: 1.2rem;
     text-align: center;
   }
-  
+
   .modal-section-title {
     font-size: 1.1rem;
   }
-  
+
   .modal-description-text {
     font-size: 0.9rem;
   }
-  
+
   .modal-detail-item {
     padding: 10px 12px;
     gap: 10px;
     border-radius: 8px;
   }
-  
+
   .modal-detail-item svg {
     width: 18px;
     height: 18px;
   }
-  
+
   .modal-detail-label {
     font-size: 0.7rem;
   }
-  
+
   .modal-detail-value {
     font-size: 0.85rem;
   }
-  
+
   .modal-project-description-section {
     padding: 15px 10px;
   }
-  
+
   .modal-properties-section {
     padding: 15px 10px;
   }
-  
+
   .modal-properties-grid {
     gap: 12px;
   }
-  
+
   .property-image-container {
     height: 150px;
   }
-  
+
   .property-info {
     padding: 12px;
   }
-  
+
   .property-title {
     font-size: 0.95rem;
   }
-  
+
   .property-address {
     font-size: 0.8rem;
   }
-  
+
   .property-features .feature {
     font-size: 0.75rem;
   }
-  
+
   .property-features .feature svg {
     width: 12px;
     height: 12px;
   }
-  
+
   .agent-image {
     width: 50px;
     height: 50px;
   }
-  
+
   .agent-name {
     font-size: 1rem;
   }
-  
+
   .agent-type {
     font-size: 0.8rem;
   }
-  
-  .agent-phone, .agent-email {
+
+  .agent-phone,
+  .agent-email {
     font-size: 0.85rem;
   }
-  
+
   .btn-view-all-properties {
     font-size: 0.85rem;
     padding: 10px 20px;
   }
-  
 }
-
 </style>

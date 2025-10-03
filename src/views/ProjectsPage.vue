@@ -6,49 +6,69 @@
         <!-- Header de la galería -->
         <div class="gallery-header">
           <h2 class="gallery-title">Todos Nuestros Proyectos</h2>
-          <p class="gallery-subtitle">Descubre nuestra colección completa de desarrollos inmobiliarios</p>
+          <p class="gallery-subtitle">
+            Descubre nuestra colección completa de desarrollos inmobiliarios
+          </p>
         </div>
-        
+
         <!-- Grid de proyectos -->
         <div class="projects-grid">
-          <div 
-            v-for="project in projects" 
+          <div
+            v-for="project in projects"
             :key="project.id"
             class="project-card"
             @click="openProjectDetail(project)"
           >
             <!-- Image container with project click -->
             <div class="project-image-container">
-              <img 
-                :src="getImageUrl(project.cover_image_url)" 
+              <img
+                :src="getImageUrl(project.cover_image_url)"
                 :alt="project.name"
                 class="project-image"
                 loading="lazy"
               />
               <div class="image-overlay">
                 <div class="project-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                    <circle cx="12" cy="12" r="3"/>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
                   </svg>
                   <span>Ver Proyecto</span>
                 </div>
               </div>
             </div>
-            
+
             <!-- Project information below image -->
             <div class="project-info-section">
               <h2 class="project-title">{{ project.name }}</h2>
               <div class="project-details">
-                <p class="project-type" v-if="project.type">{{ project.type }}</p>
-                <p class="project-location" v-if="project.city || project.state || project.location">
-                  <svg class="location-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                    <circle cx="12" cy="10" r="3"/>
+                <p class="project-type" v-if="project.type">
+                  {{ project.type }}
+                </p>
+                <p
+                  class="project-location"
+                  v-if="project.city || project.state || project.location"
+                >
+                  <svg
+                    class="location-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                    <circle cx="12" cy="10" r="3" />
                   </svg>
                   <span v-if="project.location">{{ project.location }}</span>
                   <span v-else>
-                    <span v-if="project.city">{{ project.city }}</span><span v-if="project.city && project.state">, </span><span v-if="project.state">{{ project.state }}</span>
+                    <span v-if="project.city">{{ project.city }}</span
+                    ><span v-if="project.city && project.state">, </span
+                    ><span v-if="project.state">{{ project.state }}</span>
                   </span>
                 </p>
               </div>
@@ -65,12 +85,22 @@
         <p class="loading-text">Cargando proyectos...</p>
       </div>
     </div>
-    
+
     <!-- Error State -->
     <div v-else-if="error" class="error-gallery">
       <div class="error-content">
-        <svg class="error-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 15.5c-.77.833.192 2.5 1.732 2.5z"></path>
+        <svg
+          class="error-icon"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 15.5c-.77.833.192 2.5 1.732 2.5z"
+          ></path>
         </svg>
         <p class="error-message">{{ error }}</p>
         <button @click="projectsStore.fetchProjects()" class="retry-btn">
@@ -78,55 +108,69 @@
         </button>
       </div>
     </div>
-    
+
     <!-- Empty State -->
     <div v-else class="empty-gallery">
       <div class="empty-content">
-        <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+        <svg
+          class="empty-icon"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+          ></path>
         </svg>
         <p class="empty-message">No se encontraron proyectos disponibles.</p>
-        <p class="empty-submessage">Vuelve pronto para conocer nuestros nuevos desarrollos.</p>
+        <p class="empty-submessage">
+          Vuelve pronto para conocer nuestros nuevos desarrollos.
+        </p>
       </div>
     </div>
   </AppLayout>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { useProjectsStore } from '@/stores/projects'
-import { storeToRefs } from 'pinia'
-import AppLayout from '@/components/AppLayout.vue'
+import { onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { useProjectsStore } from "@/stores/projects";
+import { storeToRefs } from "pinia";
+import AppLayout from "@/components/AppLayout.vue";
 
-const router = useRouter()
-const projectsStore = useProjectsStore()
-const { projects, loading, error } = storeToRefs(projectsStore)
+const router = useRouter();
+const projectsStore = useProjectsStore();
+const { projects, loading, error } = storeToRefs(projectsStore);
 
 // Helper function to convert absolute URLs to relative for development
 const getImageUrl = (url: string): string => {
-  if (!url) return '/placeholder-project.svg'
-  
+  if (!url) return "/placeholder-project.svg";
+
   // In development, convert absolute URLs to relative
-  if (import.meta.env.DEV && url.includes('app.tierrasonada.com')) {
-    return url.replace('https://app.tierrasonada.com', '').replace('http://app.tierrasonada.com', '')
+  if (import.meta.env.DEV && url.includes("app.tierrasonada.com")) {
+    return url
+      .replace("https://app.tierrasonada.com", "")
+      .replace("http://app.tierrasonada.com", "");
   }
-  
-  return url
-}
+
+  return url;
+};
 
 const openProjectDetail = (project: any) => {
   // Navegar al detalle del proyecto
-  router.push(`/proyectos/${project.id}`)
-}
+  router.push(`/proyectos/${project.id}`);
+};
 
 onMounted(() => {
-  projectsStore.fetchProjects()
-})
+  projectsStore.fetchProjects();
+});
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Montserrat:wght@300;400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Montserrat:wght@300;400;500;600;700&display=swap");
 
 /* GALERÍA DE PROYECTOS - RESPONSIVE OPTIMIZADA */
 .project-gallery-hero {
@@ -160,7 +204,7 @@ onMounted(() => {
 }
 
 .gallery-title {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: clamp(1.8rem, 5vw, 3rem);
   font-weight: 300;
   color: #2c3e50;
@@ -171,7 +215,7 @@ onMounted(() => {
 }
 
 .gallery-title::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -10px;
   left: 50%;
@@ -183,7 +227,7 @@ onMounted(() => {
 }
 
 .gallery-subtitle {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: clamp(0.9rem, 2.5vw, 1.2rem);
   color: #6c757d;
   font-weight: 300;
@@ -315,7 +359,11 @@ onMounted(() => {
 .image-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(30, 30, 50, 0.8));
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.7),
+    rgba(30, 30, 50, 0.8)
+  );
   display: flex;
   align-items: center;
   justify-content: center;
@@ -335,7 +383,7 @@ onMounted(() => {
   align-items: center;
   gap: 10px;
   color: white;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 0.9rem;
   font-weight: 600;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
@@ -367,7 +415,7 @@ onMounted(() => {
 }
 
 .project-title {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: clamp(1rem, 3vw, 1.2rem);
   font-weight: 500;
   margin-bottom: clamp(0.75rem, 2vw, 1rem);
@@ -383,7 +431,7 @@ onMounted(() => {
 }
 
 .project-type {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: clamp(0.75rem, 2vw, 0.85rem);
   font-weight: 500;
   color: #667eea;
@@ -394,7 +442,7 @@ onMounted(() => {
 }
 
 .project-location {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: clamp(0.75rem, 2vw, 0.85rem);
   font-weight: 400;
   color: #6c757d;
@@ -445,21 +493,25 @@ onMounted(() => {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .loading-text,
 .error-message,
 .empty-message {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 1.2rem;
   color: #2c3e50;
   margin-bottom: 10px;
 }
 
 .empty-submessage {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 0.9rem;
   color: #6c757d;
 }
@@ -478,7 +530,7 @@ onMounted(() => {
   border: none;
   padding: 12px 24px;
   border-radius: 8px;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -498,7 +550,7 @@ onMounted(() => {
     padding: clamp(12px, 3vw, 16px) clamp(16px, 4vw, 20px);
     font-size: clamp(0.8rem, 2vw, 0.9rem);
   }
-  
+
   .project-icon svg {
     width: clamp(24px, 6vw, 32px);
     height: clamp(24px, 6vw, 32px);
@@ -510,7 +562,7 @@ onMounted(() => {
   .project-card {
     min-height: 420px;
   }
-  
+
   .project-image-container {
     height: 240px;
   }
@@ -520,7 +572,7 @@ onMounted(() => {
   .project-card {
     min-height: 450px;
   }
-  
+
   .project-image-container {
     height: 280px;
   }
@@ -531,7 +583,7 @@ onMounted(() => {
   .projects-container-full {
     max-width: 1600px;
   }
-  
+
   .projects-grid {
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
   }

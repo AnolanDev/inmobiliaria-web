@@ -23,13 +23,21 @@
     <!-- Error State -->
     <div v-else-if="error && blogs.length === 0" class="error-container">
       <div class="error-content">
-        <svg class="error-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 15.5c-.77.833.192 2.5 1.732 2.5z"></path>
+        <svg
+          class="error-icon"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 15.5c-.77.833.192 2.5 1.732 2.5z"
+          ></path>
         </svg>
         <p class="error-message">{{ error }}</p>
-        <button @click="fetchBlogs" class="retry-btn">
-          Reintentar
-        </button>
+        <button @click="fetchBlogs" class="retry-btn">Reintentar</button>
       </div>
     </div>
 
@@ -42,25 +50,36 @@
             <!-- Search Bar -->
             <div class="search-container">
               <div class="search-input-wrapper">
-                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="11" cy="11" r="8"/>
-                  <path d="M21 21l-4.35-4.35"/>
+                <svg
+                  class="search-icon"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <circle cx="11" cy="11" r="8" />
+                  <path d="M21 21l-4.35-4.35" />
                 </svg>
-                <input 
+                <input
                   v-model="searchQuery"
                   type="text"
                   placeholder="Buscar blogs..."
                   class="search-input"
                   @input="handleSearch"
                 />
-                <button 
+                <button
                   v-if="searchQuery"
                   @click="clearSearch"
                   class="clear-search-btn"
                 >
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="18" y1="6" x2="6" y2="18"/>
-                    <line x1="6" y1="6" x2="18" y2="18"/>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
                   </svg>
                 </button>
               </div>
@@ -68,9 +87,17 @@
 
             <!-- Category Filter -->
             <div class="filter-container">
-              <select v-model="selectedCategory" @change="applyFilters" class="filter-select">
+              <select
+                v-model="selectedCategory"
+                @change="applyFilters"
+                class="filter-select"
+              >
                 <option value="">Todas las categorías</option>
-                <option v-for="category in categories" :key="category" :value="category">
+                <option
+                  v-for="category in categories"
+                  :key="category"
+                  :value="category"
+                >
                   {{ category }}
                 </option>
               </select>
@@ -78,7 +105,11 @@
 
             <!-- Sort Options -->
             <div class="filter-container">
-              <select v-model="sortOption" @change="applySorting" class="filter-select">
+              <select
+                v-model="sortOption"
+                @change="applySorting"
+                class="filter-select"
+              >
                 <option value="recent">Más recientes</option>
                 <option value="popular">Más populares</option>
                 <option value="title">Por título</option>
@@ -89,24 +120,34 @@
           <!-- Active Filters -->
           <div v-if="hasActiveFilters" class="active-filters">
             <span class="active-filters-label">Filtros activos:</span>
-            
+
             <div class="filter-tags">
               <span v-if="searchQuery" class="filter-tag">
                 <span>Búsqueda: "{{ searchQuery }}"</span>
                 <button @click="clearSearch">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="18" y1="6" x2="6" y2="18"/>
-                    <line x1="6" y1="6" x2="18" y2="18"/>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
                   </svg>
                 </button>
               </span>
-              
+
               <span v-if="selectedCategory" class="filter-tag">
                 <span>Categoría: {{ selectedCategory }}</span>
                 <button @click="clearCategoryFilter">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <line x1="18" y1="6" x2="6" y2="18"/>
-                    <line x1="6" y1="6" x2="18" y2="18"/>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
                   </svg>
                 </button>
               </span>
@@ -119,14 +160,17 @@
         </div>
 
         <!-- Featured Blogs Section -->
-        <section v-if="featuredBlogs.length > 0 && !hasActiveFilters" class="featured-section">
+        <section
+          v-if="featuredBlogs.length > 0 && !hasActiveFilters"
+          class="featured-section"
+        >
           <div class="section-header">
             <h2 class="section-title">Artículos destacados</h2>
           </div>
-          
+
           <div class="featured-grid">
-            <BlogCard 
-              v-for="blog in featuredBlogs.slice(0, 3)" 
+            <BlogCard
+              v-for="blog in featuredBlogs.slice(0, 3)"
               :key="`featured-${blog.id}`"
               :blog="blog"
               class="featured-card"
@@ -138,19 +182,41 @@
         <div class="results-info">
           <p class="results-text">
             <span v-if="hasActiveFilters">
-              {{ displayedBlogs.length }} {{ displayedBlogs.length === 1 ? 'resultado encontrado' : 'resultados encontrados' }}
+              {{ displayedBlogs.length }}
+              {{
+                displayedBlogs.length === 1
+                  ? "resultado encontrado"
+                  : "resultados encontrados"
+              }}
             </span>
             <span v-else>
-              Mostrando {{ displayedBlogs.length }} blogs{{ featuredBlogs.length > 0 ? ` (+ ${featuredBlogs.length} destacados)` : '' }}
+              Mostrando {{ displayedBlogs.length }} blogs{{
+                featuredBlogs.length > 0
+                  ? ` (+ ${featuredBlogs.length} destacados)`
+                  : ""
+              }}
             </span>
           </p>
         </div>
 
         <!-- Blogs Grid -->
         <section class="blogs-section">
-          <div v-if="displayedBlogs.length === 0 && hasActiveFilters" class="no-results">
-            <svg class="no-results-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          <div
+            v-if="displayedBlogs.length === 0 && hasActiveFilters"
+            class="no-results"
+          >
+            <svg
+              class="no-results-icon"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
             </svg>
             <h3>No se encontraron blogs</h3>
             <p>Intenta ajustar tus filtros de búsqueda</p>
@@ -163,27 +229,32 @@
           <div v-if="isLoading && blogs.length === 0" class="blogs-grid">
             <BlogCardSkeleton v-for="n in 6" :key="`skeleton-${n}`" />
           </div>
-          
+
           <!-- Actual Content -->
           <div v-else class="blogs-grid">
-            <BlogCard 
-              v-for="blog in displayedBlogs" 
+            <BlogCard
+              v-for="blog in displayedBlogs"
               :key="blog.id"
               :blog="blog"
             />
-            
+
             <!-- Loading more items -->
-            <BlogCardSkeleton 
-              v-if="isLoading && blogs.length > 0" 
-              v-for="n in 3" 
-              :key="`loading-${n}`" 
+            <BlogCardSkeleton
+              v-if="isLoading && blogs.length > 0"
+              v-for="n in 3"
+              :key="`loading-${n}`"
             />
           </div>
         </section>
 
         <!-- Load More Button -->
-        <div v-if="pagination.currentPage < pagination.lastPage && !hasActiveFilters" class="load-more-container">
-          <button 
+        <div
+          v-if="
+            pagination.currentPage < pagination.lastPage && !hasActiveFilters
+          "
+          class="load-more-container"
+        >
+          <button
             @click="loadMoreBlogs"
             :disabled="isLoading"
             class="load-more-btn"
@@ -194,21 +265,29 @@
               Cargando...
             </span>
           </button>
-          
+
           <p class="load-more-info">
             Mostrando {{ blogs.length }} de {{ pagination.total }} artículos
           </p>
         </div>
-        
+
         <!-- Traditional Pagination (backup) -->
-        <div v-if="pagination.lastPage > 1 && hasActiveFilters" class="pagination">
-          <button 
+        <div
+          v-if="pagination.lastPage > 1 && hasActiveFilters"
+          class="pagination"
+        >
+          <button
             @click="goToPage(pagination.currentPage - 1)"
             :disabled="pagination.currentPage <= 1"
             class="pagination-btn"
           >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M15 18l-6-6 6-6"/>
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M15 18l-6-6 6-6" />
             </svg>
             Anterior
           </button>
@@ -218,20 +297,28 @@
               v-for="page in visiblePages"
               :key="page"
               @click="goToPage(page)"
-              :class="['pagination-number', { active: page === pagination.currentPage }]"
+              :class="[
+                'pagination-number',
+                { active: page === pagination.currentPage },
+              ]"
             >
               {{ page }}
             </button>
           </div>
 
-          <button 
+          <button
             @click="goToPage(pagination.currentPage + 1)"
             :disabled="pagination.currentPage >= pagination.lastPage"
             class="pagination-btn"
           >
             Siguiente
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M9 18l6-6-6-6"/>
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M9 18l6-6-6-6" />
             </svg>
           </button>
         </div>
@@ -246,196 +333,209 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch, nextTick } from 'vue'
-import { useBlogStore } from '@/stores/blogs'
-import { storeToRefs } from 'pinia'
-import BlogCard from '@/components/BlogCard.vue'
-import BlogCardSkeleton from '@/components/BlogCardSkeleton.vue'
-import AppLayout from '@/components/AppLayout.vue'
+import { ref, computed, onMounted, watch, nextTick } from "vue";
+import { useBlogStore } from "@/stores/blogs";
+import { storeToRefs } from "pinia";
+import BlogCard from "@/components/BlogCard.vue";
+import BlogCardSkeleton from "@/components/BlogCardSkeleton.vue";
+import AppLayout from "@/components/AppLayout.vue";
 
 // Store
-const blogStore = useBlogStore()
-const { 
-  blogs, 
-  featuredBlogs, 
-  categories, 
-  isLoading, 
-  error, 
-  pagination 
-} = storeToRefs(blogStore)
+const blogStore = useBlogStore();
+const { blogs, featuredBlogs, categories, isLoading, error, pagination } =
+  storeToRefs(blogStore);
 
 // Local state
-const searchQuery = ref('')
-const selectedCategory = ref('')
-const sortOption = ref('recent')
-const searchResults = ref<typeof blogs.value>([])
-let searchTimeout: NodeJS.Timeout | null = null
+const searchQuery = ref("");
+const selectedCategory = ref("");
+const sortOption = ref("recent");
+const searchResults = ref<typeof blogs.value>([]);
+let searchTimeout: NodeJS.Timeout | null = null;
 
 // Computed
 const hasActiveFilters = computed(() => {
-  return searchQuery.value.length > 0 || selectedCategory.value.length > 0
-})
+  return searchQuery.value.length > 0 || selectedCategory.value.length > 0;
+});
 
 const displayedBlogs = computed(() => {
-  let result = hasActiveFilters.value ? searchResults.value : blogs.value
+  let result = hasActiveFilters.value ? searchResults.value : blogs.value;
 
   // If no filters are active, exclude featured blogs to avoid duplicates
   if (!hasActiveFilters.value && featuredBlogs.value.length > 0) {
-    const featuredIds = new Set(featuredBlogs.value.map(blog => blog.id))
-    result = result.filter(blog => !featuredIds.has(blog.id))
+    const featuredIds = new Set(featuredBlogs.value.map((blog) => blog.id));
+    result = result.filter((blog) => !featuredIds.has(blog.id));
   }
 
   // Apply sorting
-  if (sortOption.value === 'popular') {
-    result = [...result].sort((a, b) => (b.views_count || 0) - (a.views_count || 0))
-  } else if (sortOption.value === 'title') {
-    result = [...result].sort((a, b) => a.title.localeCompare(b.title))
+  if (sortOption.value === "popular") {
+    result = [...result].sort(
+      (a, b) => (b.views_count || 0) - (a.views_count || 0),
+    );
+  } else if (sortOption.value === "title") {
+    result = [...result].sort((a, b) => a.title.localeCompare(b.title));
   } else {
-    result = [...result].sort((a, b) => 
-      new Date(b.published_at).getTime() - new Date(a.published_at).getTime()
-    )
+    result = [...result].sort(
+      (a, b) =>
+        new Date(b.published_at).getTime() - new Date(a.published_at).getTime(),
+    );
   }
 
-  return result
-})
+  return result;
+});
 
 const visiblePages = computed(() => {
-  const current = pagination.value.currentPage
-  const last = pagination.value.lastPage
-  const delta = 2
-  const range = []
-  const rangeWithDots = []
+  const current = pagination.value.currentPage;
+  const last = pagination.value.lastPage;
+  const delta = 2;
+  const range = [];
+  const rangeWithDots = [];
 
-  for (let i = Math.max(2, current - delta); i <= Math.min(last - 1, current + delta); i++) {
-    range.push(i)
+  for (
+    let i = Math.max(2, current - delta);
+    i <= Math.min(last - 1, current + delta);
+    i++
+  ) {
+    range.push(i);
   }
 
   if (current - delta > 2) {
-    rangeWithDots.push(1, '...')
+    rangeWithDots.push(1, "...");
   } else {
-    rangeWithDots.push(1)
+    rangeWithDots.push(1);
   }
 
-  rangeWithDots.push(...range)
+  rangeWithDots.push(...range);
 
   if (current + delta < last - 1) {
-    rangeWithDots.push('...', last)
+    rangeWithDots.push("...", last);
   } else if (last > 1) {
-    rangeWithDots.push(last)
+    rangeWithDots.push(last);
   }
 
-  return rangeWithDots
-})
+  return rangeWithDots;
+});
 
 // Methods
 const fetchBlogs = async (page = 1) => {
-  await blogStore.fetchBlogs({
-    with: 'media,image,featured_image',
-    include: 'featured_image,gallery,media,image',
-    fields: '*'
-  }, page)
-}
+  await blogStore.fetchBlogs(
+    {
+      with: "media,image,featured_image",
+      include: "featured_image,gallery,media,image",
+      fields: "*",
+    },
+    page,
+  );
+};
 
 const handleSearch = () => {
   if (searchTimeout) {
-    clearTimeout(searchTimeout)
+    clearTimeout(searchTimeout);
   }
-  
+
   searchTimeout = setTimeout(() => {
-    applyFilters()
-  }, 300) // Debounce search by 300ms
-}
+    applyFilters();
+  }, 300); // Debounce search by 300ms
+};
 
 const applyFilters = () => {
   if (!selectedCategory.value && !searchQuery.value) {
-    searchResults.value = []
-    return
+    searchResults.value = [];
+    return;
   }
 
-  let results = [...blogs.value]
+  let results = [...blogs.value];
 
   // Apply category filter
   if (selectedCategory.value) {
-    results = results.filter(blog => blog.category === selectedCategory.value)
+    results = results.filter(
+      (blog) => blog.category === selectedCategory.value,
+    );
   }
 
   // Apply search filter
   if (searchQuery.value) {
-    const query = searchQuery.value.toLowerCase().trim()
-    results = results.filter(blog => 
-      blog.title.toLowerCase().includes(query) ||
-      blog.excerpt.toLowerCase().includes(query) ||
-      blog.content.toLowerCase().includes(query) ||
-      blog.tags.some(tag => tag.toLowerCase().includes(query)) ||
-      blog.category.toLowerCase().includes(query)
-    )
+    const query = searchQuery.value.toLowerCase().trim();
+    results = results.filter(
+      (blog) =>
+        blog.title.toLowerCase().includes(query) ||
+        blog.excerpt.toLowerCase().includes(query) ||
+        blog.content.toLowerCase().includes(query) ||
+        blog.tags.some((tag) => tag.toLowerCase().includes(query)) ||
+        blog.category.toLowerCase().includes(query),
+    );
   }
 
-  searchResults.value = results
-}
+  searchResults.value = results;
+};
 
 const applySorting = () => {
   // Sorting is handled in computed displayedBlogs
-}
+};
 
 const clearSearch = () => {
-  searchQuery.value = ''
-  handleSearch()
-}
+  searchQuery.value = "";
+  handleSearch();
+};
 
 const clearCategoryFilter = () => {
-  selectedCategory.value = ''
-  applyFilters()
-}
+  selectedCategory.value = "";
+  applyFilters();
+};
 
 const clearAllFilters = () => {
-  searchQuery.value = ''
-  selectedCategory.value = ''
-  searchResults.value = []
-}
+  searchQuery.value = "";
+  selectedCategory.value = "";
+  searchResults.value = [];
+};
 
 const loadMoreBlogs = async () => {
   if (pagination.value.currentPage < pagination.value.lastPage) {
-    await blogStore.loadMoreBlogs(pagination.value.currentPage + 1)
+    await blogStore.loadMoreBlogs(pagination.value.currentPage + 1);
   }
-}
+};
 
 const goToPage = (page: number) => {
   if (page >= 1 && page <= pagination.value.lastPage) {
-    fetchBlogs(page)
+    fetchBlogs(page);
     // Scroll to top
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
-}
+};
 
 // Watch for filter changes
 watch([searchQuery, selectedCategory], () => {
-  applyFilters()
-})
+  applyFilters();
+});
 
 // Lifecycle
 onMounted(async () => {
   try {
     // Fetch only first page with smaller limit for faster initial load
-    await blogStore.fetchBlogs({ 
-      per_page: 6, 
-      with: 'media,image,featured_image',
-      include: 'featured_image,gallery,media,image',
-      fields: '*'
-    }, 1)
-    
+    await blogStore.fetchBlogs(
+      {
+        per_page: 6,
+        with: "media,image,featured_image",
+        include: "featured_image,gallery,media,image",
+        fields: "*",
+      },
+      1,
+    );
+
     // Load categories immediately for filters
-    blogStore.fetchBlogCategories().catch(err => console.warn('Failed to load categories:', err))
-    
+    blogStore
+      .fetchBlogCategories()
+      .catch((err) => console.warn("Failed to load categories:", err));
+
     // Delay featured blogs load by 1 second
     setTimeout(() => {
-      blogStore.fetchFeaturedBlogs().catch(err => console.warn('Failed to load featured blogs:', err))
-    }, 1000)
-    
+      blogStore
+        .fetchFeaturedBlogs()
+        .catch((err) => console.warn("Failed to load featured blogs:", err));
+    }, 1000);
   } catch (err) {
-    console.error('Failed to load blogs:', err)
+    console.error("Failed to load blogs:", err);
   }
-})
+});
 </script>
 
 <style scoped>
@@ -498,8 +598,12 @@ onMounted(async () => {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .loading-text {
@@ -1093,12 +1197,12 @@ onMounted(async () => {
     min-width: 120px;
     justify-content: center;
   }
-  
+
   .load-more-container {
     margin-top: 24px;
     padding: 16px;
   }
-  
+
   .load-more-btn {
     padding: 12px 24px;
     font-size: 0.875rem;

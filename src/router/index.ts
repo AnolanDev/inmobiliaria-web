@@ -1,86 +1,86 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from "vue-router";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
-      name: 'home',
-      component: () => import('@/views/HomePage.vue'),
+      path: "/",
+      name: "home",
+      component: () => import("@/views/HomePage.vue"),
       meta: {
-        title: 'Inicio - Inmobiliaria'
-      }
+        title: "Inicio - Inmobiliaria",
+      },
     },
     {
-      path: '/proyectos',
-      name: 'projects',
-      component: () => import('@/views/ProjectsPage.vue'),
+      path: "/proyectos",
+      name: "projects",
+      component: () => import("@/views/ProjectsPage.vue"),
       meta: {
-        title: 'Proyectos - Inmobiliaria'
-      }
+        title: "Proyectos - Inmobiliaria",
+      },
     },
     {
-      path: '/proyectos/:id',
-      name: 'project-detail',
-      component: () => import('@/views/ProjectDetailPage.vue'),
+      path: "/proyectos/:id",
+      name: "project-detail",
+      component: () => import("@/views/ProjectDetailPage.vue"),
       meta: {
-        title: 'Detalle del Proyecto - Inmobiliaria'
-      }
+        title: "Detalle del Proyecto - Inmobiliaria",
+      },
     },
     {
-      path: '/agentes',
-      name: 'agents',
-      component: () => import('@/views/AgentsPage.vue'),
+      path: "/agentes",
+      name: "agents",
+      component: () => import("@/views/AgentsPage.vue"),
       meta: {
-        title: 'Agentes - Inmobiliaria'
-      }
+        title: "Agentes - Inmobiliaria",
+      },
     },
     {
-      path: '/agentes/:id',
-      name: 'agent-detail',
-      component: () => import('@/views/AgentDetailPage.vue'),
+      path: "/agentes/:id",
+      name: "agent-detail",
+      component: () => import("@/views/AgentDetailPage.vue"),
       meta: {
-        title: 'Perfil del Agente - Inmobiliaria'
-      }
+        title: "Perfil del Agente - Inmobiliaria",
+      },
     },
     {
-      path: '/contacto',
-      name: 'contact',
-      component: () => import('@/views/ContactPage.vue'),
+      path: "/contacto",
+      name: "contact",
+      component: () => import("@/views/ContactPage.vue"),
       meta: {
-        title: 'Contacto - Inmobiliaria'
-      }
+        title: "Contacto - Inmobiliaria",
+      },
     },
     {
-      path: '/blog',
-      name: 'blogs',
-      component: () => import('@/views/BlogsPage.vue'),
+      path: "/blog",
+      name: "blogs",
+      component: () => import("@/views/BlogsPage.vue"),
       meta: {
-        title: 'Blog - Inmobiliaria'
-      }
+        title: "Blog - Inmobiliaria",
+      },
     },
     {
-      path: '/blog/:id',
-      name: 'blog-detail',
-      component: () => import('@/views/BlogDetailPage.vue'),
+      path: "/blog/:id",
+      name: "blog-detail",
+      component: () => import("@/views/BlogDetailPage.vue"),
       meta: {
-        title: 'Artículo - Inmobiliaria'
-      }
+        title: "Artículo - Inmobiliaria",
+      },
     },
     {
-      path: '/login',
-      name: 'login',
-      component: () => import('@/views/LoginPage.vue'),
+      path: "/login",
+      name: "login",
+      component: () => import("@/views/LoginPage.vue"),
       meta: {
-        title: 'Acceso al Sistema - Inmobiliaria'
-      }
-    }
-  ]
-})
+        title: "Acceso al Sistema - Inmobiliaria",
+      },
+    },
+  ],
+});
 
 // Update document title
 router.beforeEach((to) => {
-  document.title = to.meta?.title as string || 'Inmobiliaria'
-})
+  document.title = (to.meta?.title as string) || "Inmobiliaria";
+});
 
-export default router
+export default router;

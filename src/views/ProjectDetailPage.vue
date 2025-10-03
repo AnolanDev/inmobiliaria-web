@@ -11,12 +11,23 @@
     <!-- Error State -->
     <div v-else-if="error && !project" class="error-container">
       <div class="error-content">
-        <svg class="error-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 15.5c-.77.833.192 2.5 1.732 2.5z"></path>
+        <svg
+          class="error-icon"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 15.5c-.77.833.192 2.5 1.732 2.5z"
+          ></path>
         </svg>
         <p class="error-message">{{ error }}</p>
         <p class="error-details" v-if="error?.includes('servidor')">
-          El proyecto puede no estar disponible temporalmente. Por favor, inténtalo más tarde o contacta con el administrador.
+          El proyecto puede no estar disponible temporalmente. Por favor,
+          inténtalo más tarde o contacta con el administrador.
         </p>
         <div class="error-actions">
           <button @click="fetchProjectData" class="retry-btn">
@@ -34,8 +45,13 @@
       <!-- Back Button -->
       <div class="back-navigation">
         <button @click="goBack" class="back-btn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M19 12H5M12 19l-7-7 7-7" />
           </svg>
           <span>Volver a Proyectos</span>
         </button>
@@ -47,49 +63,62 @@
           <!-- Project Image Gallery -->
           <div class="project-image-section">
             <div class="main-image-container">
-              <img 
-                :src="getImageUrl(currentImage)" 
+              <img
+                :src="getImageUrl(currentImage)"
                 :alt="project.name"
                 class="project-main-image"
               />
-              
+
               <!-- Image Navigation -->
-              <button 
+              <button
                 v-if="projectImages.length > 1"
-                @click="prevImage" 
+                @click="prevImage"
                 class="image-nav-btn image-nav-prev"
               >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M15 18l-6-6 6-6"/>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M15 18l-6-6 6-6" />
                 </svg>
               </button>
-              
-              <button 
+
+              <button
                 v-if="projectImages.length > 1"
-                @click="nextImage" 
+                @click="nextImage"
                 class="image-nav-btn image-nav-next"
               >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M9 18l6-6-6-6"/>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M9 18l6-6-6-6" />
                 </svg>
               </button>
-              
+
               <!-- Image Counter -->
               <div v-if="projectImages.length > 1" class="image-counter">
                 {{ currentImageIndex + 1 }} / {{ projectImages.length }}
               </div>
             </div>
-            
+
             <!-- Thumbnails -->
             <div v-if="projectImages.length > 1" class="thumbnails-container">
-              <div 
-                v-for="(image, index) in projectImages" 
+              <div
+                v-for="(image, index) in projectImages"
                 :key="index"
                 class="thumbnail-item"
                 :class="{ active: currentImageIndex === index }"
                 @click="selectImage(index)"
               >
-                <img :src="getImageUrl(image)" :alt="`${project.name} - ${index + 1}`" />
+                <img
+                  :src="getImageUrl(image)"
+                  :alt="`${project.name} - ${index + 1}`"
+                />
               </div>
             </div>
           </div>
@@ -98,38 +127,51 @@
           <div class="project-info-section">
             <div class="project-header">
               <h1 class="project-name">{{ project.name }}</h1>
-              
+
               <!-- Información como las cards -->
               <div class="project-card-info">
                 <!-- Tipo de Proyecto -->
                 <div class="project-type-card" v-if="project.type">
                   {{ project.type }}
                 </div>
-                
+
                 <!-- Ubicación completa -->
                 <div class="project-location-card">
-                  <svg class="location-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                    <circle cx="12" cy="10" r="3"/>
+                  <svg
+                    class="location-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                    <circle cx="12" cy="10" r="3" />
                   </svg>
                   <span v-if="project.location">{{ project.location }}</span>
                   <span v-else-if="project.city">
-                    {{ project.city }}<span v-if="project.state">, {{ project.state }}</span>
+                    {{ project.city
+                    }}<span v-if="project.state">, {{ project.state }}</span>
                   </span>
-                  <span v-else>Ubicación por definir</span>
+                  <span v-else>-</span>
                 </div>
               </div>
             </div>
 
             <div class="project-details-grid">
-
               <!-- Tipo de Proyecto -->
               <div class="detail-item" v-if="project.type">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-                  <polyline points="7.5,4.21 12,6.81 16.5,4.21"/>
-                  <polyline points="7.5,19.79 7.5,14.6 3,12"/>
-                  <polyline points="21,12 16.5,14.6 16.5,19.79"/>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
+                  />
+                  <polyline points="7.5,4.21 12,6.81 16.5,4.21" />
+                  <polyline points="7.5,19.79 7.5,14.6 3,12" />
+                  <polyline points="21,12 16.5,14.6 16.5,19.79" />
                 </svg>
                 <div class="detail-content">
                   <span class="detail-label">Tipo de Proyecto</span>
@@ -139,28 +181,46 @@
 
               <!-- Estado del Proyecto -->
               <div class="detail-item" v-if="project.status">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="12" cy="12" r="10"/>
-                  <path d="m9 12 2 2 4-4"/>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="m9 12 2 2 4-4" />
                 </svg>
                 <div class="detail-content">
                   <span class="detail-label">Estado</span>
-                  <span class="detail-value" :style="{ color: project.status_color || '#28a745' }">{{ project.status }}</span>
+                  <span
+                    class="detail-value"
+                    :style="{ color: project.status_color || '#28a745' }"
+                    >{{ project.status }}</span
+                  >
                 </div>
               </div>
 
               <!-- Videos disponibles -->
-              <div class="detail-item" v-if="project.videos && project.videos.length > 0">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polygon points="5,3 19,12 5,21"/>
+              <div
+                class="detail-item"
+                v-if="project.videos && project.videos.length > 0"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <polygon points="5,3 19,12 5,21" />
                 </svg>
                 <div class="detail-content">
                   <span class="detail-label">Videos</span>
-                  <span class="detail-value">{{ project.videos.length }} {{ project.videos.length === 1 ? 'Video' : 'Videos' }}</span>
+                  <span class="detail-value"
+                    >{{ project.videos.length }}
+                    {{ project.videos.length === 1 ? "Video" : "Videos" }}</span
+                  >
                 </div>
               </div>
-
-
             </div>
 
             <!-- Agent Information (if available) -->
@@ -168,26 +228,50 @@
               <h3>Agente del Proyecto</h3>
               <div class="agent-card-mini" @click="goToAgent(project.agent.id)">
                 <div class="agent-avatar">
-                  <img 
-                    :src="getImageUrl(project.agent.profile_picture_url)" 
+                  <img
+                    :src="getImageUrl(project.agent.profile_picture_url)"
                     :alt="project.agent.name"
                     class="agent-image-mini"
                   />
                 </div>
                 <div class="agent-details-mini">
                   <h4 class="agent-name-mini">{{ project.agent.name }}</h4>
-                  <p class="agent-type-mini" v-if="project.agent.type">{{ project.agent.type }}</p>
+                  <p class="agent-type-mini" v-if="project.agent.type">
+                    {{ project.agent.type }}
+                  </p>
                   <div class="agent-contact-mini">
-                    <a :href="`tel:${project.agent.phone}`" class="contact-mini" v-if="project.agent.phone">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                    <a
+                      :href="`tel:${project.agent.phone}`"
+                      class="contact-mini"
+                      v-if="project.agent.phone"
+                    >
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                      >
+                        <path
+                          d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"
+                        />
                       </svg>
                       {{ project.agent.phone }}
                     </a>
-                    <a :href="`mailto:${project.agent.email}`" class="contact-mini" v-if="project.agent.email">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                        <polyline points="22,6 12,13 2,6"/>
+                    <a
+                      :href="`mailto:${project.agent.email}`"
+                      class="contact-mini"
+                      v-if="project.agent.email"
+                    >
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                      >
+                        <path
+                          d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                        />
+                        <polyline points="22,6 12,13 2,6" />
                       </svg>
                       {{ project.agent.email }}
                     </a>
@@ -213,11 +297,91 @@
           <h2 class="section-title">Sobre {{ project.name }}</h2>
           <div class="description-content">
             <!-- Párrafos organizados -->
-            <div class="description-paragraphs">
-              <p v-for="(paragraph, index) in formatDescription(project.description)" 
-                 :key="index" 
-                 class="description-paragraph"
-                 :class="{ 'first-paragraph': index === 0 }">
+            <!-- Enhanced Professional Description -->
+            <div v-if="enhancedDescription" class="enhanced-description">
+              
+              <!-- Summary Section -->
+              <div v-if="enhancedDescription.summary" class="description-summary">
+                <h3 class="text-xl font-bold text-gray-900 mb-3 flex items-center">
+                  🌟 Descripción Principal
+                </h3>
+                <p class="text-lg text-gray-700 leading-relaxed mb-6 bg-gradient-to-r from-blue-50 to-green-50 p-4 rounded-lg border-l-4 border-blue-500">
+                  {{ enhancedDescription.summary }}
+                </p>
+              </div>
+
+              <!-- Location Highlight -->
+              <div v-if="enhancedDescription.location" class="description-location">
+                <h3 class="text-xl font-bold text-gray-900 mb-3 flex items-center">
+                  📍 Ubicación Privilegiada
+                </h3>
+                <p class="text-lg font-semibold text-gray-800 mb-6 bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500">
+                  {{ enhancedDescription.location }}
+                </p>
+              </div>
+
+              <!-- Key Features -->
+              <div v-if="enhancedDescription.features.length > 0" class="description-features">
+                <h3 class="text-xl font-bold text-gray-900 mb-3 flex items-center">
+                  🏠 Características Principales
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
+                  <div 
+                    v-for="(feature, index) in enhancedDescription.features" 
+                    :key="index"
+                    class="flex items-center space-x-2 text-gray-700 bg-gray-50 p-3 rounded-lg"
+                  >
+                    <span class="font-medium">{{ feature }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Amenities by Category -->
+              <div v-if="enhancedDescription.amenities.length > 0" class="description-amenities">
+                <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                  ✨ Amenidades y Espacios
+                </h3>
+                <div class="space-y-6">
+                  <div 
+                    v-for="(category, index) in enhancedDescription.amenities" 
+                    :key="index"
+                    class="amenity-category"
+                  >
+                    <h4 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+                      {{ category.category }}
+                    </h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+                      <div 
+                        v-for="(item, itemIndex) in category.items" 
+                        :key="itemIndex"
+                        class="flex items-center space-x-2 text-gray-700 bg-white p-3 rounded-lg shadow-sm border"
+                      >
+                        <span>{{ item }}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Call to Action -->
+              <div v-if="enhancedDescription.cta" class="description-cta">
+                <div class="bg-gradient-to-r from-blue-500 to-green-500 text-white p-6 rounded-lg mt-8">
+                  <p class="text-lg font-medium" v-html="enhancedDescription.cta.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')"></p>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Fallback to simple description -->
+            <div v-else class="description-paragraphs">
+              <p
+                v-for="(paragraph, index) in formatDescription(
+                  project.description,
+                )"
+                :key="index"
+                class="description-paragraph"
+                :class="{ 'first-paragraph': index === 0 }"
+              >
                 {{ paragraph }}
               </p>
             </div>
@@ -229,30 +393,50 @@
       <section class="info-notice" v-else-if="project && !isLoading">
         <div class="notice-container">
           <div class="notice-content">
-            <svg class="notice-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            <svg
+              class="notice-icon"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
             </svg>
             <p class="notice-text">
-              Mostrando información básica del proyecto. Para ver detalles completos, contacta con nuestro equipo.
+              Mostrando información básica del proyecto. Para ver detalles
+              completos, contacta con nuestro equipo.
             </p>
           </div>
         </div>
       </section>
 
       <!-- Project Properties (if available) -->
-      <section class="project-properties" v-if="project.properties && project.properties.length > 0">
+      <section
+        class="project-properties"
+        v-if="project.properties && project.properties.length > 0"
+      >
         <div class="properties-container">
-          <h2 class="section-title">Propiedades del Proyecto ({{ project.properties.length }})</h2>
+          <h2 class="section-title">
+            Propiedades del Proyecto ({{ project.properties.length }})
+          </h2>
           <div class="properties-grid">
-            <div 
-              v-for="property in project.properties" 
+            <div
+              v-for="property in project.properties"
               :key="property.id"
               class="property-card"
               @click="goToProperty(property.id)"
             >
               <div class="property-image-container">
-                <img 
-                  :src="getImageUrl(property.cover_image_url || '/placeholder-property.svg')" 
+                <img
+                  :src="
+                    getImageUrl(
+                      property.cover_image_url || '/placeholder-property.svg',
+                    )
+                  "
                   :alt="property.title"
                   class="property-image"
                 />
@@ -262,38 +446,64 @@
               </div>
               <div class="property-info">
                 <h3 class="property-title">{{ property.title }}</h3>
-                <p class="property-address">{{ property.address }}, {{ property.city }}</p>
+                <p class="property-address">
+                  {{ property.address }}, {{ property.city }}
+                </p>
                 <div class="property-features">
                   <span class="feature" v-if="property.bedrooms">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M2 4v16"/>
-                      <path d="M2 8h18a2 2 0 0 1 2 2v10"/>
-                      <path d="M2 17h20"/>
-                      <path d="M6 8v9"/>
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path d="M2 4v16" />
+                      <path d="M2 8h18a2 2 0 0 1 2 2v10" />
+                      <path d="M2 17h20" />
+                      <path d="M6 8v9" />
                     </svg>
                     {{ property.bedrooms }}
                   </span>
                   <span class="feature" v-if="property.bathrooms">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M9 6 6.5 3.5a1.5 1.5 0 0 0-1-.5C4.683 3 4 3.683 4 4.5V17a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5"/>
-                      <line x1="10" x2="8" y1="5" y2="7"/>
-                      <line x1="2" x2="22" y1="12" y2="12"/>
-                      <line x1="7" x2="7" y1="19" y2="21"/>
-                      <line x1="17" x2="17" y1="19" y2="21"/>
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path
+                        d="M9 6 6.5 3.5a1.5 1.5 0 0 0-1-.5C4.683 3 4 3.683 4 4.5V17a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5"
+                      />
+                      <line x1="10" x2="8" y1="5" y2="7" />
+                      <line x1="2" x2="22" y1="12" y2="12" />
+                      <line x1="7" x2="7" y1="19" y2="21" />
+                      <line x1="17" x2="17" y1="19" y2="21" />
                     </svg>
                     {{ property.bathrooms }}
                   </span>
                   <span class="feature" v-if="property.area">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                      <circle cx="12" cy="10" r="3"/>
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path
+                        d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"
+                      />
+                      <circle cx="12" cy="10" r="3" />
                     </svg>
                     {{ property.area }}m²
                   </span>
                   <span class="feature" v-if="property.status">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <circle cx="12" cy="12" r="10"/>
-                      <path d="m9 12 2 2 4-4"/>
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <circle cx="12" cy="12" r="10" />
+                      <path d="m9 12 2 2 4-4" />
                     </svg>
                     {{ property.status }}
                   </span>
@@ -308,8 +518,18 @@
     <!-- Not Found State -->
     <div v-else class="not-found-container">
       <div class="not-found-content">
-        <svg class="not-found-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+        <svg
+          class="not-found-icon"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+          ></path>
         </svg>
         <p class="not-found-message">Proyecto no encontrado</p>
         <button @click="goBack" class="back-btn-alt">Volver a Proyectos</button>
@@ -319,191 +539,209 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { useProjectsStore } from '@/stores/projects'
-import { storeToRefs } from 'pinia'
-import AppLayout from '@/components/AppLayout.vue'
-import type { Project } from '@/types'
+import { ref, onMounted, computed, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { useProjectsStore } from "@/stores/projects";
+import { storeToRefs } from "pinia";
+import AppLayout from "@/components/AppLayout.vue";
+import { formatProjectDescription, markdownToHtml } from "@/utils/descriptionFormatter";
+import type { Project } from "@/types";
 
-const route = useRoute()
-const router = useRouter()
-const projectsStore = useProjectsStore()
-const { currentProject, loading, error } = storeToRefs(projectsStore)
+const route = useRoute();
+const router = useRouter();
+const projectsStore = useProjectsStore();
+const { currentProject, loading, error } = storeToRefs(projectsStore);
 
 // Local project ref that we can set directly
-const project = ref<Project | null>(null)
-const isLoading = ref(true)
+const project = ref<Project | null>(null);
+const isLoading = ref(true);
 
-const currentImageIndex = ref(0)
-const currentImage = ref('')
-const projectImages = ref<string[]>([])
+const currentImageIndex = ref(0);
+const currentImage = ref("");
+const projectImages = ref<string[]>([]);
 
-const projectId = computed(() => parseInt(route.params.id as string))
+const projectId = computed(() => parseInt(route.params.id as string));
 
 // Helper function to convert absolute URLs to relative for development
 const getImageUrl = (url: string): string => {
-  if (!url) return '/placeholder-project.svg'
-  
+  if (!url) return "/placeholder-project.svg";
+
   // In development, convert absolute URLs to relative
-  if (import.meta.env.DEV && url.includes('app.tierrasonada.com')) {
-    return url.replace('https://app.tierrasonada.com', '').replace('http://app.tierrasonada.com', '')
+  if (import.meta.env.DEV && url.includes("app.tierrasonada.com")) {
+    return url
+      .replace("https://app.tierrasonada.com", "")
+      .replace("http://app.tierrasonada.com", "");
   }
-  
-  return url
-}
+
+  return url;
+};
 
 // Format price with thousands separator
 const formatPrice = (price: number): string => {
-  return new Intl.NumberFormat('es-CO', {
+  return new Intl.NumberFormat("es-CO", {
     minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  }).format(price)
-}
+    maximumFractionDigits: 0,
+  }).format(price);
+};
 
 // Format date function
 const formatDate = (dateString: string): string => {
-  const date = new Date(dateString)
-  return date.toLocaleDateString('es-ES', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  })
-}
+  const date = new Date(dateString);
+  return date.toLocaleDateString("es-ES", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+};
 
 // Format price with currency for property cards
 const formatPriceComplete = (price: number): string => {
-  if (!price) return 'Precio no disponible'
-  
-  return new Intl.NumberFormat('es-CO', {
-    style: 'currency',
-    currency: 'COP',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  }).format(price)
-}
+  if (!price) return "Precio no disponible";
 
-// Format description into organized paragraphs
+  return new Intl.NumberFormat("es-CO", {
+    style: "currency",
+    currency: "COP",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(price);
+};
+
+// Format description into organized paragraphs (fallback)
 const formatDescription = (description: string): string[] => {
-  if (!description) return []
-  
+  if (!description) return [];
+
   // Split by double line breaks or periods followed by spaces for better paragraph structure
   let paragraphs = description
     .split(/\.\s+(?=[A-Z])|[\n\r]{2,}/)
-    .map(p => p.trim())
-    .filter(p => p.length > 0)
-  
+    .map((p) => p.trim())
+    .filter((p) => p.length > 0);
+
   // If we don't have natural paragraphs, try to split by sentences for readability
   if (paragraphs.length === 1 && description.length > 200) {
     paragraphs = description
       .split(/(?<=[.!?])\s+/)
       .reduce((acc: string[], sentence: string, index: number) => {
-        const groupIndex = Math.floor(index / 2) // Group every 2 sentences
-        if (!acc[groupIndex]) acc[groupIndex] = ''
-        acc[groupIndex] += (acc[groupIndex] ? ' ' : '') + sentence
-        return acc
+        const groupIndex = Math.floor(index / 2); // Group every 2 sentences
+        if (!acc[groupIndex]) acc[groupIndex] = "";
+        acc[groupIndex] += (acc[groupIndex] ? " " : "") + sentence;
+        return acc;
       }, [])
-      .filter(p => p.trim().length > 0)
+      .filter((p) => p.trim().length > 0);
   }
+
+  return paragraphs.map((p) => (p.endsWith(".") ? p : p + "."));
+};
+
+// Enhanced description with professional formatting
+const enhancedDescription = computed(() => {
+  if (!project.value?.description) return null;
   
-  return paragraphs.map(p => p.endsWith('.') ? p : p + '.')
-}
+  const formatted = formatProjectDescription(
+    project.value.description, 
+    project.value.name
+  );
+  
+  return {
+    ...formatted,
+    htmlContent: markdownToHtml(formatted.originalFormatted)
+  };
+});
 
 // Image gallery functions
 const setupImageGallery = () => {
-  console.log('Setting up image gallery for project:', project.value?.name)
   if (project.value) {
-    projectImages.value = [project.value.cover_image_url, ...(project.value.gallery_urls || [])].filter(Boolean)
-    currentImage.value = projectImages.value[0] || project.value.cover_image_url
-    currentImageIndex.value = 0
-    console.log('Gallery setup complete, images:', projectImages.value.length)
+    projectImages.value = [
+      project.value.cover_image_url,
+      ...(project.value.gallery_urls || []),
+    ].filter(Boolean);
+    currentImage.value =
+      projectImages.value[0] || project.value.cover_image_url;
+    currentImageIndex.value = 0;
   }
-}
+};
 
 const nextImage = () => {
   if (currentImageIndex.value < projectImages.value.length - 1) {
-    currentImageIndex.value++
-    currentImage.value = projectImages.value[currentImageIndex.value]
+    currentImageIndex.value++;
+    currentImage.value = projectImages.value[currentImageIndex.value];
   }
-}
+};
 
 const prevImage = () => {
   if (currentImageIndex.value > 0) {
-    currentImageIndex.value--
-    currentImage.value = projectImages.value[currentImageIndex.value]
+    currentImageIndex.value--;
+    currentImage.value = projectImages.value[currentImageIndex.value];
   }
-}
+};
 
 const selectImage = (index: number) => {
-  currentImageIndex.value = index
-  currentImage.value = projectImages.value[index]
-}
+  currentImageIndex.value = index;
+  currentImage.value = projectImages.value[index];
+};
 
 // Navigation methods
 const goBack = () => {
-  router.push('/proyectos')
-}
+  router.push("/proyectos");
+};
 
 const goToProperty = (propertyId: number) => {
-  router.push(`/propiedades/${propertyId}`)
-}
+  router.push(`/propiedades/${propertyId}`);
+};
 
 const goToAgent = (agentId: number) => {
-  router.push(`/agentes/${agentId}`)
-}
+  router.push(`/agentes/${agentId}`);
+};
 
 // Fetch project data
 const fetchProjectData = async () => {
-  console.log('fetchProjectData called with projectId:', projectId.value)
-  isLoading.value = true
-  
+  isLoading.value = true;
+
   if (projectId.value) {
     try {
       // Ensure we have the projects list loaded first
       if (projectsStore.projects.length === 0) {
-        console.log('Loading projects list first...')
-        await projectsStore.fetchProjects()
+        await projectsStore.fetchProjects();
       }
-      
+
       // Try to find the project in the existing projects list
-      const existingProject = projectsStore.projects.find(p => p.id === projectId.value)
-      console.log('Found existing project:', existingProject?.name)
-      
+      const existingProject = projectsStore.projects.find(
+        (p) => p.id === projectId.value,
+      );
+
       if (existingProject) {
         // Directly set the project without going through the store action
-        project.value = existingProject
-        setupImageGallery()
-        console.log('Set project from existing data')
+        project.value = existingProject;
+        setupImageGallery();
       } else {
-        console.log('Project not found in list')
-        project.value = null
+        project.value = null;
       }
-      
     } catch (err) {
-      console.error('Error in fetchProjectData:', err)
-      project.value = null
+      console.error("Error in fetchProjectData:", err);
+      project.value = null;
     } finally {
-      isLoading.value = false
-      console.log('Loading finished, project:', project.value?.name)
+      isLoading.value = false;
     }
   } else {
-    isLoading.value = false
+    isLoading.value = false;
   }
-}
+};
 
 onMounted(() => {
-  console.log('ProjectDetailPage mounted')
-  fetchProjectData()
-})
+  fetchProjectData();
+});
 
 // Watch for project changes
-watch(project, (newProject) => {
-  console.log('Project changed:', newProject?.name)
-}, { immediate: true })
+watch(
+  project,
+  (newProject) => {
+    // Project changed logic if needed
+  },
+  { immediate: true },
+);
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Montserrat:wght@300;400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Montserrat:wght@300;400;500;600;700&display=swap");
 
 /* Container Styles */
 .project-detail-container {
@@ -537,14 +775,18 @@ watch(project, (newProject) => {
 }
 
 .loading-text {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 1.1rem;
   font-weight: 500;
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Error State */
@@ -569,14 +811,14 @@ watch(project, (newProject) => {
 }
 
 .error-message {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 1.1rem;
   font-weight: 500;
   margin: 0 0 10px;
 }
 
 .error-details {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 0.9rem;
   color: #6c757d;
   margin: 0 0 20px;
@@ -591,13 +833,15 @@ watch(project, (newProject) => {
   flex-wrap: wrap;
 }
 
-.retry-btn, .back-btn-alt, .back-btn-error {
+.retry-btn,
+.back-btn-alt,
+.back-btn-error {
   background: linear-gradient(135deg, #667eea, #764ba2);
   color: white;
   border: none;
   padding: 12px 24px;
   border-radius: 25px;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -616,7 +860,8 @@ watch(project, (newProject) => {
   border-color: rgba(108, 117, 125, 0.5) !important;
 }
 
-.retry-btn:hover, .back-btn-alt:hover {
+.retry-btn:hover,
+.back-btn-alt:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
@@ -643,7 +888,7 @@ watch(project, (newProject) => {
 }
 
 .not-found-message {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 1.1rem;
   font-weight: 500;
   margin: 0 0 20px;
@@ -652,7 +897,8 @@ watch(project, (newProject) => {
 
 /* Back Navigation - Responsive */
 .back-navigation {
-  padding: clamp(20px, 4vw, 30px) clamp(1rem, 4vw, 2.5rem) clamp(1rem, 3vw, 1.25rem) clamp(1rem, 4vw, 2.5rem);
+  padding: clamp(20px, 4vw, 30px) clamp(1rem, 4vw, 2.5rem)
+    clamp(1rem, 3vw, 1.25rem) clamp(1rem, 4vw, 2.5rem);
   display: flex;
   justify-content: flex-end;
 }
@@ -666,7 +912,7 @@ watch(project, (newProject) => {
   color: #667eea;
   padding: clamp(8px, 2vw, 10px) clamp(16px, 4vw, 20px);
   border-radius: 25px;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-weight: 500;
   font-size: clamp(0.8rem, 2vw, 0.9rem);
   cursor: pointer;
@@ -791,7 +1037,7 @@ watch(project, (newProject) => {
   color: white;
   padding: 8px 15px;
   border-radius: 20px;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 0.85rem;
   font-weight: 500;
   backdrop-filter: blur(10px);
@@ -844,7 +1090,7 @@ watch(project, (newProject) => {
 }
 
 .project-name {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: clamp(1.8rem, 5vw, 2.5rem);
   font-weight: 300;
   color: #2c3e50;
@@ -864,7 +1110,7 @@ watch(project, (newProject) => {
 }
 
 .project-type-card {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: clamp(0.9rem, 2.5vw, 1rem);
   font-weight: 500;
   color: #667eea;
@@ -875,7 +1121,7 @@ watch(project, (newProject) => {
 }
 
 .project-location-card {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: clamp(1rem, 2.8vw, 1.1rem);
   font-weight: 500;
   color: #2c3e50;
@@ -884,7 +1130,11 @@ watch(project, (newProject) => {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.08), rgba(118, 75, 162, 0.05));
+  background: linear-gradient(
+    135deg,
+    rgba(102, 126, 234, 0.08),
+    rgba(118, 75, 162, 0.05)
+  );
   padding: 12px 16px;
   border-radius: 12px;
   border-left: 4px solid #667eea;
@@ -892,7 +1142,11 @@ watch(project, (newProject) => {
 }
 
 .project-location-card:hover {
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.12), rgba(118, 75, 162, 0.08));
+  background: linear-gradient(
+    135deg,
+    rgba(102, 126, 234, 0.12),
+    rgba(118, 75, 162, 0.08)
+  );
   transform: translateX(3px);
 }
 
@@ -935,7 +1189,7 @@ watch(project, (newProject) => {
 }
 
 .detail-label {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: clamp(0.75rem, 2vw, 0.85rem);
   font-weight: 500;
   color: #667eea;
@@ -946,7 +1200,7 @@ watch(project, (newProject) => {
 }
 
 .detail-value {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: clamp(1rem, 2.5vw, 1.1rem);
   font-weight: 500;
   color: #2c3e50;
@@ -960,7 +1214,7 @@ watch(project, (newProject) => {
 }
 
 .agent-info h3 {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 1.2rem;
   font-weight: 500;
   color: #2c3e50;
@@ -1005,7 +1259,7 @@ watch(project, (newProject) => {
 }
 
 .agent-name-mini {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 1.1rem;
   font-weight: 500;
   color: #2c3e50;
@@ -1013,7 +1267,7 @@ watch(project, (newProject) => {
 }
 
 .agent-type-mini {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 0.85rem;
   font-weight: 500;
   color: #667eea;
@@ -1032,7 +1286,7 @@ watch(project, (newProject) => {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 0.8rem;
   font-weight: 500;
   color: #6c757d;
@@ -1065,14 +1319,14 @@ watch(project, (newProject) => {
 }
 
 .stat-number {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 2rem;
   font-weight: 700;
   margin-bottom: 5px;
 }
 
 .stat-label {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 0.9rem;
   font-weight: 500;
   text-transform: uppercase;
@@ -1097,7 +1351,7 @@ watch(project, (newProject) => {
 }
 
 .section-title {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 2rem;
   font-weight: 300;
   color: #2c3e50;
@@ -1107,7 +1361,7 @@ watch(project, (newProject) => {
 }
 
 .section-title::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -8px;
   left: 0;
@@ -1124,7 +1378,7 @@ watch(project, (newProject) => {
 }
 
 .description-paragraph {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 1.1rem;
   line-height: 1.7;
   color: #5a6c7d;
@@ -1151,7 +1405,7 @@ watch(project, (newProject) => {
 }
 
 .description-paragraph:not(.first-paragraph):before {
-  content: '•';
+  content: "•";
   position: absolute;
   left: 0;
   color: rgba(102, 126, 234, 0.6);
@@ -1191,7 +1445,7 @@ watch(project, (newProject) => {
 }
 
 .notice-text {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 1rem;
   color: #e65100;
   margin: 0;
@@ -1262,7 +1516,7 @@ watch(project, (newProject) => {
   color: white;
   padding: 8px 15px;
   border-radius: 20px;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-weight: 600;
   font-size: 0.9rem;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
@@ -1274,7 +1528,7 @@ watch(project, (newProject) => {
 }
 
 .property-title {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 1.1rem;
   font-weight: 500;
   color: #2c3e50;
@@ -1283,7 +1537,7 @@ watch(project, (newProject) => {
 }
 
 .property-address {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 0.9rem;
   color: #6c757d;
   margin: 0 0 12px 0;
@@ -1300,7 +1554,7 @@ watch(project, (newProject) => {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 0.8rem;
   color: #667eea;
   background: rgba(102, 126, 234, 0.1);

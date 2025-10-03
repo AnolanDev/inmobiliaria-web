@@ -6,36 +6,47 @@
         <!-- Header de la galería -->
         <div class="gallery-header">
           <h2 class="gallery-title">Todo Nuestro Equipo</h2>
-          <p class="gallery-subtitle">Conoce a todos los profesionales que te acompañarán en tu inversión</p>
+          <p class="gallery-subtitle">
+            Conoce a todos los profesionales que te acompañarán en tu inversión
+          </p>
         </div>
-        
+
         <!-- Grid de agentes -->
         <div class="agents-grid">
-          <div 
-            v-for="agent in agents" 
+          <div
+            v-for="agent in agents"
             :key="agent.id"
             class="agent-card"
             @click="openAgentDetail(agent)"
           >
             <!-- Image container with agent click -->
             <div class="agent-image-container">
-              <img 
-                :src="getImageUrl(agent.profile_picture_url || '/placeholder-agent.svg')" 
+              <img
+                :src="
+                  getImageUrl(
+                    agent.profile_picture_url || '/placeholder-agent.svg',
+                  )
+                "
                 :alt="agent.name"
                 class="agent-image"
                 loading="lazy"
               />
               <div class="image-overlay">
                 <div class="agent-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                    <circle cx="12" cy="7" r="4"/>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
                   </svg>
                   <span>Ver Perfil</span>
                 </div>
               </div>
             </div>
-            
+
             <!-- Agent information below image -->
             <div class="agent-info-section">
               <h2 class="agent-title">{{ agent.name }}</h2>
@@ -57,12 +68,22 @@
         <p class="loading-text">Cargando agentes...</p>
       </div>
     </div>
-    
+
     <!-- Error State -->
     <div v-else-if="error" class="error-gallery">
       <div class="error-content">
-        <svg class="error-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 15.5c-.77.833.192 2.5 1.732 2.5z"></path>
+        <svg
+          class="error-icon"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 15.5c-.77.833.192 2.5 1.732 2.5z"
+          ></path>
         </svg>
         <p class="error-message">{{ error }}</p>
         <button @click="agentsStore.fetchAgents()" class="retry-btn">
@@ -70,56 +91,70 @@
         </button>
       </div>
     </div>
-    
+
     <!-- Empty State -->
     <div v-else class="empty-gallery">
       <div class="empty-content">
-        <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+        <svg
+          class="empty-icon"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+          ></path>
         </svg>
         <p class="empty-message">No se encontraron agentes disponibles.</p>
-        <p class="empty-submessage">Vuelve pronto para conocer a nuestro equipo.</p>
+        <p class="empty-submessage">
+          Vuelve pronto para conocer a nuestro equipo.
+        </p>
       </div>
     </div>
   </AppLayout>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { useAgentsStore } from '@/stores/agents'
-import { storeToRefs } from 'pinia'
-import AppLayout from '@/components/AppLayout.vue'
-import type { Agent } from '@/types'
+import { onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { useAgentsStore } from "@/stores/agents";
+import { storeToRefs } from "pinia";
+import AppLayout from "@/components/AppLayout.vue";
+import type { Agent } from "@/types";
 
-const router = useRouter()
-const agentsStore = useAgentsStore()
-const { agents, loading, error } = storeToRefs(agentsStore)
+const router = useRouter();
+const agentsStore = useAgentsStore();
+const { agents, loading, error } = storeToRefs(agentsStore);
 
 // Helper function to convert absolute URLs to relative for development
 const getImageUrl = (url: string): string => {
-  if (!url) return '/placeholder-agent.svg'
-  
+  if (!url) return "/placeholder-agent.svg";
+
   // In development, convert absolute URLs to relative
-  if (import.meta.env.DEV && url.includes('app.tierrasonada.com')) {
-    return url.replace('https://app.tierrasonada.com', '').replace('http://app.tierrasonada.com', '')
+  if (import.meta.env.DEV && url.includes("app.tierrasonada.com")) {
+    return url
+      .replace("https://app.tierrasonada.com", "")
+      .replace("http://app.tierrasonada.com", "");
   }
-  
-  return url
-}
+
+  return url;
+};
 
 const openAgentDetail = (agent: Agent) => {
   // Navigate to agent detail page
-  router.push(`/agentes/${agent.id}`)
-}
+  router.push(`/agentes/${agent.id}`);
+};
 
 onMounted(() => {
-  agentsStore.fetchAgents()
-})
+  agentsStore.fetchAgents();
+});
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Montserrat:wght@300;400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Montserrat:wght@300;400;500;600;700&display=swap");
 
 /* GALERÍA DE AGENTES - RESPONSIVE OPTIMIZADA */
 .agents-gallery-hero {
@@ -154,7 +189,7 @@ onMounted(() => {
 }
 
 .gallery-title {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: clamp(1.8rem, 5vw, 3rem);
   font-weight: 300;
   color: #2c3e50;
@@ -165,7 +200,7 @@ onMounted(() => {
 }
 
 .gallery-title::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -10px;
   left: 50%;
@@ -177,7 +212,7 @@ onMounted(() => {
 }
 
 .gallery-subtitle {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: clamp(0.9rem, 2.5vw, 1.2rem);
   color: #6c757d;
   font-weight: 300;
@@ -310,7 +345,11 @@ onMounted(() => {
 .image-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(30, 30, 50, 0.8));
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.7),
+    rgba(30, 30, 50, 0.8)
+  );
   display: flex;
   align-items: center;
   justify-content: center;
@@ -330,7 +369,7 @@ onMounted(() => {
   align-items: center;
   gap: 10px;
   color: white;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 0.9rem;
   font-weight: 600;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
@@ -362,7 +401,7 @@ onMounted(() => {
 }
 
 .agent-title {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: clamp(1rem, 3vw, 1.2rem);
   font-weight: 500;
   margin-bottom: clamp(0.5rem, 2vw, 0.75rem);
@@ -378,7 +417,7 @@ onMounted(() => {
 }
 
 .agent-type {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: clamp(0.75rem, 2vw, 0.85rem);
   font-weight: 500;
   color: #667eea;
@@ -388,8 +427,9 @@ onMounted(() => {
   line-height: 1.3;
 }
 
-.agent-phone, .agent-email {
-  font-family: 'Montserrat', sans-serif;
+.agent-phone,
+.agent-email {
+  font-family: "Montserrat", sans-serif;
   font-size: clamp(0.75rem, 2vw, 0.85rem);
   font-weight: 400;
   color: #6c757d;
@@ -427,7 +467,7 @@ onMounted(() => {
 }
 
 .loading-text {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: clamp(1rem, 2.5vw, 1.1rem);
   font-weight: 500;
   margin: 0;
@@ -435,8 +475,12 @@ onMounted(() => {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Error State */
@@ -468,7 +512,7 @@ onMounted(() => {
 }
 
 .error-message {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 1.1rem;
   font-weight: 500;
   margin: 0 0 20px;
@@ -480,7 +524,7 @@ onMounted(() => {
   border: none;
   padding: 12px 24px;
   border-radius: 25px;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -521,7 +565,7 @@ onMounted(() => {
 }
 
 .empty-message {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 1.1rem;
   font-weight: 500;
   margin: 0 0 10px;
@@ -529,7 +573,7 @@ onMounted(() => {
 }
 
 .empty-submessage {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 0.95rem;
   margin: 0;
 }
@@ -542,7 +586,7 @@ onMounted(() => {
     padding: clamp(12px, 3vw, 16px) clamp(16px, 4vw, 20px);
     font-size: clamp(0.8rem, 2vw, 0.9rem);
   }
-  
+
   .agent-icon svg {
     width: clamp(24px, 6vw, 32px);
     height: clamp(24px, 6vw, 32px);
@@ -554,7 +598,7 @@ onMounted(() => {
   .agent-card {
     min-height: 420px;
   }
-  
+
   .agent-image-container {
     min-height: 240px;
   }
@@ -564,7 +608,7 @@ onMounted(() => {
   .agent-card {
     min-height: 450px;
   }
-  
+
   .agent-image-container {
     min-height: 280px;
   }
@@ -575,7 +619,7 @@ onMounted(() => {
   .agents-container-full {
     max-width: 1600px;
   }
-  
+
   .agents-grid {
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
   }

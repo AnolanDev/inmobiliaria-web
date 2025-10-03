@@ -11,17 +11,26 @@
     <!-- Error State -->
     <div v-else-if="localError && !agent" class="error-container">
       <div class="error-content">
-        <svg class="error-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 15.5c-.77.833.192 2.5 1.732 2.5z"></path>
+        <svg
+          class="error-icon"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 15.5c-.77.833.192 2.5 1.732 2.5z"
+          ></path>
         </svg>
         <p class="error-message">{{ localError }}</p>
         <p class="error-details" v-if="localError?.includes('servidor')">
-          El agente puede no estar disponible temporalmente. Por favor, inténtalo más tarde o contacta con el administrador.
+          El agente puede no estar disponible temporalmente. Por favor,
+          inténtalo más tarde o contacta con el administrador.
         </p>
         <div class="error-actions">
-          <button @click="fetchAgentData" class="retry-btn">
-            Reintentar
-          </button>
+          <button @click="fetchAgentData" class="retry-btn">Reintentar</button>
           <button @click="goBack" class="back-btn-error">
             Volver a Agentes
           </button>
@@ -34,8 +43,13 @@
       <!-- Back Button -->
       <div class="back-navigation">
         <button @click="goBack" class="back-btn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M19 12H5M12 19l-7-7 7-7" />
           </svg>
           <span>Volver a Agentes</span>
         </button>
@@ -47,8 +61,8 @@
           <!-- Agent Image -->
           <div class="agent-image-section">
             <div class="main-image-container">
-              <img 
-                :src="getImageUrl(agent.profile_picture_url)" 
+              <img
+                :src="getImageUrl(agent.profile_picture_url)"
                 :alt="agent.name"
                 class="agent-main-image"
               />
@@ -64,42 +78,84 @@
 
             <div class="contact-info">
               <div class="contact-item" v-if="agent.phone">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"
+                  />
                 </svg>
-                <a :href="`tel:${agent.phone}`" class="contact-link">{{ agent.phone }}</a>
+                <a :href="`tel:${agent.phone}`" class="contact-link">{{
+                  agent.phone
+                }}</a>
               </div>
 
               <div class="contact-item" v-if="agent.email">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                  <polyline points="22,6 12,13 2,6"/>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                  />
+                  <polyline points="22,6 12,13 2,6" />
                 </svg>
-                <a :href="`mailto:${agent.email}`" class="contact-link">{{ agent.email }}</a>
+                <a :href="`mailto:${agent.email}`" class="contact-link">{{
+                  agent.email
+                }}</a>
               </div>
             </div>
 
             <!-- Social Media Links -->
-            <div class="social-media" v-if="agent.facebook || agent.instagram || agent.linkedin">
+            <div
+              class="social-media"
+              v-if="agent.facebook || agent.instagram || agent.linkedin"
+            >
               <h3>Sígueme en redes</h3>
               <div class="social-links">
-                <a v-if="agent.facebook" :href="agent.facebook" target="_blank" class="social-link facebook">
+                <a
+                  v-if="agent.facebook"
+                  :href="agent.facebook"
+                  target="_blank"
+                  class="social-link facebook"
+                >
                   <svg viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                    <path
+                      d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
+                    />
                   </svg>
                   <span>Facebook</span>
                 </a>
 
-                <a v-if="agent.instagram" :href="agent.instagram" target="_blank" class="social-link instagram">
+                <a
+                  v-if="agent.instagram"
+                  :href="agent.instagram"
+                  target="_blank"
+                  class="social-link instagram"
+                >
                   <svg viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 6.62 5.367 11.987 11.988 11.987 6.62 0 11.987-5.367 11.987-11.987C24.014 5.367 18.647.001 12.017.001zM8.449 16.988c-1.297 0-2.348-1.051-2.348-2.348 0-1.297 1.051-2.348 2.348-2.348 1.297 0 2.348 1.051 2.348 2.348 0 1.297-1.051 2.348-2.348 2.348zm7.718 0c-1.297 0-2.348-1.051-2.348-2.348 0-1.297 1.051-2.348 2.348-2.348 1.297 0 2.348 1.051 2.348 2.348 0 1.297-1.051 2.348-2.348 2.348z"/>
+                    <path
+                      d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 6.62 5.367 11.987 11.988 11.987 6.62 0 11.987-5.367 11.987-11.987C24.014 5.367 18.647.001 12.017.001zM8.449 16.988c-1.297 0-2.348-1.051-2.348-2.348 0-1.297 1.051-2.348 2.348-2.348 1.297 0 2.348 1.051 2.348 2.348 0 1.297-1.051 2.348-2.348 2.348zm7.718 0c-1.297 0-2.348-1.051-2.348-2.348 0-1.297 1.051-2.348 2.348-2.348 1.297 0 2.348 1.051 2.348 2.348 0 1.297-1.051 2.348-2.348 2.348z"
+                    />
                   </svg>
                   <span>Instagram</span>
                 </a>
 
-                <a v-if="agent.linkedin" :href="agent.linkedin" target="_blank" class="social-link linkedin">
+                <a
+                  v-if="agent.linkedin"
+                  :href="agent.linkedin"
+                  target="_blank"
+                  class="social-link linkedin"
+                >
                   <svg viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                    <path
+                      d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"
+                    />
                   </svg>
                   <span>LinkedIn</span>
                 </a>
@@ -120,7 +176,7 @@
       <!-- Agent Biography -->
       <section class="agent-biography" v-if="agent.bio">
         <div class="biography-container">
-          <h2 class="section-title">Sobre {{ agent.name.split(' ')[0] }}</h2>
+          <h2 class="section-title">Sobre {{ agent.name.split(" ")[0] }}</h2>
           <div class="biography-content">
             <p class="biography-text">{{ agent.bio }}</p>
           </div>
@@ -128,19 +184,24 @@
       </section>
 
       <!-- Agent Properties (if available) -->
-      <section class="agent-properties" v-if="agent.properties && agent.properties.length > 0">
+      <section
+        class="agent-properties"
+        v-if="agent.properties && agent.properties.length > 0"
+      >
         <div class="properties-container">
-          <h2 class="section-title">Propiedades de {{ agent.name.split(' ')[0] }}</h2>
+          <h2 class="section-title">
+            Propiedades de {{ agent.name.split(" ")[0] }}
+          </h2>
           <div class="properties-grid">
-            <div 
-              v-for="property in agent.properties" 
+            <div
+              v-for="property in agent.properties"
               :key="property.id"
               class="property-card"
               @click="goToProperty(property.id)"
             >
               <div class="property-image-container">
-                <img 
-                  :src="getImageUrl(property.cover_image_url)" 
+                <img
+                  :src="getImageUrl(property.cover_image_url)"
                   :alt="property.title"
                   class="property-image"
                 />
@@ -150,7 +211,9 @@
               </div>
               <div class="property-info">
                 <h3 class="property-title">{{ property.title }}</h3>
-                <p class="property-location">{{ property.address }}, {{ property.city }}</p>
+                <p class="property-location">
+                  {{ property.address }}, {{ property.city }}
+                </p>
                 <div class="property-details">
                   <span class="property-detail" v-if="property.bedrooms">
                     {{ property.bedrooms }} hab.
@@ -167,14 +230,23 @@
           </div>
         </div>
       </section>
-
     </div>
 
     <!-- Not Found State -->
     <div v-else class="not-found-container">
       <div class="not-found-content">
-        <svg class="not-found-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+        <svg
+          class="not-found-icon"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+          ></path>
         </svg>
         <p class="not-found-message">Agente no encontrado</p>
         <button @click="goBack" class="back-btn-alt">Volver a Agentes</button>
@@ -184,109 +256,116 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { useAgentsStore } from '@/stores/agents'
-import { storeToRefs } from 'pinia'
-import AppLayout from '@/components/AppLayout.vue'
-import type { Agent } from '@/types'
+import { ref, onMounted, computed, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { useAgentsStore } from "@/stores/agents";
+import { storeToRefs } from "pinia";
+import AppLayout from "@/components/AppLayout.vue";
+import type { Agent } from "@/types";
 
-const route = useRoute()
-const router = useRouter()
-const agentsStore = useAgentsStore()
-const { currentAgent, loading, error } = storeToRefs(agentsStore)
+const route = useRoute();
+const router = useRouter();
+const agentsStore = useAgentsStore();
+const { currentAgent, loading, error } = storeToRefs(agentsStore);
 
 // Estado local para optimización
-const agent = ref<Agent | null>(null)
-const isLoading = ref(true)
-const localError = ref<string | null>(null)
+const agent = ref<Agent | null>(null);
+const isLoading = ref(true);
+const localError = ref<string | null>(null);
 
-const agentId = computed(() => parseInt(route.params.id as string))
+const agentId = computed(() => parseInt(route.params.id as string));
 
 // Helper function to convert absolute URLs to relative for development
 const getImageUrl = (url: string): string => {
-  if (!url) return '/placeholder-agent.svg'
-  
+  if (!url) return "/placeholder-agent.svg";
+
   // In development, convert absolute URLs to relative
-  if (import.meta.env.DEV && url.includes('app.tierrasonada.com')) {
-    return url.replace('https://app.tierrasonada.com', '').replace('http://app.tierrasonada.com', '')
+  if (import.meta.env.DEV && url.includes("app.tierrasonada.com")) {
+    return url
+      .replace("https://app.tierrasonada.com", "")
+      .replace("http://app.tierrasonada.com", "");
   }
-  
-  return url
-}
+
+  return url;
+};
 
 // Format price with thousands separator
 const formatPrice = (price: number): string => {
-  return new Intl.NumberFormat('es-CO', {
+  return new Intl.NumberFormat("es-CO", {
     minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  }).format(price)
-}
+    maximumFractionDigits: 0,
+  }).format(price);
+};
 
 // Navigation methods
 const goBack = () => {
-  router.push('/agentes')
-}
+  router.push("/agentes");
+};
 
 const goToProperty = (propertyId: number) => {
-  router.push(`/propiedades/${propertyId}`)
-}
+  router.push(`/propiedades/${propertyId}`);
+};
 
 // Fetch agent data with caching strategy
 const fetchAgentData = async () => {
-  console.log('fetchAgentData called with agentId:', agentId.value)
-  isLoading.value = true
-  localError.value = null
-  
+  console.log("fetchAgentData called with agentId:", agentId.value);
+  isLoading.value = true;
+  localError.value = null;
+
   if (agentId.value) {
     try {
       // Ensure we have the agents list loaded first
       if (agentsStore.agents.length === 0) {
-        console.log('Loading agents list first...')
-        await agentsStore.fetchAgents()
+        console.log("Loading agents list first...");
+        await agentsStore.fetchAgents();
       }
-      
+
       // Try to find the agent in the existing agents list
-      const existingAgent = agentsStore.agents.find(a => a.id === agentId.value)
-      console.log('Found existing agent:', existingAgent?.name)
-      
+      const existingAgent = agentsStore.agents.find(
+        (a) => a.id === agentId.value,
+      );
+      console.log("Found existing agent:", existingAgent?.name);
+
       if (existingAgent) {
         // Directly set the agent without going through the store action
-        agent.value = existingAgent
-        console.log('Set agent from existing data')
+        agent.value = existingAgent;
+        console.log("Set agent from existing data");
       } else {
-        console.log('Agent not found in list, fetching from API...')
+        console.log("Agent not found in list, fetching from API...");
         // Fallback to API call if not found in cache
-        await agentsStore.fetchAgent(agentId.value)
-        agent.value = currentAgent.value
+        await agentsStore.fetchAgent(agentId.value);
+        agent.value = currentAgent.value;
       }
-      
     } catch (err) {
-      console.error('Error in fetchAgentData:', err)
-      localError.value = 'Error al cargar información del agente'
-      agent.value = null
+      console.error("Error in fetchAgentData:", err);
+      localError.value = "Error al cargar información del agente";
+      agent.value = null;
     } finally {
-      isLoading.value = false
-      console.log('Loading finished, agent:', agent.value?.name)
+      isLoading.value = false;
+      console.log("Loading finished, agent:", agent.value?.name);
     }
   } else {
-    isLoading.value = false
+    isLoading.value = false;
   }
-}
+};
 
 onMounted(() => {
-  console.log('AgentDetailPage mounted')
-  fetchAgentData()
-})
+  console.log("AgentDetailPage mounted");
+  fetchAgentData();
+});
 
 // Watch for agent changes
-watch(agent, (newAgent) => {
-  console.log('Agent changed:', newAgent?.name)
-}, { immediate: true })
+watch(
+  agent,
+  (newAgent) => {
+    console.log("Agent changed:", newAgent?.name);
+  },
+  { immediate: true },
+);
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Montserrat:wght@300;400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Montserrat:wght@300;400;500;600;700&display=swap");
 
 /* Container Styles */
 .agent-detail-container {
@@ -319,14 +398,18 @@ watch(agent, (newAgent) => {
 }
 
 .loading-text {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 1.1rem;
   font-weight: 500;
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Error State */
@@ -351,14 +434,14 @@ watch(agent, (newAgent) => {
 }
 
 .error-message {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 1.1rem;
   font-weight: 500;
   margin: 0 0 20px;
 }
 
 .error-details {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 0.9rem;
   color: #6c757d;
   margin: 10px 0 20px;
@@ -372,13 +455,15 @@ watch(agent, (newAgent) => {
   flex-wrap: wrap;
 }
 
-.retry-btn, .back-btn-alt, .back-btn-error {
+.retry-btn,
+.back-btn-alt,
+.back-btn-error {
   background: linear-gradient(135deg, #667eea, #764ba2);
   color: white;
   border: none;
   padding: 12px 24px;
   border-radius: 25px;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -390,7 +475,8 @@ watch(agent, (newAgent) => {
   box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
 }
 
-.retry-btn:hover, .back-btn-alt:hover {
+.retry-btn:hover,
+.back-btn-alt:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
@@ -424,7 +510,7 @@ watch(agent, (newAgent) => {
 }
 
 .not-found-message {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: clamp(1rem, 2.5vw, 1.1rem);
   font-weight: 500;
   margin: 0 0 clamp(1rem, 3vw, 1.25rem);
@@ -434,7 +520,8 @@ watch(agent, (newAgent) => {
 
 /* Back Navigation - Responsive */
 .back-navigation {
-  padding: clamp(60px, 12vw, 80px) clamp(1rem, 4vw, 2.5rem) clamp(1rem, 3vw, 1.25rem) clamp(1rem, 4vw, 2.5rem);
+  padding: clamp(60px, 12vw, 80px) clamp(1rem, 4vw, 2.5rem)
+    clamp(1rem, 3vw, 1.25rem) clamp(1rem, 4vw, 2.5rem);
   display: flex;
   justify-content: flex-end;
 }
@@ -448,7 +535,7 @@ watch(agent, (newAgent) => {
   color: #667eea;
   padding: clamp(8px, 2vw, 10px) clamp(16px, 4vw, 20px);
   border-radius: 25px;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-weight: 500;
   font-size: clamp(0.8rem, 2vw, 0.9rem);
   cursor: pointer;
@@ -540,7 +627,7 @@ watch(agent, (newAgent) => {
 }
 
 .agent-name {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: clamp(1.8rem, 5vw, 2.5rem);
   font-weight: 300;
   color: #2c3e50;
@@ -550,7 +637,7 @@ watch(agent, (newAgent) => {
 }
 
 .agent-type {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: clamp(0.9rem, 2.5vw, 1.1rem);
   font-weight: 500;
   color: #667eea;
@@ -586,7 +673,7 @@ watch(agent, (newAgent) => {
 }
 
 .contact-link {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: clamp(0.875rem, 2.5vw, 1rem);
   font-weight: 500;
   color: #2c3e50;
@@ -606,7 +693,7 @@ watch(agent, (newAgent) => {
 }
 
 .social-media h3 {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: clamp(1rem, 2.5vw, 1.2rem);
   font-weight: 500;
   color: #2c3e50;
@@ -627,7 +714,7 @@ watch(agent, (newAgent) => {
   padding: clamp(8px, 2vw, 10px) clamp(12px, 3vw, 15px);
   border-radius: 25px;
   text-decoration: none;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-weight: 500;
   font-size: clamp(0.8rem, 2vw, 0.9rem);
   transition: all 0.3s ease;
@@ -700,7 +787,7 @@ watch(agent, (newAgent) => {
 }
 
 .stat-number {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: clamp(1.5rem, 4vw, 2rem);
   font-weight: 700;
   margin-bottom: clamp(0.25rem, 1vw, 0.375rem);
@@ -708,7 +795,7 @@ watch(agent, (newAgent) => {
 }
 
 .stat-label {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: clamp(0.75rem, 2vw, 0.9rem);
   font-weight: 500;
   text-transform: uppercase;
@@ -734,7 +821,7 @@ watch(agent, (newAgent) => {
 }
 
 .section-title {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: clamp(1.5rem, 4vw, 2rem);
   font-weight: 300;
   color: #2c3e50;
@@ -745,7 +832,7 @@ watch(agent, (newAgent) => {
 }
 
 .section-title::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -8px;
   left: 0;
@@ -756,7 +843,7 @@ watch(agent, (newAgent) => {
 }
 
 .biography-text {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: clamp(0.95rem, 2.5vw, 1.1rem);
   line-height: 1.8;
   color: #5a6c7d;
@@ -848,7 +935,7 @@ watch(agent, (newAgent) => {
   color: white;
   padding: clamp(6px, 2vw, 8px) clamp(12px, 3vw, 15px);
   border-radius: 20px;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-weight: 600;
   font-size: clamp(0.75rem, 2vw, 0.9rem);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
@@ -860,7 +947,7 @@ watch(agent, (newAgent) => {
 }
 
 .property-title {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: clamp(1rem, 2.5vw, 1.1rem);
   font-weight: 500;
   color: #2c3e50;
@@ -870,7 +957,7 @@ watch(agent, (newAgent) => {
 }
 
 .property-location {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: clamp(0.8rem, 2vw, 0.9rem);
   color: #6c757d;
   margin: 0 0 clamp(0.75rem, 2vw, 1rem) 0;
@@ -884,7 +971,7 @@ watch(agent, (newAgent) => {
 }
 
 .property-detail {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: clamp(0.7rem, 2vw, 0.8rem);
   color: #667eea;
   background: rgba(102, 126, 234, 0.1);
@@ -895,29 +982,29 @@ watch(agent, (newAgent) => {
   white-space: nowrap;
 }
 
-
 /* Responsive Design Moderno */
 
 /* Mobile devices: Hasta 479px */
 @media (max-width: 479px) {
   .back-navigation {
-    padding: clamp(60px, 15vw, 80px) clamp(1rem, 4vw, 1.25rem) clamp(1rem, 4vw, 1.25rem);
+    padding: clamp(60px, 15vw, 80px) clamp(1rem, 4vw, 1.25rem)
+      clamp(1rem, 4vw, 1.25rem);
   }
-  
+
   .social-links {
     flex-direction: column;
     align-items: stretch;
   }
-  
+
   .social-link {
     justify-content: center;
     text-align: center;
   }
-  
+
   .stats-section {
     justify-content: center;
   }
-  
+
   .stat-item {
     flex: 1 1 auto;
     max-width: 150px;
@@ -938,7 +1025,7 @@ watch(agent, (newAgent) => {
     flex-wrap: wrap;
     justify-content: flex-start;
   }
-  
+
   .stats-section {
     justify-content: flex-start;
   }
@@ -950,7 +1037,7 @@ watch(agent, (newAgent) => {
     grid-template-columns: 1fr 1fr;
     align-items: center;
   }
-  
+
   .main-image-container {
     max-height: 400px;
   }
@@ -961,7 +1048,7 @@ watch(agent, (newAgent) => {
   .hero-content {
     grid-template-columns: 1fr 1.3fr;
   }
-  
+
   .social-links {
     gap: 1.25rem;
   }
@@ -970,7 +1057,8 @@ watch(agent, (newAgent) => {
 /* Desktop: 1024px+ */
 @media (min-width: 1024px) {
   .back-navigation {
-    padding: clamp(80px, 8vw, 100px) clamp(2rem, 5vw, 2.5rem) clamp(1.5rem, 4vw, 2rem) clamp(2rem, 5vw, 2.5rem);
+    padding: clamp(80px, 8vw, 100px) clamp(2rem, 5vw, 2.5rem)
+      clamp(1.5rem, 4vw, 2rem) clamp(2rem, 5vw, 2.5rem);
   }
 }
 </style>

@@ -1,52 +1,52 @@
-import { defineStore } from 'pinia'
-import { ref } from 'vue'
-import type { Agent } from '@/types'
-import { apiService } from '@/services/api'
+import { defineStore } from "pinia";
+import { ref } from "vue";
+import type { Agent } from "@/types";
+import { apiService } from "@/services/api";
 
-export const useAgentsStore = defineStore('agents', () => {
-  const agents = ref<Agent[]>([])
-  const currentAgent = ref<Agent | null>(null)
-  const loading = ref(false)
-  const error = ref<string | null>(null)
+export const useAgentsStore = defineStore("agents", () => {
+  const agents = ref<Agent[]>([]);
+  const currentAgent = ref<Agent | null>(null);
+  const loading = ref(false);
+  const error = ref<string | null>(null);
 
   const fetchAgents = async () => {
-    loading.value = true
-    error.value = null
-    
+    loading.value = true;
+    error.value = null;
+
     try {
-      agents.value = await apiService.getAgents()
+      agents.value = await apiService.getAgents();
     } catch (err: any) {
-      error.value = err.response?.data?.message || 'Error al cargar agentes'
-      console.error('Error fetching agents:', err)
+      error.value = err.response?.data?.message || "Error al cargar agentes";
+      console.error("Error fetching agents:", err);
     } finally {
-      loading.value = false
+      loading.value = false;
     }
-  }
+  };
 
   const fetchAgent = async (id: number) => {
-    loading.value = true
-    error.value = null
-    
+    loading.value = true;
+    error.value = null;
+
     try {
-      currentAgent.value = await apiService.getAgent(id)
+      currentAgent.value = await apiService.getAgent(id);
     } catch (err: any) {
       if (err.response?.status === 404) {
-        error.value = 'Agente no encontrado'
+        error.value = "Agente no encontrado";
       } else if (err.response?.status === 500) {
-        error.value = 'Error del servidor al cargar el agente'
+        error.value = "Error del servidor al cargar el agente";
       } else {
-        error.value = err.response?.data?.message || 'Error al cargar agente'
+        error.value = err.response?.data?.message || "Error al cargar agente";
       }
-      console.error('Error fetching agent:', err)
-      currentAgent.value = null
+      console.error("Error fetching agent:", err);
+      currentAgent.value = null;
     } finally {
-      loading.value = false
+      loading.value = false;
     }
-  }
+  };
 
   const clearCurrentAgent = () => {
-    currentAgent.value = null
-  }
+    currentAgent.value = null;
+  };
 
   return {
     agents,
@@ -55,6 +55,6 @@ export const useAgentsStore = defineStore('agents', () => {
     error,
     fetchAgents,
     fetchAgent,
-    clearCurrentAgent
-  }
-})
+    clearCurrentAgent,
+  };
+});

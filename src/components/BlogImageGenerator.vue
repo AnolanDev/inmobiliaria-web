@@ -5,82 +5,103 @@
       <div class="category-icon">
         <component :is="categoryIcon" class="w-8 h-8 text-white/80" />
       </div>
-      
+
       <!-- Blog Title Preview -->
       <div class="title-preview">
-        <h3 class="text-sm font-semibold text-white/90 text-center line-clamp-2">
+        <h3
+          class="text-sm font-semibold text-white/90 text-center line-clamp-2"
+        >
           {{ truncatedTitle }}
         </h3>
       </div>
-      
+
       <!-- Decorative Elements -->
       <div class="decorative-dots">
-        <div v-for="n in 6" :key="n" class="dot" :style="{ animationDelay: `${n * 0.2}s` }"></div>
+        <div
+          v-for="n in 6"
+          :key="n"
+          class="dot"
+          :style="{ animationDelay: `${n * 0.2}s` }"
+        ></div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, h } from 'vue'
+import { computed, h } from "vue";
 
 interface Props {
-  title: string
-  category?: string
+  title: string;
+  category?: string;
 }
 
-const props = defineProps<Props>()
+const props = defineProps<Props>();
 
 // Generate consistent gradient based on title hash
 const gradientClass = computed(() => {
-  const hash = props.title.split('').reduce((a, b) => {
-    a = ((a << 5) - a) + b.charCodeAt(0)
-    return a & a
-  }, 0)
-  
+  const hash = props.title.split("").reduce((a, b) => {
+    a = (a << 5) - a + b.charCodeAt(0);
+    return a & a;
+  }, 0);
+
   const gradients = [
-    'gradient-blue',
-    'gradient-purple', 
-    'gradient-green',
-    'gradient-orange',
-    'gradient-pink',
-    'gradient-indigo'
-  ]
-  
-  return gradients[Math.abs(hash) % gradients.length]
-})
+    "gradient-blue",
+    "gradient-purple",
+    "gradient-green",
+    "gradient-orange",
+    "gradient-pink",
+    "gradient-indigo",
+  ];
+
+  return gradients[Math.abs(hash) % gradients.length];
+});
 
 const truncatedTitle = computed(() => {
-  return props.title.length > 60 ? props.title.substring(0, 60) + '...' : props.title
-})
+  return props.title.length > 60
+    ? props.title.substring(0, 60) + "..."
+    : props.title;
+});
 
 const categoryIcon = computed(() => {
-  const category = props.category?.toLowerCase() || 'general'
-  
+  const category = props.category?.toLowerCase() || "general";
+
   // Return SVG components based on category
-  if (category.includes('tecnolog') || category.includes('tech')) {
-    return h('svg', { viewBox: '0 0 24 24', fill: 'currentColor' }, [
-      h('path', { d: 'M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z' })
-    ])
+  if (category.includes("tecnolog") || category.includes("tech")) {
+    return h("svg", { viewBox: "0 0 24 24", fill: "currentColor" }, [
+      h("path", { d: "M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z" }),
+    ]);
   }
-  
-  if (category.includes('inmobiliaria') || category.includes('real estate') || category.includes('propied')) {
-    return h('svg', { viewBox: '0 0 24 24', fill: 'currentColor' }, [
-      h('path', { d: 'M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z' })
-    ])
+
+  if (
+    category.includes("inmobiliaria") ||
+    category.includes("real estate") ||
+    category.includes("propied")
+  ) {
+    return h("svg", { viewBox: "0 0 24 24", fill: "currentColor" }, [
+      h("path", { d: "M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" }),
+    ]);
   }
-  
-  if (category.includes('mercado') || category.includes('market') || category.includes('economia')) {
-    return h('svg', { viewBox: '0 0 24 24', fill: 'currentColor' }, [
-      h('path', { d: 'M7 4V2c0-1.1.9-2 2-2h6c1.1 0 2 .9 2 2v2h4v2H3V4h4zM6 7v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6z' })
-    ])
+
+  if (
+    category.includes("mercado") ||
+    category.includes("market") ||
+    category.includes("economia")
+  ) {
+    return h("svg", { viewBox: "0 0 24 24", fill: "currentColor" }, [
+      h("path", {
+        d: "M7 4V2c0-1.1.9-2 2-2h6c1.1 0 2 .9 2 2v2h4v2H3V4h4zM6 7v12c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6z",
+      }),
+    ]);
   }
-  
+
   // Default article icon
-  return h('svg', { viewBox: '0 0 24 24', fill: 'currentColor' }, [
-    h('path', { d: 'M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z' })
-  ])
-})
+  return h("svg", { viewBox: "0 0 24 24", fill: "currentColor" }, [
+    h("path", {
+      d: "M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z",
+    }),
+  ]);
+});
 </script>
 
 <style scoped>
@@ -139,16 +160,41 @@ const categoryIcon = computed(() => {
   animation: float 3s ease-in-out infinite;
 }
 
-.dot:nth-child(1) { top: 10%; left: 15%; }
-.dot:nth-child(2) { top: 20%; right: 20%; }
-.dot:nth-child(3) { top: 60%; left: 10%; }
-.dot:nth-child(4) { bottom: 30%; right: 15%; }
-.dot:nth-child(5) { bottom: 20%; left: 25%; }
-.dot:nth-child(6) { top: 50%; right: 10%; }
+.dot:nth-child(1) {
+  top: 10%;
+  left: 15%;
+}
+.dot:nth-child(2) {
+  top: 20%;
+  right: 20%;
+}
+.dot:nth-child(3) {
+  top: 60%;
+  left: 10%;
+}
+.dot:nth-child(4) {
+  bottom: 30%;
+  right: 15%;
+}
+.dot:nth-child(5) {
+  bottom: 20%;
+  left: 25%;
+}
+.dot:nth-child(6) {
+  top: 50%;
+  right: 10%;
+}
 
 @keyframes float {
-  0%, 100% { transform: translateY(0px) scale(1); opacity: 0.6; }
-  50% { transform: translateY(-10px) scale(1.1); opacity: 0.8; }
+  0%,
+  100% {
+    transform: translateY(0px) scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateY(-10px) scale(1.1);
+    opacity: 0.8;
+  }
 }
 
 .line-clamp-2 {

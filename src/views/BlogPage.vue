@@ -9,12 +9,15 @@
               Blog <span class="text-primary-400">Tierra Soñada</span>
             </h1>
             <p class="blog-hero-subtitle">
-              Descubre las últimas tendencias en inversión inmobiliaria, tips para el hogar y noticias del mercado campestre
+              Descubre las últimas tendencias en inversión inmobiliaria, tips
+              para el hogar y noticias del mercado campestre
             </p>
           </div>
           <div class="blog-hero-stats">
             <div class="blog-stat">
-              <span class="blog-stat-number">{{ mockStats.totalArticles }}</span>
+              <span class="blog-stat-number">{{
+                mockStats.totalArticles
+              }}</span>
               <span class="blog-stat-label">Artículos</span>
             </div>
             <div class="blog-stat">
@@ -22,7 +25,9 @@
               <span class="blog-stat-label">Categorías</span>
             </div>
             <div class="blog-stat">
-              <span class="blog-stat-number">{{ mockStats.monthlyReaders }}K</span>
+              <span class="blog-stat-number"
+                >{{ mockStats.monthlyReaders }}K</span
+              >
               <span class="blog-stat-label">Lectores/mes</span>
             </div>
           </div>
@@ -34,19 +39,24 @@
         <div class="blog-categories-container">
           <h2 class="blog-categories-title">Explora por Categoría</h2>
           <div class="blog-categories-grid">
-            <button 
-              v-for="category in mockCategories" 
+            <button
+              v-for="category in mockCategories"
               :key="category.id"
               class="blog-category-card"
-              :class="{ 'active': selectedCategory === category.id }"
+              :class="{ active: selectedCategory === category.id }"
               @click="selectCategory(category.id)"
             >
-              <div class="blog-category-icon" :style="{ backgroundColor: category.color }">
+              <div
+                class="blog-category-icon"
+                :style="{ backgroundColor: category.color }"
+              >
                 <span v-html="category.icon"></span>
               </div>
               <div class="blog-category-info">
                 <h3 class="blog-category-name">{{ category.name }}</h3>
-                <span class="blog-category-count">{{ category.articleCount }} artículos</span>
+                <span class="blog-category-count"
+                  >{{ category.articleCount }} artículos</span
+                >
               </div>
             </button>
           </div>
@@ -60,7 +70,7 @@
             <h2 class="blog-featured-title">Artículos Destacados</h2>
             <button class="blog-view-all">Ver todos</button>
           </div>
-          
+
           <div class="blog-featured-grid">
             <!-- Main Featured Article -->
             <article class="blog-featured-main">
@@ -79,8 +89,9 @@
                   Guía Completa: Cómo Invertir en Lotes Campestres en 2024
                 </h3>
                 <p class="blog-featured-main-excerpt">
-                  Descubre las claves para una inversión exitosa en el mercado inmobiliario campestre. 
-                  Desde la selección del terreno hasta el retorno de la inversión.
+                  Descubre las claves para una inversión exitosa en el mercado
+                  inmobiliario campestre. Desde la selección del terreno hasta
+                  el retorno de la inversión.
                 </p>
                 <div class="blog-featured-main-footer">
                   <div class="blog-author">
@@ -94,8 +105,8 @@
 
             <!-- Secondary Featured Articles -->
             <div class="blog-featured-secondary">
-              <article 
-                v-for="article in mockFeaturedSecondary" 
+              <article
+                v-for="article in mockFeaturedSecondary"
                 :key="article.id"
                 class="blog-featured-card"
               >
@@ -104,12 +115,20 @@
                 </div>
                 <div class="blog-featured-card-content">
                   <div class="blog-featured-card-meta">
-                    <span class="blog-featured-card-category">{{ article.category }}</span>
-                    <span class="blog-featured-card-date">{{ article.date }}</span>
+                    <span class="blog-featured-card-category">{{
+                      article.category
+                    }}</span>
+                    <span class="blog-featured-card-date">{{
+                      article.date
+                    }}</span>
                   </div>
                   <h4 class="blog-featured-card-title">{{ article.title }}</h4>
-                  <p class="blog-featured-card-excerpt">{{ article.excerpt }}</p>
-                  <span class="blog-featured-card-read-time">{{ article.readTime }} min</span>
+                  <p class="blog-featured-card-excerpt">
+                    {{ article.excerpt }}
+                  </p>
+                  <span class="blog-featured-card-read-time"
+                    >{{ article.readTime }} min</span
+                  >
                 </div>
               </article>
             </div>
@@ -123,16 +142,16 @@
           <div class="blog-recent-header">
             <h2 class="blog-recent-title">Artículos Recientes</h2>
             <div class="blog-recent-filters">
-              <button 
-                class="blog-filter-btn" 
-                :class="{ 'active': sortBy === 'newest' }"
+              <button
+                class="blog-filter-btn"
+                :class="{ active: sortBy === 'newest' }"
                 @click="sortBy = 'newest'"
               >
                 Más recientes
               </button>
-              <button 
-                class="blog-filter-btn" 
-                :class="{ 'active': sortBy === 'popular' }"
+              <button
+                class="blog-filter-btn"
+                :class="{ active: sortBy === 'popular' }"
                 @click="sortBy = 'popular'"
               >
                 Más populares
@@ -141,15 +160,20 @@
           </div>
 
           <div class="blog-recent-grid">
-            <article 
-              v-for="article in mockRecentArticles" 
+            <article
+              v-for="article in mockRecentArticles"
               :key="article.id"
               class="blog-article-card"
             >
               <div class="blog-article-card-image">
                 <img :src="article.image" :alt="article.title" />
                 <div class="blog-article-card-overlay">
-                  <span class="blog-article-category" :style="{ backgroundColor: getCategoryColor(article.category) }">
+                  <span
+                    class="blog-article-category"
+                    :style="{
+                      backgroundColor: getCategoryColor(article.category),
+                    }"
+                  >
                     {{ article.category }}
                   </span>
                 </div>
@@ -157,20 +181,36 @@
               <div class="blog-article-card-content">
                 <div class="blog-article-card-meta">
                   <span class="blog-article-card-date">{{ article.date }}</span>
-                  <span class="blog-article-card-views">{{ article.views }} vistas</span>
+                  <span class="blog-article-card-views"
+                    >{{ article.views }} vistas</span
+                  >
                 </div>
                 <h3 class="blog-article-card-title">{{ article.title }}</h3>
                 <p class="blog-article-card-excerpt">{{ article.excerpt }}</p>
                 <div class="blog-article-card-footer">
                   <div class="blog-article-author">
-                    <div class="blog-article-author-avatar">{{ article.author.initials }}</div>
-                    <span class="blog-article-author-name">{{ article.author.name }}</span>
+                    <div class="blog-article-author-avatar">
+                      {{ article.author.initials }}
+                    </div>
+                    <span class="blog-article-author-name">{{
+                      article.author.name
+                    }}</span>
                   </div>
                   <div class="blog-article-card-actions">
-                    <span class="blog-article-read-time">{{ article.readTime }} min</span>
+                    <span class="blog-article-read-time"
+                      >{{ article.readTime }} min</span
+                    >
                     <button class="blog-article-share">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                      >
+                        <path
+                          d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"
+                        ></path>
                         <polyline points="16,6 12,2 8,6"></polyline>
                         <line x1="12" y1="2" x2="12" y2="15"></line>
                       </svg>
@@ -185,7 +225,13 @@
           <div class="blog-load-more">
             <button class="blog-load-more-btn" @click="loadMore">
               <span>Cargar más artículos</span>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+              >
                 <polyline points="6,9 12,15 18,9"></polyline>
               </svg>
             </button>
@@ -198,14 +244,17 @@
         <div class="blog-newsletter-container">
           <div class="blog-newsletter-content">
             <div class="blog-newsletter-text">
-              <h3 class="blog-newsletter-title">¿Te gustó nuestro contenido?</h3>
+              <h3 class="blog-newsletter-title">
+                ¿Te gustó nuestro contenido?
+              </h3>
               <p class="blog-newsletter-subtitle">
-                Suscríbete a nuestro newsletter y recibe los mejores consejos sobre inversión inmobiliaria
+                Suscríbete a nuestro newsletter y recibe los mejores consejos
+                sobre inversión inmobiliaria
               </p>
             </div>
             <div class="blog-newsletter-form">
-              <input 
-                type="email" 
+              <input
+                type="email"
                 placeholder="Tu correo electrónico"
                 v-model="newsletterEmail"
                 class="blog-newsletter-input"
@@ -222,146 +271,196 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import AppLayout from '@/components/AppLayout.vue'
+import { ref } from "vue";
+import AppLayout from "@/components/AppLayout.vue";
 
 // Reactive data
-const selectedCategory = ref('all')
-const sortBy = ref('newest')
-const newsletterEmail = ref('')
+const selectedCategory = ref("all");
+const sortBy = ref("newest");
+const newsletterEmail = ref("");
 
 // Mock data - will be replaced with API calls
 const mockStats = {
   totalArticles: 156,
   categories: 8,
-  monthlyReaders: 25
-}
+  monthlyReaders: 25,
+};
 
 const mockCategories = [
-  { id: 'all', name: 'Todos', icon: '📚', color: '#25D366', articleCount: 156 },
-  { id: 'investment', name: 'Inversión', icon: '💰', color: '#FFB800', articleCount: 45 },
-  { id: 'lifestyle', name: 'Estilo de Vida', icon: '🏡', color: '#FF6B6B', articleCount: 32 },
-  { id: 'legal', name: 'Legal', icon: '⚖️', color: '#4ECDC4', articleCount: 28 },
-  { id: 'design', name: 'Diseño', icon: '🎨', color: '#45B7D1', articleCount: 23 },
-  { id: 'finance', name: 'Finanzas', icon: '📊', color: '#96CEB4', articleCount: 18 },
-  { id: 'news', name: 'Noticias', icon: '📰', color: '#FFEAA7', articleCount: 15 },
-  { id: 'tips', name: 'Consejos', icon: '💡', color: '#DDA0DD', articleCount: 12 }
-]
+  { id: "all", name: "Todos", icon: "📚", color: "#25D366", articleCount: 156 },
+  {
+    id: "investment",
+    name: "Inversión",
+    icon: "💰",
+    color: "#FFB800",
+    articleCount: 45,
+  },
+  {
+    id: "lifestyle",
+    name: "Estilo de Vida",
+    icon: "🏡",
+    color: "#FF6B6B",
+    articleCount: 32,
+  },
+  {
+    id: "legal",
+    name: "Legal",
+    icon: "⚖️",
+    color: "#4ECDC4",
+    articleCount: 28,
+  },
+  {
+    id: "design",
+    name: "Diseño",
+    icon: "🎨",
+    color: "#45B7D1",
+    articleCount: 23,
+  },
+  {
+    id: "finance",
+    name: "Finanzas",
+    icon: "📊",
+    color: "#96CEB4",
+    articleCount: 18,
+  },
+  {
+    id: "news",
+    name: "Noticias",
+    icon: "📰",
+    color: "#FFEAA7",
+    articleCount: 15,
+  },
+  {
+    id: "tips",
+    name: "Consejos",
+    icon: "💡",
+    color: "#DDA0DD",
+    articleCount: 12,
+  },
+];
 
 const mockFeaturedSecondary = [
   {
     id: 1,
-    title: 'Tendencias del Mercado Inmobiliario 2024',
-    excerpt: 'Análisis completo de las proyecciones y oportunidades.',
-    category: 'Mercado',
-    date: '12 Dic 2024',
-    image: '/placeholder-blog-2.svg',
-    readTime: 6
+    title: "Tendencias del Mercado Inmobiliario 2024",
+    excerpt: "Análisis completo de las proyecciones y oportunidades.",
+    category: "Mercado",
+    date: "12 Dic 2024",
+    image: "/placeholder-blog-2.svg",
+    readTime: 6,
   },
   {
     id: 2,
-    title: 'Financiación: Opciones para Tu Lote Campestre',
-    excerpt: 'Descubre las mejores alternativas de financiamiento.',
-    category: 'Finanzas',
-    date: '10 Dic 2024',
-    image: '/placeholder-blog-3.svg',
-    readTime: 4
-  }
-]
+    title: "Financiación: Opciones para Tu Lote Campestre",
+    excerpt: "Descubre las mejores alternativas de financiamiento.",
+    category: "Finanzas",
+    date: "10 Dic 2024",
+    image: "/placeholder-blog-3.svg",
+    readTime: 4,
+  },
+];
 
 const mockRecentArticles = [
   {
     id: 1,
-    title: 'Los Mejores Sectores para Invertir en Lotes Campestres',
-    excerpt: 'Analizamos las zonas con mayor potencial de revalorización y rentabilidad para inversionistas.',
-    category: 'Inversión',
-    date: '8 Dic 2024',
-    image: '/placeholder-blog.svg',
+    title: "Los Mejores Sectores para Invertir en Lotes Campestres",
+    excerpt:
+      "Analizamos las zonas con mayor potencial de revalorización y rentabilidad para inversionistas.",
+    category: "Inversión",
+    date: "8 Dic 2024",
+    image: "/placeholder-blog.svg",
     readTime: 7,
     views: 1245,
-    author: { name: 'Carlos Mendoza', initials: 'CM' }
+    author: { name: "Carlos Mendoza", initials: "CM" },
   },
   {
     id: 2,
-    title: 'Guía Legal: Qué Documentos Necesitas para Comprar un Lote',
-    excerpt: 'Todo lo que debes saber sobre la documentación legal antes de realizar tu compra.',
-    category: 'Legal',
-    date: '5 Dic 2024',
-    image: '/placeholder-blog-2.svg',
+    title: "Guía Legal: Qué Documentos Necesitas para Comprar un Lote",
+    excerpt:
+      "Todo lo que debes saber sobre la documentación legal antes de realizar tu compra.",
+    category: "Legal",
+    date: "5 Dic 2024",
+    image: "/placeholder-blog-2.svg",
     readTime: 5,
     views: 987,
-    author: { name: 'Ana Ruiz', initials: 'AR' }
+    author: { name: "Ana Ruiz", initials: "AR" },
   },
   {
     id: 3,
-    title: 'Diseña Tu Casa de Campo: Ideas y Tendencias 2024',
-    excerpt: 'Inspiración y consejos prácticos para crear el hogar campestre de tus sueños.',
-    category: 'Diseño',
-    date: '3 Dic 2024',
-    image: '/placeholder-blog-3.svg',
+    title: "Diseña Tu Casa de Campo: Ideas y Tendencias 2024",
+    excerpt:
+      "Inspiración y consejos prácticos para crear el hogar campestre de tus sueños.",
+    category: "Diseño",
+    date: "3 Dic 2024",
+    image: "/placeholder-blog-3.svg",
     readTime: 8,
     views: 2156,
-    author: { name: 'Laura Silva', initials: 'LS' }
+    author: { name: "Laura Silva", initials: "LS" },
   },
   {
     id: 4,
-    title: 'Servicios Públicos en Zona Rural: Lo Que Debes Saber',
-    excerpt: 'Información esencial sobre disponibilidad y conexión de servicios básicos.',
-    category: 'Consejos',
-    date: '1 Dic 2024',
-    image: '/placeholder-blog-4.svg',
+    title: "Servicios Públicos en Zona Rural: Lo Que Debes Saber",
+    excerpt:
+      "Información esencial sobre disponibilidad y conexión de servicios básicos.",
+    category: "Consejos",
+    date: "1 Dic 2024",
+    image: "/placeholder-blog-4.svg",
     readTime: 6,
     views: 756,
-    author: { name: 'Miguel Torres', initials: 'MT' }
+    author: { name: "Miguel Torres", initials: "MT" },
   },
   {
     id: 5,
-    title: 'ROI en Lotes Campestres: Calculando tu Rentabilidad',
-    excerpt: 'Herramientas y metodologías para evaluar el retorno de tu inversión inmobiliaria.',
-    category: 'Finanzas',
-    date: '28 Nov 2024',
-    image: '/placeholder-blog.svg',
+    title: "ROI en Lotes Campestres: Calculando tu Rentabilidad",
+    excerpt:
+      "Herramientas y metodologías para evaluar el retorno de tu inversión inmobiliaria.",
+    category: "Finanzas",
+    date: "28 Nov 2024",
+    image: "/placeholder-blog.svg",
     readTime: 9,
     views: 1834,
-    author: { name: 'Patricia López', initials: 'PL' }
+    author: { name: "Patricia López", initials: "PL" },
   },
   {
     id: 6,
-    title: 'Vida Sostenible: Construye Eco-Friendly en el Campo',
-    excerpt: 'Tecnologías verdes y materiales sostenibles para tu proyecto campestre.',
-    category: 'Estilo de Vida',
-    date: '25 Nov 2024',
-    image: '/placeholder-blog-2.svg',
+    title: "Vida Sostenible: Construye Eco-Friendly en el Campo",
+    excerpt:
+      "Tecnologías verdes y materiales sostenibles para tu proyecto campestre.",
+    category: "Estilo de Vida",
+    date: "25 Nov 2024",
+    image: "/placeholder-blog-2.svg",
     readTime: 7,
     views: 1423,
-    author: { name: 'Ricardo Vega', initials: 'RV' }
-  }
-]
+    author: { name: "Ricardo Vega", initials: "RV" },
+  },
+];
 
 // Methods - ready for API integration
 const selectCategory = (categoryId: string) => {
-  selectedCategory.value = categoryId
+  selectedCategory.value = categoryId;
   // TODO: API call to filter articles by category
-  console.log('Filtering by category:', categoryId)
-}
+  console.log("Filtering by category:", categoryId);
+};
 
 const loadMore = () => {
   // TODO: API call to load more articles
-  console.log('Loading more articles...')
-}
+  console.log("Loading more articles...");
+};
 
 const subscribeNewsletter = () => {
   if (newsletterEmail.value) {
     // TODO: API call to subscribe to newsletter
-    console.log('Subscribing email:', newsletterEmail.value)
-    newsletterEmail.value = ''
+    console.log("Subscribing email:", newsletterEmail.value);
+    newsletterEmail.value = "";
   }
-}
+};
 
 const getCategoryColor = (categoryName: string) => {
-  const category = mockCategories.find(cat => cat.name.toLowerCase() === categoryName.toLowerCase())
-  return category?.color || '#25D366'
-}
+  const category = mockCategories.find(
+    (cat) => cat.name.toLowerCase() === categoryName.toLowerCase(),
+  );
+  return category?.color || "#25D366";
+};
 </script>
 
 <style scoped>
@@ -379,13 +478,13 @@ const getCategoryColor = (categoryName: string) => {
 }
 
 .blog-hero::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   right: 0;
   width: 300px;
   height: 300px;
-  background: linear-gradient(45deg, #25D366, #20B858);
+  background: linear-gradient(45deg, #25d366, #20b858);
   border-radius: 50%;
   opacity: 0.1;
   transform: translate(100px, -100px);
@@ -439,7 +538,7 @@ const getCategoryColor = (categoryName: string) => {
   display: block;
   font-size: 36px;
   font-weight: 700;
-  color: #25D366;
+  color: #25d366;
   margin-bottom: 8px;
 }
 
@@ -490,7 +589,7 @@ const getCategoryColor = (categoryName: string) => {
 
 .blog-category-card:hover,
 .blog-category-card.active {
-  border-color: #25D366;
+  border-color: #25d366;
   transform: translateY(-2px);
   box-shadow: 0 8px 30px rgba(37, 211, 102, 0.15);
 }
@@ -544,7 +643,7 @@ const getCategoryColor = (categoryName: string) => {
 }
 
 .blog-view-all {
-  background: #25D366;
+  background: #25d366;
   color: white;
   padding: 12px 24px;
   border-radius: 8px;
@@ -555,7 +654,7 @@ const getCategoryColor = (categoryName: string) => {
 }
 
 .blog-view-all:hover {
-  background: #20B858;
+  background: #20b858;
 }
 
 .blog-featured-grid {
@@ -596,7 +695,7 @@ const getCategoryColor = (categoryName: string) => {
 }
 
 .blog-featured-badge {
-  background: linear-gradient(45deg, #25D366, #20B858);
+  background: linear-gradient(45deg, #25d366, #20b858);
   color: white;
   padding: 8px 16px;
   border-radius: 20px;
@@ -617,7 +716,7 @@ const getCategoryColor = (categoryName: string) => {
 }
 
 .blog-featured-category {
-  background: #25D366;
+  background: #25d366;
   color: white;
   padding: 4px 12px;
   border-radius: 12px;
@@ -660,7 +759,7 @@ const getCategoryColor = (categoryName: string) => {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: #25D366;
+  background: #25d366;
   color: white;
   display: flex;
   align-items: center;
@@ -794,8 +893,8 @@ const getCategoryColor = (categoryName: string) => {
 
 .blog-filter-btn:hover,
 .blog-filter-btn.active {
-  border-color: #25D366;
-  background: #25D366;
+  border-color: #25d366;
+  background: #25d366;
   color: white;
 }
 
@@ -898,7 +997,7 @@ const getCategoryColor = (categoryName: string) => {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: #25D366;
+  background: #25d366;
   color: white;
   display: flex;
   align-items: center;
@@ -936,7 +1035,7 @@ const getCategoryColor = (categoryName: string) => {
 
 .blog-article-share:hover {
   background: #f8f9fa;
-  color: #25D366;
+  color: #25d366;
 }
 
 /* Load More */
@@ -950,8 +1049,8 @@ const getCategoryColor = (categoryName: string) => {
   gap: 8px;
   padding: 16px 32px;
   background: white;
-  border: 2px solid #25D366;
-  color: #25D366;
+  border: 2px solid #25d366;
+  color: #25d366;
   border-radius: 8px;
   font-weight: 500;
   cursor: pointer;
@@ -959,7 +1058,7 @@ const getCategoryColor = (categoryName: string) => {
 }
 
 .blog-load-more-btn:hover {
-  background: #25D366;
+  background: #25d366;
   color: white;
 }
 
@@ -1011,7 +1110,7 @@ const getCategoryColor = (categoryName: string) => {
 
 .blog-newsletter-btn {
   padding: 16px 24px;
-  background: #25D366;
+  background: #25d366;
   color: white;
   border: none;
   border-radius: 8px;
@@ -1022,7 +1121,7 @@ const getCategoryColor = (categoryName: string) => {
 }
 
 .blog-newsletter-btn:hover {
-  background: #20B858;
+  background: #20b858;
 }
 
 /* Responsive Design */
@@ -1032,40 +1131,40 @@ const getCategoryColor = (categoryName: string) => {
     gap: 40px;
     text-align: center;
   }
-  
+
   .blog-hero-title {
     font-size: 36px;
   }
-  
+
   .blog-hero-stats {
     flex-direction: row;
     justify-content: space-around;
   }
-  
+
   .blog-categories-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .blog-featured-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .blog-recent-header {
     flex-direction: column;
     gap: 24px;
     align-items: flex-start;
   }
-  
+
   .blog-recent-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .blog-newsletter-content {
     grid-template-columns: 1fr;
     gap: 32px;
     text-align: center;
   }
-  
+
   .blog-newsletter-form {
     flex-direction: column;
   }

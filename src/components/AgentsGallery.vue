@@ -4,36 +4,47 @@
       <!-- Header de la galería -->
       <div class="gallery-header">
         <h2 class="gallery-title">Nuestro Equipo de Expertos</h2>
-        <p class="gallery-subtitle">Conoce a los profesionales que te acompañarán en tu inversión</p>
+        <p class="gallery-subtitle">
+          Conoce a los profesionales que te acompañarán en tu inversión
+        </p>
       </div>
-      
+
       <!-- Grid de agentes -->
       <div class="agents-grid">
-        <div 
-          v-for="agent in agents" 
+        <div
+          v-for="agent in agents"
           :key="agent.id"
           class="agent-card"
           @click="openAgentDetail(agent)"
         >
           <!-- Image container with agent click -->
           <div class="agent-image-container">
-            <img 
-              :src="getImageUrl(agent.profile_picture_url || '/placeholder-agent.svg')" 
+            <img
+              :src="
+                getImageUrl(
+                  agent.profile_picture_url || '/placeholder-agent.svg',
+                )
+              "
               :alt="agent.name"
               class="agent-image"
               loading="lazy"
             />
             <div class="image-overlay">
               <div class="agent-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                  <circle cx="12" cy="7" r="4"/>
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
                 </svg>
                 <span>Ver Perfil</span>
               </div>
             </div>
           </div>
-          
+
           <!-- Agent information below image -->
           <div class="agent-info-section">
             <h2 class="agent-title">{{ agent.name }}</h2>
@@ -45,13 +56,18 @@
           </div>
         </div>
       </div>
-      
+
       <!-- Botón para ver todos los agentes -->
       <div class="gallery-footer">
         <button @click="$emit('viewAllAgents')" class="gallery-btn-all">
           <span>Conocer Todo el Equipo</span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M5 12h14M12 5l7 7-7 7"/>
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M5 12h14M12 5l7 7-7 7" />
           </svg>
         </button>
       </div>
@@ -60,43 +76,45 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
-import type { Agent } from '@/types'
+import { useRouter } from "vue-router";
+import type { Agent } from "@/types";
 
 interface Props {
-  agents: Agent[]
+  agents: Agent[];
 }
 
-const props = defineProps<Props>()
+const props = defineProps<Props>();
 
 const emit = defineEmits<{
-  viewAgent: [id: number]
-  viewAllAgents: []
-}>()
+  viewAgent: [id: number];
+  viewAllAgents: [];
+}>();
 
-const router = useRouter()
+const router = useRouter();
 
 // Helper function to convert absolute URLs to relative for development
 const getImageUrl = (url: string): string => {
-  if (!url) return '/placeholder-agent.svg'
-  
+  if (!url) return "/placeholder-agent.svg";
+
   // In development, convert absolute URLs to relative
-  if (import.meta.env.DEV && url.includes('app.tierrasonada.com')) {
-    return url.replace('https://app.tierrasonada.com', '').replace('http://app.tierrasonada.com', '')
+  if (import.meta.env.DEV && url.includes("app.tierrasonada.com")) {
+    return url
+      .replace("https://app.tierrasonada.com", "")
+      .replace("http://app.tierrasonada.com", "");
   }
-  
-  return url
-}
+
+  return url;
+};
 
 const openAgentDetail = (agent: Agent) => {
   // Emit event to parent and navigate
-  emit('viewAgent', agent.id)
-  router.push(`/agentes/${agent.id}`)
-}
+  emit("viewAgent", agent.id);
+  router.push(`/agentes/${agent.id}`);
+};
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Montserrat:wght@300;400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Montserrat:wght@300;400;500;600;700&display=swap");
 
 /* GALERÍA DE AGENTES */
 .agents-gallery-hero {
@@ -106,7 +124,7 @@ const openAgentDetail = (agent: Agent) => {
   margin-left: calc(-50vw + 50% + 40px);
   margin-top: 40px;
   margin-right: 40px;
-  background: linear-gradient(135deg, #f0f2f5 0%, #e8ebed 50%, #dfe3e6 100%);
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #dcfce7 100%);
   display: flex;
   align-items: flex-start;
   justify-content: center;
@@ -129,33 +147,33 @@ const openAgentDetail = (agent: Agent) => {
 }
 
 .gallery-title {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 3rem;
-  font-weight: 300;
-  color: #2c3e50;
+  font-weight: 700;
+  color: #171717;
   margin-bottom: 20px;
-  letter-spacing: 2px;
+  letter-spacing: -0.5px;
   position: relative;
 }
 
 .gallery-title::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -10px;
   left: 50%;
   transform: translateX(-50%);
   width: 80px;
   height: 3px;
-  background: linear-gradient(90deg, #667eea, #764ba2);
+  background: linear-gradient(90deg, #0ea5e9, #22c55e);
   border-radius: 2px;
 }
 
 .gallery-subtitle {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 1.2rem;
-  color: #6c757d;
-  font-weight: 300;
-  font-style: italic;
+  color: #525252;
+  font-weight: 400;
+  font-style: normal;
 }
 
 /* Grid de agentes */
@@ -187,8 +205,8 @@ const openAgentDetail = (agent: Agent) => {
 
 .agent-card:hover {
   transform: translateY(-10px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-  border-color: rgba(102, 126, 234, 0.3);
+  box-shadow: 0 20px 40px rgba(14, 165, 233, 0.15);
+  border-color: rgba(14, 165, 233, 0.3);
   background: rgba(255, 255, 255, 0.95);
 }
 
@@ -227,7 +245,11 @@ const openAgentDetail = (agent: Agent) => {
 .image-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(30, 30, 50, 0.8));
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.7),
+    rgba(30, 30, 50, 0.8)
+  );
   display: flex;
   align-items: center;
   justify-content: center;
@@ -247,7 +269,7 @@ const openAgentDetail = (agent: Agent) => {
   align-items: center;
   gap: 10px;
   color: white;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 0.9rem;
   font-weight: 600;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
@@ -278,7 +300,7 @@ const openAgentDetail = (agent: Agent) => {
 }
 
 .agent-title {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 1.2rem;
   font-weight: 500;
   margin-bottom: 12px;
@@ -294,17 +316,18 @@ const openAgentDetail = (agent: Agent) => {
 }
 
 .agent-type {
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 0.85rem;
   font-weight: 500;
-  color: #667eea;
+  color: #0ea5e9;
   margin: 0;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
-.agent-phone, .agent-email {
-  font-family: 'Montserrat', sans-serif;
+.agent-phone,
+.agent-email {
+  font-family: "Montserrat", sans-serif;
   font-size: 0.85rem;
   font-weight: 400;
   color: #6c757d;
@@ -318,12 +341,12 @@ const openAgentDetail = (agent: Agent) => {
 }
 
 .gallery-btn-all {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, #0ea5e9, #22c55e);
   color: white;
   border: none;
   padding: 16px 40px;
   border-radius: 50px;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Inter", sans-serif;
   font-weight: 600;
   font-size: 1.1rem;
   cursor: pointer;
@@ -333,13 +356,13 @@ const openAgentDetail = (agent: Agent) => {
   gap: 12px;
   text-transform: uppercase;
   letter-spacing: 1px;
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 8px 25px rgba(14, 165, 233, 0.3);
 }
 
 .gallery-btn-all:hover {
   transform: translateY(-3px);
-  box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
-  background: linear-gradient(135deg, #5a6fd8, #6a42a0);
+  box-shadow: 0 15px 40px rgba(14, 165, 233, 0.4);
+  background: linear-gradient(135deg, #0284c7, #16a34a);
 }
 
 .gallery-btn-all svg {
@@ -360,24 +383,24 @@ const openAgentDetail = (agent: Agent) => {
     margin-right: 20px;
     padding: 30px 0;
   }
-  
+
   .agents-container-full {
     padding: 0 20px;
   }
-  
+
   .gallery-title {
     font-size: 2.2rem;
   }
-  
+
   .gallery-subtitle {
     font-size: 1rem;
   }
-  
+
   .agents-grid {
     grid-template-columns: 1fr;
     gap: 40px;
   }
-  
+
   .agent-card {
     max-width: 400px;
     height: auto;
@@ -386,11 +409,11 @@ const openAgentDetail = (agent: Agent) => {
     padding: 15px;
     gap: 15px;
   }
-  
+
   .agent-image-container {
     height: 350px;
   }
-  
+
   .agent-title {
     font-size: 1.3rem;
   }
@@ -402,23 +425,23 @@ const openAgentDetail = (agent: Agent) => {
     margin-left: calc(-50vw + 50% + 15px);
     margin-right: 15px;
   }
-  
+
   .agents-container-full {
     padding: 0 15px;
   }
-  
+
   .gallery-title {
     font-size: 1.8rem;
   }
-  
+
   .gallery-subtitle {
     font-size: 0.9rem;
   }
-  
+
   .agents-grid {
     gap: 30px;
   }
-  
+
   .agent-card {
     max-width: 100%;
     height: auto;
@@ -426,11 +449,11 @@ const openAgentDetail = (agent: Agent) => {
     padding: 15px;
     gap: 15px;
   }
-  
+
   .agent-image-container {
     height: 300px;
   }
-  
+
   .agent-title {
     font-size: 1.2rem;
   }

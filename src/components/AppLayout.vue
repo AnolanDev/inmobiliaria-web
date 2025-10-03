@@ -14,13 +14,17 @@
 </template>
 
 <script setup lang="ts">
-import AppHeader from './AppHeader.vue'
-import AppFooter from './AppFooter.vue'
+import AppHeader from "./AppHeader.vue";
+import AppFooter from "./AppFooter.vue";
 </script>
 
 <style scoped>
 .main-content {
-  padding-top: clamp(72px, 10vw, 80px); /* Responsive padding for fixed header */
+  padding-top: clamp(
+    72px,
+    10vw,
+    80px
+  ); /* Responsive padding for fixed header */
   min-height: calc(100vh - clamp(72px, 10vw, 80px));
   background-color: #ffffff;
 }

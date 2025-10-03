@@ -1,15 +1,18 @@
 <template>
   <div class="project-carousel-fullwidth">
     <div class="carousel-container">
-      <div class="carousel-track" :style="{ transform: `translateX(-${currentIndex * 100}%)` }">
-        <div 
-          v-for="(project, index) in projects" 
+      <div
+        class="carousel-track"
+        :style="{ transform: `translateX(-${currentIndex * 100}%)` }"
+      >
+        <div
+          v-for="(project, index) in projects"
           :key="project.id"
           class="carousel-slide"
         >
           <div class="image-container">
-            <img 
-              :src="getImageUrl(project.cover_image_url)" 
+            <img
+              :src="getImageUrl(project.cover_image_url)"
               :alt="`Proyecto ${project.name}`"
               class="project-image"
               @load="onImageLoad"
@@ -19,19 +22,17 @@
             <div class="project-info">
               <h2 class="project-title">{{ project.name }}</h2>
               <p class="project-description" v-if="project.description">
-                {{ project.description.substring(0, 150) }}{{ project.description.length > 150 ? '...' : '' }}
+                {{ project.description.substring(0, 150)
+                }}{{ project.description.length > 150 ? "..." : "" }}
               </p>
               <div class="project-buttons">
-                <button 
+                <button
                   @click="$emit('viewProject', project.id)"
                   class="btn-primary"
                 >
                   Ver Proyecto
                 </button>
-                <button 
-                  @click="$emit('viewAllProjects')"
-                  class="btn-secondary"
-                >
+                <button @click="$emit('viewAllProjects')" class="btn-secondary">
                   Todos los Proyectos
                 </button>
               </div>
@@ -41,20 +42,38 @@
       </div>
 
       <!-- Navigation arrows -->
-      <button @click="prevSlide" class="nav-arrow nav-prev" aria-label="Proyecto anterior">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M15 18l-6-6 6-6"/>
+      <button
+        @click="prevSlide"
+        class="nav-arrow nav-prev"
+        aria-label="Proyecto anterior"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path d="M15 18l-6-6 6-6" />
         </svg>
       </button>
-      <button @click="nextSlide" class="nav-arrow nav-next" aria-label="Proyecto siguiente">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M9 18l6-6-6-6"/>
+      <button
+        @click="nextSlide"
+        class="nav-arrow nav-next"
+        aria-label="Proyecto siguiente"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <path d="M9 18l6-6-6-6" />
         </svg>
       </button>
 
       <!-- Dots indicator -->
       <div class="carousel-dots">
-        <button 
+        <button
           v-for="(project, index) in projects"
           :key="`dot-${project.id}`"
           @click="goToSlide(index)"
@@ -73,146 +92,154 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
-import type { Project } from '@/types'
+import { ref, onMounted, onUnmounted, computed, watch } from "vue";
+import type { Project } from "@/types";
 
 interface Props {
-  projects: Project[]
-  autoPlay?: boolean
-  interval?: number
+  projects: Project[];
+  autoPlay?: boolean;
+  interval?: number;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   autoPlay: true,
-  interval: 5000
-})
+  interval: 5000,
+});
 
 const emit = defineEmits<{
-  viewProject: [id: number]
-  viewAllProjects: []
-}>()
+  viewProject: [id: number];
+  viewAllProjects: [];
+}>();
 
-const currentIndex = ref(0)
-const progressWidth = ref(0)
-let autoPlayTimer: NodeJS.Timeout | null = null
-let progressTimer: NodeJS.Timeout | null = null
+const currentIndex = ref(0);
+const progressWidth = ref(0);
+let autoPlayTimer: NodeJS.Timeout | null = null;
+let progressTimer: NodeJS.Timeout | null = null;
 
 const getImageUrl = (url: string): string => {
-  if (!url) return '/placeholder-project.svg'
-  
-  if (import.meta.env.DEV && url.includes('app.tierrasonada.com')) {
-    return url.replace('https://app.tierrasonada.com', '').replace('http://app.tierrasonada.com', '')
+  if (!url) return "/placeholder-project.svg";
+
+  if (import.meta.env.DEV && url.includes("app.tierrasonada.com")) {
+    return url
+      .replace("https://app.tierrasonada.com", "")
+      .replace("http://app.tierrasonada.com", "");
   }
-  
-  return url
-}
+
+  return url;
+};
 
 const nextSlide = () => {
-  currentIndex.value = (currentIndex.value + 1) % props.projects.length
-  resetAutoPlay()
-}
+  currentIndex.value = (currentIndex.value + 1) % props.projects.length;
+  resetAutoPlay();
+};
 
 const prevSlide = () => {
-  currentIndex.value = currentIndex.value === 0 ? props.projects.length - 1 : currentIndex.value - 1
-  resetAutoPlay()
-}
+  currentIndex.value =
+    currentIndex.value === 0
+      ? props.projects.length - 1
+      : currentIndex.value - 1;
+  resetAutoPlay();
+};
 
 const goToSlide = (index: number) => {
-  currentIndex.value = index
-  resetAutoPlay()
-}
+  currentIndex.value = index;
+  resetAutoPlay();
+};
 
 const startAutoPlay = () => {
-  if (!props.autoPlay || props.projects.length <= 1) return
-  
+  if (!props.autoPlay || props.projects.length <= 1) return;
+
   autoPlayTimer = setInterval(() => {
-    nextSlide()
-  }, props.interval)
-  
+    nextSlide();
+  }, props.interval);
+
   // Progress bar animation
-  progressWidth.value = 0
+  progressWidth.value = 0;
   progressTimer = setInterval(() => {
-    progressWidth.value += 100 / (props.interval / 100)
+    progressWidth.value += 100 / (props.interval / 100);
     if (progressWidth.value >= 100) {
-      progressWidth.value = 0
+      progressWidth.value = 0;
     }
-  }, 100)
-}
+  }, 100);
+};
 
 const stopAutoPlay = () => {
   if (autoPlayTimer) {
-    clearInterval(autoPlayTimer)
-    autoPlayTimer = null
+    clearInterval(autoPlayTimer);
+    autoPlayTimer = null;
   }
   if (progressTimer) {
-    clearInterval(progressTimer)
-    progressTimer = null
+    clearInterval(progressTimer);
+    progressTimer = null;
   }
-  progressWidth.value = 0
-}
+  progressWidth.value = 0;
+};
 
 const resetAutoPlay = () => {
-  stopAutoPlay()
-  startAutoPlay()
-}
+  stopAutoPlay();
+  startAutoPlay();
+};
 
 const onImageLoad = () => {
   // Image loaded successfully
-}
+};
 
 // Keyboard navigation
 const handleKeydown = (e: KeyboardEvent) => {
-  if (e.key === 'ArrowLeft') {
-    prevSlide()
-  } else if (e.key === 'ArrowRight') {
-    nextSlide()
+  if (e.key === "ArrowLeft") {
+    prevSlide();
+  } else if (e.key === "ArrowRight") {
+    nextSlide();
   }
-}
+};
 
 // Touch/swipe support
-let touchStartX = 0
-let touchEndX = 0
+let touchStartX = 0;
+let touchEndX = 0;
 
 const handleTouchStart = (e: TouchEvent) => {
-  touchStartX = e.changedTouches[0].screenX
-}
+  touchStartX = e.changedTouches[0].screenX;
+};
 
 const handleTouchEnd = (e: TouchEvent) => {
-  touchEndX = e.changedTouches[0].screenX
-  handleSwipe()
-}
+  touchEndX = e.changedTouches[0].screenX;
+  handleSwipe();
+};
 
 const handleSwipe = () => {
-  const swipeThreshold = 50
-  const swipeDistance = touchStartX - touchEndX
-  
+  const swipeThreshold = 50;
+  const swipeDistance = touchStartX - touchEndX;
+
   if (Math.abs(swipeDistance) > swipeThreshold) {
     if (swipeDistance > 0) {
-      nextSlide()
+      nextSlide();
     } else {
-      prevSlide()
+      prevSlide();
     }
   }
-}
+};
 
-watch(() => props.projects, () => {
-  currentIndex.value = 0
-  resetAutoPlay()
-})
+watch(
+  () => props.projects,
+  () => {
+    currentIndex.value = 0;
+    resetAutoPlay();
+  },
+);
 
 onMounted(() => {
-  startAutoPlay()
-  window.addEventListener('keydown', handleKeydown)
-  window.addEventListener('touchstart', handleTouchStart)
-  window.addEventListener('touchend', handleTouchEnd)
-})
+  startAutoPlay();
+  window.addEventListener("keydown", handleKeydown);
+  window.addEventListener("touchstart", handleTouchStart);
+  window.addEventListener("touchend", handleTouchEnd);
+});
 
 onUnmounted(() => {
-  stopAutoPlay()
-  window.removeEventListener('keydown', handleKeydown)
-  window.removeEventListener('touchstart', handleTouchStart)
-  window.removeEventListener('touchend', handleTouchEnd)
-})
+  stopAutoPlay();
+  window.removeEventListener("keydown", handleKeydown);
+  window.removeEventListener("touchstart", handleTouchStart);
+  window.removeEventListener("touchend", handleTouchEnd);
+});
 </script>
 
 <style scoped>
@@ -309,7 +336,8 @@ onUnmounted(() => {
   flex-wrap: wrap;
 }
 
-.btn-primary, .btn-secondary {
+.btn-primary,
+.btn-secondary {
   padding: 12px 32px;
   border-radius: 8px;
   font-weight: 600;
@@ -432,42 +460,43 @@ onUnmounted(() => {
   .project-title {
     font-size: 2rem;
   }
-  
+
   .project-description {
     font-size: 1rem;
   }
-  
+
   .project-buttons {
     flex-direction: column;
     align-items: center;
   }
-  
-  .btn-primary, .btn-secondary {
+
+  .btn-primary,
+  .btn-secondary {
     min-width: 200px;
   }
-  
+
   .nav-arrow {
     width: 48px;
     height: 48px;
   }
-  
+
   .nav-arrow svg {
     width: 20px;
     height: 20px;
   }
-  
+
   .nav-prev {
     left: 16px;
   }
-  
+
   .nav-next {
     right: 16px;
   }
-  
+
   .project-overlay {
     padding: 40px 20px 20px;
   }
-  
+
   .carousel-dots {
     bottom: 80px;
   }
@@ -477,7 +506,7 @@ onUnmounted(() => {
   .project-title {
     font-size: 1.5rem;
   }
-  
+
   .project-description {
     font-size: 0.9rem;
   }
