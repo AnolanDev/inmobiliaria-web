@@ -197,6 +197,7 @@ const hasTriedFallback = ref(false);
 
 // Watch for changes in imageUrl prop
 watch(() => props.imageUrl, (newUrl) => {
+  console.log('🔍 HeroImage received imageUrl:', newUrl);
   currentImageUrl.value = newUrl;
   hasTriedFallback.value = false;
   loading.value = true;

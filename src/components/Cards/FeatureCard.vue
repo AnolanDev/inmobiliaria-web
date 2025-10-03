@@ -161,15 +161,22 @@ const emit = defineEmits<{
 
 // Smart URL conversion for development proxy
 const getImageUrl = (url: string | null | undefined): string => {
-  if (!url) return "/placeholder-project.svg";
+  console.log('🔍 FeatureCard getImageUrl input:', url);
+  
+  if (!url) {
+    console.log('❌ FeatureCard: No URL, using placeholder');
+    return "/placeholder-project.svg";
+  }
   
   if (url.includes("app.tierrasonada.com")) {
     const convertedUrl = url
       .replace("https://app.tierrasonada.com", "")
       .replace("http://app.tierrasonada.com", "");
+    console.log('🔄 FeatureCard URL conversion:', url, '→', convertedUrl);
     return convertedUrl;
   }
   
+  console.log('✅ FeatureCard: URL unchanged:', url);
   return url;
 };
 
