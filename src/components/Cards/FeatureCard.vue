@@ -168,7 +168,7 @@ const getImageUrl = (url: string | null | undefined): string => {
     return "/placeholder-project.svg";
   }
   
-  // In production, use original URLs directly - proxy doesn't work
+  // In production, use original URLs directly
   if (import.meta.env.PROD) {
     console.log('🚀 FeatureCard PRODUCTION: Using original URL:', url);
     return url;
