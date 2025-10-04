@@ -209,6 +209,7 @@
                 ]"
                 placeholder="Tu nombre completo"
                 @input="clearError('name')"
+                @blur="validateField('name', formData.name)"
               />
               <p
                 v-if="errors.name"
@@ -250,6 +251,7 @@
                 ]"
                 placeholder="tu@email.com"
                 @input="clearError('email')"
+                @blur="validateField('email', formData.email)"
               />
               <p
                 v-if="errors.email"
@@ -291,6 +293,7 @@
                 ]"
                 placeholder="+57 300 123 4567"
                 @input="clearError('phone')"
+                @blur="validateField('phone', formData.phone)"
               />
               <p
                 v-if="errors.phone"
@@ -455,6 +458,7 @@
                 ]"
                 placeholder="Cuéntanos en qué podemos ayudarte..."
                 @input="clearError('message')"
+                @blur="validateField('message', formData.message)"
               ></textarea>
               <p
                 v-if="errors.message"
@@ -518,42 +522,72 @@
           <!-- Success Message -->
           <div
             v-if="success"
-            class="mt-6 p-4 bg-nature-50 border border-nature-200 rounded-xl"
+            class="success-message mt-6 p-6 bg-gradient-to-r from-nature-50 to-caribbean-50 border-2 border-nature-200 rounded-xl shadow-lg"
           >
-            <div class="flex items-center">
-              <svg
-                class="w-5 h-5 text-nature-500 mr-3"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-              <p class="text-nature-800 font-medium">{{ success }}</p>
+            <div class="flex items-start">
+              <div class="flex-shrink-0">
+                <div class="w-10 h-10 bg-nature-100 rounded-full flex items-center justify-center">
+                  <svg
+                    class="w-6 h-6 text-nature-600"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-4">
+                <h4 class="text-lg font-semibold text-nature-800 mb-1">¡Mensaje enviado!</h4>
+                <p class="text-nature-700">{{ success }}</p>
+                <p class="text-sm text-nature-600 mt-2">Te responderemos en menos de 24 horas.</p>
+              </div>
             </div>
           </div>
 
           <!-- Error Message -->
           <div
             v-if="error"
-            class="mt-6 p-4 bg-coral-50 border border-coral-200 rounded-xl"
+            class="mt-6 p-6 bg-gradient-to-r from-coral-50 to-orange-50 border-2 border-coral-200 rounded-xl shadow-lg"
           >
-            <div class="flex items-center">
-              <svg
-                class="w-5 h-5 text-coral-500 mr-3"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-              <p class="text-coral-800 font-medium">{{ error }}</p>
+            <div class="flex items-start">
+              <div class="flex-shrink-0">
+                <div class="w-10 h-10 bg-coral-100 rounded-full flex items-center justify-center">
+                  <svg
+                    class="w-6 h-6 text-coral-600"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div class="ml-4">
+                <h4 class="text-lg font-semibold text-coral-800 mb-1">Error al enviar</h4>
+                <p class="text-coral-700 mb-2">{{ error }}</p>
+                <div class="flex space-x-3">
+                  <button 
+                    @click="error = null" 
+                    class="text-sm text-coral-600 hover:text-coral-800 font-medium underline"
+                  >
+                    Cerrar
+                  </button>
+                  <span class="text-coral-400">•</span>
+                  <a 
+                    href="tel:+573116598438" 
+                    class="text-sm text-coral-600 hover:text-coral-800 font-medium underline"
+                  >
+                    Llamar directamente
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -630,7 +664,9 @@ const formData = reactive<ContactForm>({
 });
 
 const errors = reactive<Record<string, string>>({});
-const { loading, error, success } = contactStore;
+const loading = ref(false);
+const error = ref<string | null>(null);
+const success = ref<string | null>(null);
 
 const validateForm = (): boolean => {
   const newErrors: Record<string, string> = {};
@@ -671,6 +707,51 @@ const clearError = (field: string) => {
   }
 };
 
+// Real-time validation
+const validateField = (field: string, value: string) => {
+  switch (field) {
+    case 'name':
+      if (!value.trim()) {
+        errors.name = "El nombre es requerido";
+      } else if (value.trim().length < 2) {
+        errors.name = "El nombre debe tener al menos 2 caracteres";
+      } else {
+        delete errors.name;
+      }
+      break;
+    
+    case 'email':
+      if (!value.trim()) {
+        errors.email = "El email es requerido";
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+        errors.email = "Por favor ingresa un email válido";
+      } else {
+        delete errors.email;
+      }
+      break;
+    
+    case 'phone':
+      if (!value.trim()) {
+        errors.phone = "El teléfono es requerido";
+      } else if (!/^\+?[\d\s\-\(\)]{10,}$/.test(value.replace(/\s/g, ""))) {
+        errors.phone = "Por favor ingresa un teléfono válido";
+      } else {
+        delete errors.phone;
+      }
+      break;
+    
+    case 'message':
+      if (!value.trim()) {
+        errors.message = "El mensaje es requerido";
+      } else if (value.trim().length < 10) {
+        errors.message = "El mensaje debe tener al menos 10 caracteres";
+      } else {
+        delete errors.message;
+      }
+      break;
+  }
+};
+
 const resetForm = () => {
   formData.name = "";
   formData.email = "";
@@ -682,14 +763,23 @@ const resetForm = () => {
 };
 
 const handleSubmit = async () => {
-  contactStore.clearMessages();
+  error.value = null;
+  success.value = null;
 
   if (!validateForm()) {
+    // Focus on first error field
+    const firstErrorField = Object.keys(errors)[0];
+    if (firstErrorField) {
+      const element = document.getElementById(firstErrorField);
+      element?.focus();
+    }
     return;
   }
 
+  loading.value = true;
+
   try {
-    await contactStore.submitContact({
+    const response = await contactStore.submitContact({
       name: formData.name.trim(),
       email: formData.email.trim(),
       phone: formData.phone.trim(),
@@ -698,12 +788,24 @@ const handleSubmit = async () => {
       budget_range: formData.budget_range || undefined,
     });
 
-    if (success.value) {
-      resetForm();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-  } catch (err) {
+    // Success
+    success.value = response.message || "¡Mensaje enviado exitosamente! Nos pondremos en contacto contigo pronto.";
+    resetForm();
+    
+    // Scroll to success message smoothly
+    setTimeout(() => {
+      const successElement = document.querySelector('.success-message');
+      if (successElement) {
+        successElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }, 100);
+
+  } catch (err: any) {
     console.error("Error submitting contact form:", err);
+    error.value = err.response?.data?.message || 
+                  "Hubo un error al enviar tu mensaje. Por favor, inténtalo de nuevo o contáctanos directamente.";
+  } finally {
+    loading.value = false;
   }
 };
 </script>
