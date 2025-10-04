@@ -1,24 +1,19 @@
-# Fix MIME type issues
+# Configuración de MIME types para archivos JavaScript y CSS
 AddType application/javascript .js
 AddType text/css .css
 
-# Force correct MIME type for JS files
-<FilesMatch "\.js$">
-    ForceType application/javascript
-</FilesMatch>
-
-# SPA Configuration - redirect all routes to index.html
+# Configuración para SPA - redirigir todas las rutas a index.html
 RewriteEngine On
 RewriteBase /
 
-# Handle existing files
+# Manejar archivos existentes
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 
-# Redirect everything to index.html for Vue router
+# Redirigir todo a index.html para el router de Vue
 RewriteRule . /index.html [L]
 
-# Cache optimization
+# Configuración de headers para optimización
 <IfModule mod_expires.c>
     ExpiresActive on
     ExpiresByType text/css "access plus 1 year"
