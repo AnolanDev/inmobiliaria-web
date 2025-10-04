@@ -1175,13 +1175,14 @@ const getImageUrl = (url: string | null | undefined): string => {
         .replace("http://app.tierrasonada.com", "");
     }
   } else {
-    // In production, keep absolute URLs
-    if (url.includes("app.tierrasonada.com")) {
-      return url; // Keep absolute URL
-    }
-    // Convert relative URLs to absolute
-    if (url.startsWith("/storage") || url.startsWith("/api")) {
-      return `https://app.tierrasonada.com${url}`;
+    // In production, use image proxy service to avoid CORS
+    if (url.includes("app.tierrasonada.com") || url.startsWith("/storage")) {
+      const imageUrl = url.startsWith("/storage") 
+        ? `https://app.tierrasonada.com${url}` 
+        : url;
+      
+      // Use a CORS proxy service for images
+      return `https://images.weserv.nl/?url=${encodeURIComponent(imageUrl)}&w=800&q=80&output=webp&we`;
     }
   }
 

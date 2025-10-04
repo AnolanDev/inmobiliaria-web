@@ -113,13 +113,14 @@ export function useResponsiveImages(options: UseResponsiveImagesOptions = {}) {
           .replace('http://app.tierrasonada.com', '')
       }
     } else {
-      // In production, keep absolute URLs to app.tierrasonada.com
-      if (url.includes('app.tierrasonada.com')) {
-        return url // Keep absolute URL for production
-      }
-      // If it's a relative URL, make it absolute
-      if (url.startsWith('/storage') || url.startsWith('/api')) {
-        return `https://app.tierrasonada.com${url}`
+      // In production, use image proxy service to avoid CORS
+      if (url.includes('app.tierrasonada.com') || url.startsWith('/storage')) {
+        const imageUrl = url.startsWith('/storage') 
+          ? `https://app.tierrasonada.com${url}` 
+          : url
+        
+        // Use a CORS proxy service for images
+        return `https://images.weserv.nl/?url=${encodeURIComponent(imageUrl)}&w=1200&q=80&output=webp&we`
       }
     }
 
@@ -419,8 +420,7 @@ export function useResponsiveImages(options: UseResponsiveImagesOptions = {}) {
       sizes: options.sizes ? generateSizes(options.sizes) : generateSizes(),
       alt,
       loading: options.loading || (config.lazy ? 'lazy' : 'eager'),
-      fetchpriority: options.fetchPriority,
-      crossorigin: import.meta.env.PROD ? 'anonymous' : undefined
+      fetchpriority: options.fetchPriority
     }
   }
 
