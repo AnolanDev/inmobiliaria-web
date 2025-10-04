@@ -113,14 +113,14 @@ export function useResponsiveImages(options: UseResponsiveImagesOptions = {}) {
           .replace('http://app.tierrasonada.com', '')
       }
     } else {
-      // In production, use image proxy service to avoid CORS
-      if (url.includes('app.tierrasonada.com') || url.startsWith('/storage')) {
-        const imageUrl = url.startsWith('/storage') 
-          ? `https://app.tierrasonada.com${url}` 
-          : url
-        
-        // Use a CORS proxy service for images
-        return `https://images.weserv.nl/?url=${encodeURIComponent(imageUrl)}&w=1200&q=80&output=webp&we`
+      // In production, use absolute URLs to app.tierrasonada.com
+      // Backend now serves images through API routes with proper CORS
+      if (url.includes('app.tierrasonada.com')) {
+        return url // Keep absolute URL - backend handles CORS
+      }
+      // Convert relative API URLs to absolute
+      if (url.startsWith('/api/') || url.startsWith('/storage/')) {
+        return `https://app.tierrasonada.com${url}`
       }
     }
 
