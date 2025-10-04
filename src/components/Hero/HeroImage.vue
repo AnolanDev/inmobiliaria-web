@@ -205,12 +205,17 @@ watch(() => props.imageUrl, (newUrl) => {
 const generateSrcSet = () => {
   if (!props.imageUrl) return "";
 
+  // En producción, no generar srcset - usar imagen original
+  if (import.meta.env.PROD) {
+    return "";
+  }
+
   // No generar srcset para URLs de desarrollo o fallback
   if (props.imageUrl.startsWith('/storage') || props.imageUrl.includes('unsplash.com')) {
     return "";
   }
 
-  // Generate srcset for different screen sizes
+  // Generate srcset for different screen sizes solo en desarrollo
   return props.baseImageSizes
     .map((size) => {
       const url = props.imageUrl!.replace(
