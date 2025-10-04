@@ -113,9 +113,16 @@ export function useResponsiveImages(options: UseResponsiveImagesOptions = {}) {
           .replace('http://app.tierrasonada.com', '')
       }
     } else {
-      // In production, use full URLs
+      // In production, try to use same domain to avoid CORS
       if (url.startsWith('/storage') || url.startsWith('/api')) {
-        return `https://app.tierrasonada.com${url}`
+        // First try same domain, fallback to app.tierrasonada.com
+        return url // Keep relative for same domain
+      }
+      // If it's already an app.tierrasonada.com URL, convert to relative
+      if (url.includes('app.tierrasonada.com')) {
+        return url
+          .replace('https://app.tierrasonada.com', '')
+          .replace('http://app.tierrasonada.com', '')
       }
     }
 
