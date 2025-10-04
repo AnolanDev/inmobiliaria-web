@@ -25,14 +25,21 @@ class ApiService {
         "Content-Type": "application/json",
         Accept: "application/json",
       },
+      withCredentials: true,
     });
 
-    // Request interceptor for auth token
-    this.client.interceptors.request.use((config) => {
+    // Request interceptor for auth token and CSRF
+    this.client.interceptors.request.use(async (config) => {
       const token = localStorage.getItem("auth_token");
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
+
+      // For POST requests, ensure we have CSRF token
+      if (config.method === 'post' || config.method === 'put' || config.method === 'patch' || config.method === 'delete') {
+        await this.ensureCSRFToken();
+      }
+
       return config;
     });
 
@@ -48,6 +55,21 @@ class ApiService {
         return Promise.reject(error);
       },
     );
+  }
+
+  // Ensure CSRF token is available
+  private async ensureCSRFToken(): Promise<void> {
+    try {
+      // Check if we're in development with proxy
+      if (import.meta.env.DEV) {
+        await axios.get('/sanctum/csrf-cookie', { withCredentials: true });
+      }
+    } catch (error) {
+      // Ignore CSRF token errors in development
+      if (import.meta.env.DEV) {
+        console.warn('CSRF token not available:', error);
+      }
+    }
   }
 
   // Projects API

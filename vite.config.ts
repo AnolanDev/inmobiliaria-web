@@ -18,6 +18,11 @@ export default defineConfig({
         target: 'https://app.tierrasonada.com',
         changeOrigin: true,
         secure: false,
+      },
+      '/sanctum': {
+        target: 'https://app.tierrasonada.com',
+        changeOrigin: true,
+        secure: false,
       }
     }
   },
