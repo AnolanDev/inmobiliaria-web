@@ -47,7 +47,7 @@
       v-show="!isLoading && currentSrc"
       v-bind="imageAttributes"
       :class="[
-        'w-full h-full object-cover transition-all duration-300',
+        'w-full h-full object-contain transition-all duration-300',
         imageClass,
         {
           'opacity-0': isLoading,

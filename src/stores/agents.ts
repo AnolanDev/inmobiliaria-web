@@ -8,16 +8,27 @@ export const useAgentsStore = defineStore("agents", () => {
   const currentAgent = ref<Agent | null>(null);
   const loading = ref(false);
   const error = ref<string | null>(null);
+  const lastFetch = ref<number>(0);
+  const CACHE_TIME = 10 * 60 * 1000; // 10 minutes cache (agents change less frequently)
 
-  const fetchAgents = async () => {
+  const fetchAgents = async (forceRefresh = false) => {
+    // Return cached data if available and not forcing refresh
+    const now = Date.now();
+    if (!forceRefresh && agents.value.length > 0 && (now - lastFetch.value) < CACHE_TIME) {
+      return Promise.resolve(agents.value);
+    }
+
     loading.value = true;
     error.value = null;
 
     try {
       agents.value = await apiService.getAgents();
+      lastFetch.value = now;
+      return agents.value;
     } catch (err: any) {
       error.value = err.response?.data?.message || "Error al cargar agentes";
       console.error("Error fetching agents:", err);
+      throw err;
     } finally {
       loading.value = false;
     }

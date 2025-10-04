@@ -21,38 +21,25 @@
 
       <!-- Quick Stats Overlay -->
       <div class="absolute bottom-4 left-4 right-4">
-        <div class="flex items-center justify-between">
-          <!-- Rating -->
-          <div
-            class="flex items-center bg-white/90 backdrop-blur-lg rounded-full px-3 py-2 shadow-soft"
-          >
-            <div class="flex items-center mr-2">
-              <svg
-                class="w-4 h-4 text-sand-500 mr-1"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                ></path>
-              </svg>
-              <span class="text-sm font-bold text-neutral-900">{{
-                rating
-              }}</span>
-            </div>
-            <span class="text-xs text-neutral-600 font-medium"
-              >ROI {{ roi }}%</span
-            >
-          </div>
-
-          <!-- Price Range -->
+        <div class="flex items-center justify-between" v-if="project.property_count">
+          <!-- Property Count -->
           <div
             class="bg-white/90 backdrop-blur-lg rounded-full px-3 py-2 shadow-soft"
           >
             <span class="text-sm font-bold text-neutral-900">{{
-              formatPrice(minPrice)
+              project.property_count
             }}</span>
-            <span class="text-xs text-neutral-600">+</span>
+            <span class="text-xs text-neutral-600 font-medium"> propiedades</span>
+          </div>
+
+          <!-- Project Status -->
+          <div
+            v-if="project.status"
+            class="bg-white/90 backdrop-blur-lg rounded-full px-3 py-2 shadow-soft"
+          >
+            <span class="text-xs font-medium text-neutral-700">{{
+              project.status
+            }}</span>
           </div>
         </div>
       </div>
@@ -112,15 +99,16 @@
         {{ project.description }}
       </p>
 
-      <!-- Features Grid -->
-      <div class="grid grid-cols-3 gap-4 mb-6">
+      <!-- Features Grid - Only show real data -->
+      <div class="grid gap-4 mb-6" :class="getGridCols()">
         <div
+          v-if="project.property_count"
           class="text-center p-3 bg-gradient-to-br from-caribbean-50 to-aqua-50 rounded-xl border border-caribbean-100/50"
         >
           <div
             class="text-lg font-bold bg-gradient-to-r from-caribbean-600 to-aqua-600 bg-clip-text text-transparent"
           >
-            {{ project.property_count || propertiesCount }}
+            {{ project.property_count }}
           </div>
           <div
             class="text-xs text-caribbean-700 font-medium uppercase tracking-wide"
@@ -130,38 +118,40 @@
         </div>
 
         <div
+          v-if="project.type"
           class="text-center p-3 bg-gradient-to-br from-nature-50 to-sand-50 rounded-xl border border-nature-100/50"
         >
           <div
-            class="text-lg font-bold bg-gradient-to-r from-nature-600 to-sand-600 bg-clip-text text-transparent"
+            class="text-sm font-bold bg-gradient-to-r from-nature-600 to-sand-600 bg-clip-text text-transparent"
           >
-            {{ roi }}%
+            {{ project.type }}
           </div>
           <div
             class="text-xs text-nature-700 font-medium uppercase tracking-wide"
           >
-            ROI
+            Tipo
           </div>
         </div>
 
         <div
+          v-if="project.status"
           class="text-center p-3 bg-gradient-to-br from-coral-50 to-sand-50 rounded-xl border border-coral-100/50"
         >
           <div
-            class="text-lg font-bold bg-gradient-to-r from-coral-600 to-sand-600 bg-clip-text text-transparent"
+            class="text-sm font-bold bg-gradient-to-r from-coral-600 to-sand-600 bg-clip-text text-transparent"
           >
-            {{ deliveryYear }}
+            {{ project.status }}
           </div>
           <div
             class="text-xs text-coral-700 font-medium uppercase tracking-wide"
           >
-            Entrega
+            Estado
           </div>
         </div>
       </div>
 
-      <!-- Amenities -->
-      <div class="flex flex-wrap gap-2 mb-6">
+      <!-- Amenities - Only show if provided -->
+      <div v-if="amenities && amenities.length > 0" class="flex flex-wrap gap-2 mb-6">
         <span
           v-for="amenity in displayAmenities"
           :key="amenity"
@@ -227,21 +217,7 @@ interface Props {
   amenities?: string[];
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  rating: 4.8,
-  roi: 15,
-  minPrice: 180000000,
-  propertiesCount: 25,
-  deliveryYear: "2024",
-  amenities: () => [
-    "Piscina",
-    "Gimnasio",
-    "Seguridad 24/7",
-    "Zonas Verdes",
-    "Parqueadero",
-    "Club House",
-  ],
-});
+const props = defineProps<Props>();
 
 const emit = defineEmits<{
   view: [id: number];
@@ -258,12 +234,20 @@ const formatPrice = (price: number): string => {
 };
 
 const displayAmenities = computed(() => {
-  return props.amenities.slice(0, 4);
+  return props.amenities ? props.amenities.slice(0, 4) : [];
 });
 
-const highROI = computed(() => {
-  return props.roi >= 15;
-});
+const getGridCols = () => {
+  const itemsCount = [
+    props.project.property_count,
+    props.project.type,
+    props.project.status
+  ].filter(Boolean).length;
+  
+  if (itemsCount === 1) return 'grid-cols-1';
+  if (itemsCount === 2) return 'grid-cols-2';
+  return 'grid-cols-3';
+};
 
 const hasGallery = computed(() => {
   return props.project.gallery_urls && props.project.gallery_urls.length > 0;

@@ -12,12 +12,28 @@ interface FormattedDescription {
     category: string;
     items: string[];
   }[];
+  keywordSections: {
+    ubicacion?: string;
+    precio?: string;
+    amenidades?: string;
+    separacion?: string;
+    financiacion?: string;
+  };
   cta: string;
   originalFormatted: string;
 }
 
 // Patrones para identificar elementos clave
 const PATTERNS = {
+  // Secciones principales que necesitan destacarse
+  keywordSections: {
+    ubicacion: /(?:Ubicación[:\s]*)(.*?)(?=\n(?:Precio|Amenidades|Separación|Financiación)|$)/is,
+    precio: /(?:Precio[:\s]*)(.*?)(?=\n(?:Ubicación|Amenidades|Separación|Financiación)|$)/is,
+    amenidades: /(?:Amenidades[:\s]*)(.*?)(?=\n(?:Ubicación|Precio|Separación|Financiación)|$)/is,
+    separacion: /(?:Separación[:\s]*)(.*?)(?=\n(?:Ubicación|Precio|Amenidades|Financiación)|$)/is,
+    financiacion: /(?:Financiación[:\s]*)(.*?)(?=\n(?:Ubicación|Precio|Amenidades|Separación)|$)/is
+  },
+  
   // Ubicaciones comunes
   location: /(?:ubicado|localizado|situado)\s+en\s+([^.,!]+)/i,
   locationSymbols: /📍\s*([^.,!\n]+)/g,
@@ -144,11 +160,56 @@ function extractAmenities(description: string): { category: string; items: strin
 }
 
 /**
- * Retorna la descripción completa sin truncar
+ * Extrae y formatea las secciones de keywords destacadas
+ */
+function extractKeywordSections(description: string): { [key: string]: string } {
+  const sections: { [key: string]: string } = {};
+  
+  Object.entries(PATTERNS.keywordSections).forEach(([key, pattern]) => {
+    const match = description.match(pattern);
+    if (match && match[1]) {
+      sections[key] = match[1].trim();
+    }
+  });
+  
+  return sections;
+}
+
+/**
+ * Retorna la descripción completa del proyecto con formatting de keywords
  */
 function generateSummary(description: string, projectName: string): string {
-  // Retornar la descripción completa, solo limpia
-  return description.trim();
+  // Extraer las secciones de keywords
+  const keywordSections = extractKeywordSections(description);
+  
+  // Limpiar la descripción base
+  let cleanDescription = description
+    .replace(/\r\n/g, '\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+  
+  // Formatear las keywords encontradas con énfasis
+  const keywordMap = {
+    ubicacion: 'Ubicación',
+    precio: 'Precio', 
+    amenidades: 'Amenidades',
+    separacion: 'Separación',
+    financiacion: 'Financiación'
+  };
+  
+  Object.entries(keywordSections).forEach(([key, content]) => {
+    const keyword = keywordMap[key as keyof typeof keywordMap];
+    if (keyword && content) {
+      // Reemplazar la sección original con la versión formateada
+      const originalPattern = new RegExp(`(${keyword}[:\s]*)(.*?)(?=\n(?:Ubicación|Precio|Amenidades|Separación|Financiación)|$)`, 'is');
+      cleanDescription = cleanDescription.replace(originalPattern, 
+        `**${keyword}:** ${content.trim()}`
+      );
+    }
+  });
+  
+  return cleanDescription;
 }
 
 /**
@@ -169,6 +230,7 @@ export function formatProjectDescription(description: string, projectName: strin
       location: '',
       features: [],
       amenities: [],
+      keywordSections: {},
       cta: '',
       originalFormatted: description
     };
@@ -184,6 +246,7 @@ export function formatProjectDescription(description: string, projectName: strin
   const location = extractLocation(cleanDescription);
   const features = extractFeatures(cleanDescription);
   const amenities = extractAmenities(cleanDescription);
+  const keywordSections = extractKeywordSections(cleanDescription);
   const summary = generateSummary(cleanDescription, projectName);
   
   return {
@@ -192,6 +255,7 @@ export function formatProjectDescription(description: string, projectName: strin
     location,
     features,
     amenities,
+    keywordSections,
     cta: generateCTA(),
     originalFormatted: cleanDescription
   };
@@ -243,7 +307,7 @@ export function descriptionToMarkdown(formatted: FormattedDescription): string {
 }
 
 /**
- * Renderiza markdown simple a HTML
+ * Renderiza markdown simple a HTML con énfasis especial en keywords
  */
 export function markdownToHtml(markdown: string): string {
   return markdown
@@ -252,14 +316,17 @@ export function markdownToHtml(markdown: string): string {
     .replace(/^## (.*$)/gm, '<h2 class="text-xl font-bold text-gray-900 mb-3 flex items-center">$1</h2>')
     .replace(/^# (.*$)/gm, '<h1 class="text-2xl font-bold text-gray-900 mb-4">$1</h1>')
     
-    // Bold
+    // Special formatting for keyword sections (more prominent)
+    .replace(/\*\*(Ubicación|Precio|Amenidades|Separación|Financiación):\*\*/g, '<span class="inline-block bg-caribbean-100 text-caribbean-800 px-3 py-1 rounded-lg font-bold text-sm mb-2 mr-2">$1:</span>')
+    
+    // Regular bold
     .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-gray-900">$1</strong>')
     
     // Lists
     .replace(/^- (.*$)/gm, '<li class="flex items-center space-x-2 text-gray-700"><span>$1</span></li>')
     
     // Paragraphs
-    .replace(/^(?!<[hl]|<li)(.*$)/gm, '<p class="text-gray-700 mb-3 leading-relaxed">$1</p>')
+    .replace(/^(?!<[hl]|<li|<span)(.*$)/gm, '<p class="text-gray-700 mb-3 leading-relaxed">$1</p>')
     
     // Wrap lists
     .replace(/(<li.*<\/li>)/gs, '<ul class="space-y-2 mb-4">$1</ul>')

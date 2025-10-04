@@ -85,7 +85,7 @@
         </div>
       </div>
 
-      <!-- Departments Stat -->
+      <!-- Experience Stat -->
       <div class="group relative transform hover:scale-105 transition-all duration-500 cursor-pointer">
         <div class="relative mb-3">
           <div 
@@ -96,7 +96,13 @@
               'bg-clip-text text-transparent'
             ]"
           >
-            {{ departmentsCount }}
+            10
+            <span 
+              :class="[
+                'font-bold',
+                'text-6xl sm:text-5xl lg:text-6xl xl:text-7xl'
+              ]"
+            >+</span>
           </div>
           
           <div class="absolute -top-1 -right-1 w-3 h-3 bg-amber-400/80 rounded-full 
@@ -108,23 +114,23 @@
         
         <div class="space-y-1">
           <div class="text-slate-800 font-bold text-lg lg:text-xl uppercase tracking-wider">
-            Departamentos
+            Años
           </div>
           <div class="text-slate-600 text-sm font-medium">
-            Costa Caribe
+            De experiencia
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Professional Achievement Badges -->
+    <!-- Professional Achievement Badges - Only real information -->
     <div 
       :class="[
         'flex flex-wrap gap-3 max-w-lg mx-auto lg:mx-0',
         'justify-center lg:justify-start'                // Center on mobile, left on desktop
       ]"
     >
-      <!-- ROI Badge -->
+      <!-- Quality Badge -->
       <div class="px-4 py-2 bg-white/80 backdrop-blur-md border border-blue-200/60 rounded-full 
                   text-blue-700 text-sm font-semibold flex items-center shadow-sm
                   hover:bg-blue-50 hover:border-blue-300 transition-all duration-300">
@@ -132,10 +138,10 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-        ROI 15%+ Garantizado
+        Calidad Garantizada
       </div>
 
-      <!-- Delivery Badge -->
+      <!-- Experience Badge -->
       <div class="px-4 py-2 bg-white/80 backdrop-blur-md border border-emerald-200/60 rounded-full 
                   text-emerald-700 text-sm font-semibold flex items-center shadow-sm
                   hover:bg-emerald-50 hover:border-emerald-300 transition-all duration-300">
@@ -143,18 +149,7 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                 d="M13 10V3L4 14h7v7l9-11h-7z" />
         </svg>
-        Entrega 2025
-      </div>
-
-      <!-- Families Badge -->
-      <div class="px-4 py-2 bg-white/80 backdrop-blur-md border border-amber-200/60 rounded-full 
-                  text-amber-700 text-sm font-semibold flex items-center shadow-sm
-                  hover:bg-amber-50 hover:border-amber-300 transition-all duration-300">
-        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-        </svg>
-        500+ Familias
+        Experiencia Comprobada
       </div>
     </div>
   </div>
@@ -164,10 +159,7 @@
 interface Props {
   projectsCount: number;
   expertsCount: number;
-  departmentsCount: number;
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  departmentsCount: 3,
-});
+defineProps<Props>();
 </script>
