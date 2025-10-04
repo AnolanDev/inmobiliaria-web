@@ -335,13 +335,23 @@ export function useResponsiveImages(options: UseResponsiveImagesOptions = {}) {
                 typeof responsiveSet === 'string' ? null : responsiveSet,
                 fallbackSrc
               )
-              if (fallbackUrl !== src) {
+              if (fallbackUrl !== src && fallbackUrl !== config.fallbackUrl) {
                 loadWithRetry(fallbackUrl, 1).then(resolve).catch(reject)
               } else {
-                reject(new Error('All fallback options exhausted'))
+                // Use fallback as final result
+                state.value.loading = false
+                state.value.error = true
+                state.value.loaded = false
+                state.value.currentSrc = config.fallbackUrl
+                resolve(config.fallbackUrl)
               }
             } catch (error) {
-              reject(error)
+              // Final fallback - ensure loading state is reset
+              state.value.loading = false
+              state.value.error = true
+              state.value.loaded = false
+              state.value.currentSrc = config.fallbackUrl
+              resolve(config.fallbackUrl)
             }
           }
         }
