@@ -257,7 +257,9 @@ const loadImageSource = async () => {
     }
     retryCount.value = 0
   } catch (error) {
-    console.warn('📸 ResponsiveImage: Failed to load image', error)
+    if (import.meta.env.DEV) {
+      console.warn('📸 ResponsiveImage: Failed to load image', error)
+    }
     if (props.enableRetry && retryCount.value < maxRetries) {
       retryCount.value++
       if (import.meta.env.DEV) {

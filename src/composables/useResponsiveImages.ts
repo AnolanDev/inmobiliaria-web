@@ -101,15 +101,22 @@ export function useResponsiveImages(options: UseResponsiveImagesOptions = {}) {
     window.removeEventListener('resize', updateScreenWidth)
   })
 
-  // Proxy URL conversion helper
+  // URL conversion helper for dev/production
   const convertToProxyUrl = (url: string): string => {
     if (!url) return url
 
-    // Convert absolute URLs to relative for development proxy
-    if (url.includes('app.tierrasonada.com')) {
-      return url
-        .replace('https://app.tierrasonada.com', '')
-        .replace('http://app.tierrasonada.com', '')
+    // In development, use proxy (relative URLs)
+    if (import.meta.env.DEV) {
+      if (url.includes('app.tierrasonada.com')) {
+        return url
+          .replace('https://app.tierrasonada.com', '')
+          .replace('http://app.tierrasonada.com', '')
+      }
+    } else {
+      // In production, use full URLs
+      if (url.startsWith('/storage') || url.startsWith('/api')) {
+        return `https://app.tierrasonada.com${url}`
+      }
     }
 
     return url
@@ -236,33 +243,43 @@ export function useResponsiveImages(options: UseResponsiveImagesOptions = {}) {
     responsiveSet: ResponsiveImageSet | string | null,
     fallbackSrc?: string
   ): string => {
-    console.log('🎯 getOptimizedImageSrc called with:', {
-      responsiveSet,
-      fallbackSrc,
-      type: typeof responsiveSet
-    })
+    if (import.meta.env.DEV) {
+      console.log('🎯 getOptimizedImageSrc called with:', {
+        responsiveSet,
+        fallbackSrc,
+        type: typeof responsiveSet
+      })
+    }
 
     // Handle string URLs (legacy support)
     if (typeof responsiveSet === 'string') {
       const result = convertToProxyUrl(responsiveSet) || fallbackSrc || config.fallbackUrl
-      console.log('🎯 String URL result:', result)
+      if (import.meta.env.DEV) {
+        console.log('🎯 String URL result:', result)
+      }
       return result
     }
 
     // Handle responsive image sets
     if (responsiveSet) {
       const bestVariant = getBestImageVariant(responsiveSet)
-      console.log('🎯 Best variant found:', bestVariant)
+      if (import.meta.env.DEV) {
+        console.log('🎯 Best variant found:', bestVariant)
+      }
       if (bestVariant) {
         const result = convertToProxyUrl(bestVariant.url)
-        console.log('🎯 Responsive set result:', result)
+        if (import.meta.env.DEV) {
+          console.log('🎯 Responsive set result:', result)
+        }
         return result
       }
     }
 
     // Fallback chain
     const result = convertToProxyUrl(fallbackSrc || '') || config.fallbackUrl
-    console.log('🎯 Fallback result:', result)
+    if (import.meta.env.DEV) {
+      console.log('🎯 Fallback result:', result)
+    }
     return result
   }
 
@@ -332,7 +349,9 @@ export function useResponsiveImages(options: UseResponsiveImagesOptions = {}) {
     } catch (error) {
       state.value.loading = false
       state.value.error = true
-      console.warn('Image loading failed:', error)
+      if (import.meta.env.DEV) {
+        console.warn('Image loading failed:', error)
+      }
       return config.fallbackUrl
     }
   }
