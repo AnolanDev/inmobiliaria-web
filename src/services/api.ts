@@ -38,6 +38,12 @@ class ApiService {
       // For POST requests, ensure we have CSRF token
       if (config.method === 'post' || config.method === 'put' || config.method === 'patch' || config.method === 'delete') {
         await this.ensureCSRFToken();
+        
+        // Add CSRF token to headers
+        const csrfToken = this.getCSRFToken();
+        if (csrfToken) {
+          config.headers['X-XSRF-TOKEN'] = csrfToken;
+        }
       }
 
       return config;
@@ -57,17 +63,33 @@ class ApiService {
     );
   }
 
+  // Get CSRF token from cookie
+  private getCSRFToken(): string | null {
+    if (typeof document === 'undefined') return null;
+    
+    const cookies = document.cookie.split(';');
+    for (let cookie of cookies) {
+      const [name, value] = cookie.trim().split('=');
+      if (name === 'XSRF-TOKEN') {
+        return decodeURIComponent(value);
+      }
+    }
+    return null;
+  }
+
   // Ensure CSRF token is available
   private async ensureCSRFToken(): Promise<void> {
     try {
-      // Check if we're in development with proxy
-      if (import.meta.env.DEV) {
+      // First try to get token from cookie
+      const token = this.getCSRFToken();
+      if (!token && import.meta.env.DEV) {
+        // If no token, request it
         await axios.get('/sanctum/csrf-cookie', { withCredentials: true });
       }
     } catch (error) {
-      // Ignore CSRF token errors in development
+      // For public endpoints, we might not need CSRF
       if (import.meta.env.DEV) {
-        console.warn('CSRF token not available:', error);
+        console.warn('CSRF token request failed:', error);
       }
     }
   }
@@ -172,16 +194,52 @@ class ApiService {
   async submitContact(
     data: ContactForm,
   ): Promise<{ message: string; lead_id: number }> {
-    const response = await this.client.post("/public/contact", data);
-    return response.data;
+    try {
+      const response = await this.client.post("/public/contact", data);
+      return response.data;
+    } catch (error: any) {
+      // If CSRF error, try direct request without CSRF
+      if (error.response?.status === 419) {
+        const directResponse = await axios.post(
+          `${import.meta.env.DEV ? '' : 'https://app.tierrasonada.com'}/api/public/contact`,
+          data,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
+          }
+        );
+        return directResponse.data;
+      }
+      throw error;
+    }
   }
 
   // Appointments API
   async scheduleAppointment(
     data: AppointmentForm,
   ): Promise<{ message: string; appointment: any }> {
-    const response = await this.client.post("/public/appointments", data);
-    return response.data;
+    try {
+      const response = await this.client.post("/public/appointments", data);
+      return response.data;
+    } catch (error: any) {
+      // If CSRF error, try direct request without CSRF
+      if (error.response?.status === 419) {
+        const directResponse = await axios.post(
+          `${import.meta.env.DEV ? '' : 'https://app.tierrasonada.com'}/api/public/appointments`,
+          data,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
+          }
+        );
+        return directResponse.data;
+      }
+      throw error;
+    }
   }
 
   // Authentication API
