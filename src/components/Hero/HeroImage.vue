@@ -34,38 +34,33 @@
     </div>
 
     <!-- Main Image Container -->
-    <div
-      v-show="!loading"
-      :class="[
+    <ResponsiveImage
+      v-if="!loading && (responsiveImageSet || imageUrl)"
+      :src="responsiveImageSet || imageUrl"
+      :alt="alt"
+      :fallback="imageUrl"
+      :container-class="[
         'relative overflow-hidden',
         aspectRatio === 'square' ? 'aspect-square' : 
         aspectRatio === '4/3' ? 'aspect-[4/3]' : 
         aspectRatio === '16/9' ? 'aspect-[16/9]' : 
         aspectRatio === '3/4' ? 'aspect-[3/4]' : 'aspect-video'
-      ]"
-    >
-      <!-- Optimized Image -->
-      <img
-        v-if="currentImageUrl"
-        :src="currentImageUrl"
-        :alt="alt"
-        :loading="lazy ? 'lazy' : 'eager'"
-        :srcset="generateSrcSet()"
-        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-        :class="[
-          'w-full h-full object-cover transition-all duration-700',
-          hoverEffect === 'zoom' ? 'group-hover:scale-110' :
-          hoverEffect === 'brightness' ? 'group-hover:brightness-110' :
-          hoverEffect === 'both' ? 'group-hover:scale-105 group-hover:brightness-105' : ''
-        ]"
-        @load="handleImageLoad"
-        @error="handleImageError"
-        crossorigin="anonymous"
-      />
+      ].join(' ')"
+      :image-class="[
+        'w-full h-full transition-all duration-700',
+        hoverEffect === 'zoom' ? 'group-hover:scale-110' :
+        hoverEffect === 'brightness' ? 'group-hover:brightness-110' :
+        hoverEffect === 'both' ? 'group-hover:scale-105 group-hover:brightness-105' : ''
+      ].join(' ')"
+      :loading="lazy ? 'lazy' : 'eager'"
+      :sizes="sizes || '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'"
+      @load="handleImageLoad"
+      @error="handleImageError"
+    ></ResponsiveImage>
 
-      <!-- Elegant Fallback Design -->
-      <div
-        v-else
+    <!-- Elegant Fallback Design -->
+    <div
+      v-else-if="!loading"
         class="w-full h-full bg-gradient-to-br from-slate-50 via-blue-50 to-emerald-50 flex items-center justify-center relative overflow-hidden"
       >
         <!-- Subtle Pattern -->
@@ -92,24 +87,23 @@
         <div class="absolute bottom-8 left-8 w-2 h-2 bg-emerald-200/40 rounded-full"></div>
       </div>
 
-      <!-- Modern Overlay System -->
-      <div
-        v-if="overlay && currentImageUrl"
-        :class="[
-          'absolute inset-0 transition-all duration-500',
-          overlay === 'gradient' ? 'bg-gradient-to-t from-slate-900/70 via-slate-900/20 to-transparent' :
-          overlay === 'dark' ? 'bg-slate-900/50' :
-          overlay === 'light' ? 'bg-white/30' :
-          overlay === 'blue' ? 'bg-blue-600/30' :
-          overlay === 'emerald' ? 'bg-emerald-600/30' : '',
-          'group-hover:opacity-90'
-        ]"
-      ></div>
+    <!-- Modern Overlay System -->
+    <div
+      v-if="overlay && (responsiveImageSet || imageUrl)"
+      :class="[
+        'absolute inset-0 transition-all duration-500',
+        overlay === 'gradient' ? 'bg-gradient-to-t from-slate-900/70 via-slate-900/20 to-transparent' :
+        overlay === 'dark' ? 'bg-slate-900/50' :
+        overlay === 'light' ? 'bg-white/30' :
+        overlay === 'blue' ? 'bg-blue-600/30' :
+        overlay === 'emerald' ? 'bg-emerald-600/30' : '',
+        'group-hover:opacity-90'
+      ]"
+    ></div>
 
-      <!-- Content Overlay Slot -->
-      <div v-if="$slots.overlay" class="absolute inset-0 flex items-end p-6 z-10">
-        <slot name="overlay" />
-      </div>
+    <!-- Content Overlay Slot -->
+    <div v-if="$slots.overlay" class="absolute inset-0 flex items-end p-6 z-10">
+      <slot name="overlay" />
     </div>
 
     <!-- Professional Badge -->
@@ -149,9 +143,13 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from "vue";
+import ResponsiveImage from "../ResponsiveImage.vue";
+import type { ResponsiveImageSet } from "@/types";
 
 interface Props {
   imageUrl?: string;
+  responsiveImageSet?: ResponsiveImageSet;
+  sizes?: string;
   alt: string;
   aspectRatio?: "square" | "video" | "4/3" | "16/9" | "3/4" | "auto";
   lazy?: boolean;

@@ -5,21 +5,51 @@
   >
     <BaseCard hover class="h-full">
       <template #image>
-        <div class="relative bg-gray-100">
-          <!-- Show actual image if URL exists and is valid -->
-          <img
-            v-if="blogImageUrl && !imageError"
-            :src="blogImageUrl"
-            :alt="blog.title"
-            class="w-full h-48 sm:h-52 md:h-56 object-cover transition-transform duration-300 hover:scale-110"
-            loading="lazy"
-            @error="handleImageError"
-            @load="handleImageLoad"
-          />
+        <ResponsiveImage
+          v-if="hasValidImage"
+          :src="blog.featured_image_responsive || blog.featured_image_url"
+          :alt="blog.title"
+          :fallback="blog.featured_image_url"
+          container-class="relative bg-gray-100"
+          image-class="w-full h-48 sm:h-52 md:h-56"
+          :enable-hover-zoom="true"
+          loading="lazy"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          @load="handleImageLoad"
+          @error="handleImageErrorResponsive"
+        >
+          <template #overlay>
+            <!-- Featured Badge -->
+            <div
+              v-if="blog.is_featured"
+              class="absolute top-2 left-2 sm:top-3 sm:left-3"
+            >
+              <span
+                class="inline-flex items-center px-2 py-1 sm:px-2.5 sm:py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 backdrop-blur-sm"
+              >
+                <svg class="w-3 h-3 mr-1" viewBox="0 0 24 24" fill="currentColor">
+                  <path
+                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                  />
+                </svg>
+                Destacado
+              </span>
+            </div>
 
-          <!-- Show generated image if no image URL or image failed to load -->
+            <!-- Category Badge -->
+            <div class="absolute top-2 right-2 sm:top-3 sm:right-3">
+              <span
+                class="inline-flex items-center px-2 py-1 sm:px-2.5 sm:py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 backdrop-blur-sm"
+              >
+                {{ blog.category }}
+              </span>
+            </div>
+          </template>
+        </ResponsiveImage>
+
+        <!-- Show generated image if no valid image URL -->
+        <div v-else class="relative bg-gray-100">
           <BlogImageGenerator
-            v-else
             :title="blog.title"
             :category="blog.category"
             class="w-full h-48 sm:h-52 md:h-56"
@@ -172,6 +202,7 @@ import type { Blog } from "@/types";
 import BaseCard from "./BaseCard.vue";
 import BaseButton from "./BaseButton.vue";
 import BlogImageGenerator from "./BlogImageGenerator.vue";
+import ResponsiveImage from "./ResponsiveImage.vue";
 
 interface Props {
   blog: Blog;
@@ -195,22 +226,17 @@ const imageLoaded = ref(false);
 // Computed
 const hasValidImage = computed(() => {
   const blog = props.blog as any;
-  // Try multiple possible image fields
-  const imageUrl =
-    blog.featured_image_url ||
-    blog.featured_image ||
-    blog.image ||
-    blog.banner ||
-    blog.cover ||
-    blog.thumbnail;
-
-  const hasImage = !!(
-    imageUrl &&
-    imageUrl !== "null" &&
-    imageUrl !== "undefined" &&
-    imageUrl.trim() !== "" &&
+  // Check if we have either responsive image set or fallback URL
+  const hasResponsiveImage = !!(blog.featured_image_responsive);
+  const hasFallbackImage = !!(
+    blog.featured_image_url &&
+    blog.featured_image_url !== "null" &&
+    blog.featured_image_url !== "undefined" &&
+    blog.featured_image_url.trim() !== "" &&
     !imageError.value
   );
+
+  const hasImage = hasResponsiveImage || hasFallbackImage;
 
   // Log only if we have an image
   if (import.meta.env.DEV && hasImage) {
@@ -220,21 +246,6 @@ const hasValidImage = computed(() => {
   return hasImage;
 });
 
-const blogImageUrl = computed(() => {
-  // Use same logic as BlogDetailPage
-  const imageUrl = props.blog.featured_image_url || props.blog.featured_image;
-
-  if (!imageUrl) return "";
-
-  // In development, convert absolute URLs to relative for proxy
-  if (imageUrl.includes("app.tierrasonada.com")) {
-    return imageUrl
-      .replace("https://app.tierrasonada.com", "")
-      .replace("http://app.tierrasonada.com", "");
-  }
-
-  return imageUrl;
-});
 
 // Methods
 const formatDate = (dateString: string) => {
@@ -262,6 +273,13 @@ const handleImageError = () => {
 const handleImageLoad = () => {
   imageLoaded.value = true;
   imageError.value = false;
+};
+
+const handleImageErrorResponsive = (error: Error) => {
+  imageError.value = true;
+  if (import.meta.env.DEV) {
+    console.warn("Failed to load blog image:", props.blog.title, error.message);
+  }
 };
 </script>
 

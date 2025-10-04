@@ -19,15 +19,16 @@
         >
           <!-- Image container with agent click -->
           <div class="agent-image-container">
-            <img
-              :src="
-                getImageUrl(
-                  agent.profile_picture_url || '/placeholder-agent.svg',
-                )
-              "
+            <ResponsiveImage
+              :src="agent.profile_picture_responsive || agent.profile_picture_url"
               :alt="agent.name"
-              class="agent-image"
+              :fallback="agent.profile_picture_url || '/placeholder-agent.svg'"
+              container-class="w-full h-full"
+              image-class="agent-image"
               loading="lazy"
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 380px"
+              @load="handleImageLoad"
+              @error="handleImageError"
             />
             <div class="image-overlay">
               <div class="agent-icon">
@@ -78,6 +79,7 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
 import type { Agent } from "@/types";
+import ResponsiveImage from "./ResponsiveImage.vue";
 
 interface Props {
   agents: Agent[];
@@ -92,18 +94,17 @@ const emit = defineEmits<{
 
 const router = useRouter();
 
-// Helper function to convert absolute URLs to relative for development
-const getImageUrl = (url: string): string => {
-  if (!url) return "/placeholder-agent.svg";
-
-  // In development, convert absolute URLs to relative
-  if (url.includes("app.tierrasonada.com")) {
-    return url
-      .replace("https://app.tierrasonada.com", "")
-      .replace("http://app.tierrasonada.com", "");
+// Image event handlers
+const handleImageLoad = (src: string) => {
+  if (import.meta.env.DEV) {
+    console.log('✅ AgentsGallery image loaded:', src);
   }
+};
 
-  return url;
+const handleImageError = (error: Error) => {
+  if (import.meta.env.DEV) {
+    console.warn('❌ AgentsGallery image error:', error.message);
+  }
 };
 
 const openAgentDetail = (agent: Agent) => {

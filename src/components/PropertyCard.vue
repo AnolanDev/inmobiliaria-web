@@ -5,28 +5,35 @@
   >
     <BaseCard hover class="h-full">
       <template #image>
-        <div class="relative">
-          <img
-            :src="property.cover_image_url"
-            :alt="property.title"
-            class="w-full h-48 sm:h-52 object-cover transition-transform duration-300 hover:scale-110"
-            loading="lazy"
-          />
-          <div class="absolute top-2 left-2 sm:top-3 sm:left-3">
-            <span
-              class="inline-flex items-center px-2 py-1 sm:px-2.5 sm:py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800 backdrop-blur-sm"
-            >
-              {{ property.category }}
-            </span>
-          </div>
-          <div class="absolute top-2 right-2 sm:top-3 sm:right-3">
-            <span
-              class="inline-flex items-center px-2 py-1 sm:px-2.5 sm:py-0.5 rounded-full text-xs font-medium bg-white text-gray-800 backdrop-blur-sm"
-            >
-              {{ property.type }}
-            </span>
-          </div>
-        </div>
+        <ResponsiveImage
+          :src="property.cover_image_responsive || property.cover_image_url"
+          :alt="property.title"
+          :fallback="property.cover_image_url || '/placeholder-property.svg'"
+          container-class="relative"
+          image-class="w-full h-48 sm:h-52"
+          :enable-hover-zoom="true"
+          loading="lazy"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          @load="handleImageLoad"
+          @error="handleImageError"
+        >
+          <template #overlay>
+            <div class="absolute top-2 left-2 sm:top-3 sm:left-3">
+              <span
+                class="inline-flex items-center px-2 py-1 sm:px-2.5 sm:py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800 backdrop-blur-sm"
+              >
+                {{ property.category }}
+              </span>
+            </div>
+            <div class="absolute top-2 right-2 sm:top-3 sm:right-3">
+              <span
+                class="inline-flex items-center px-2 py-1 sm:px-2.5 sm:py-0.5 rounded-full text-xs font-medium bg-white text-gray-800 backdrop-blur-sm"
+              >
+                {{ property.type }}
+              </span>
+            </div>
+          </template>
+        </ResponsiveImage>
       </template>
 
       <div class="space-y-3 flex flex-col flex-1">
@@ -119,6 +126,7 @@ import { RouterLink } from "vue-router";
 import type { Property } from "@/types";
 import BaseCard from "./BaseCard.vue";
 import BaseButton from "./BaseButton.vue";
+import ResponsiveImage from "./ResponsiveImage.vue";
 
 interface Props {
   property: Property;
@@ -128,6 +136,19 @@ defineProps<Props>();
 
 const formatPrice = (price: number): string => {
   return new Intl.NumberFormat("es-ES").format(price);
+};
+
+// Image event handlers
+const handleImageLoad = (src: string) => {
+  if (import.meta.env.DEV) {
+    console.log('✅ PropertyCard image loaded:', src);
+  }
+};
+
+const handleImageError = (error: Error) => {
+  if (import.meta.env.DEV) {
+    console.warn('❌ PropertyCard image error:', error.message);
+  }
 };
 </script>
 

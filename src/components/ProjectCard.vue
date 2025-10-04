@@ -5,33 +5,37 @@
   >
     <BaseCard hover class="h-full">
       <template #image>
-        <div class="relative">
-          <img
-            :src="getProxyImageUrl(project.cover_image_url)"
-            :alt="project.name"
-            class="w-full h-48 sm:h-52 object-cover transition-transform duration-300 hover:scale-110"
-            loading="lazy"
-            crossorigin="anonymous"
-            @error="(e) => console.log('❌ Error ProjectCard original:', project.name, getProxyImageUrl(project.cover_image_url))"
-            @load="(e) => console.log('✅ ProjectCard original cargada:', project.name)"
-          />
-          <div class="absolute top-2 left-2 sm:top-3 sm:left-3">
-            <span
-              :class="getTypeColorClass(project.type)"
-              class="inline-flex items-center px-2 py-1 sm:px-2.5 sm:py-0.5 rounded-full text-xs font-medium backdrop-blur-sm"
-            >
-              {{ project.type }}
-            </span>
-          </div>
-          <div class="absolute top-2 right-2 sm:top-3 sm:right-3">
-            <span
-              :class="getStatusColorClass(project.status)"
-              class="inline-flex items-center px-2 py-1 sm:px-2.5 sm:py-0.5 rounded-full text-xs font-medium backdrop-blur-sm"
-            >
-              {{ project.status }}
-            </span>
-          </div>
-        </div>
+        <ResponsiveImage
+          :src="project.cover_image_responsive || project.cover_image_url"
+          :alt="project.name"
+          :fallback="project.cover_image_url || '/placeholder-project.svg'"
+          container-class="relative"
+          image-class="w-full h-48 sm:h-52"
+          :enable-hover-zoom="true"
+          loading="lazy"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          @load="handleImageLoad"
+          @error="handleImageError"
+        >
+          <template #overlay>
+            <div class="absolute top-2 left-2 sm:top-3 sm:left-3">
+              <span
+                :class="getTypeColorClass(project.type)"
+                class="inline-flex items-center px-2 py-1 sm:px-2.5 sm:py-0.5 rounded-full text-xs font-medium backdrop-blur-sm"
+              >
+                {{ project.type }}
+              </span>
+            </div>
+            <div class="absolute top-2 right-2 sm:top-3 sm:right-3">
+              <span
+                :class="getStatusColorClass(project.status)"
+                class="inline-flex items-center px-2 py-1 sm:px-2.5 sm:py-0.5 rounded-full text-xs font-medium backdrop-blur-sm"
+              >
+                {{ project.status }}
+              </span>
+            </div>
+          </template>
+        </ResponsiveImage>
       </template>
 
       <div class="space-y-3 flex flex-col flex-1">
@@ -131,6 +135,7 @@ import { RouterLink } from "vue-router";
 import type { Project } from "@/types";
 import BaseCard from "./BaseCard.vue";
 import BaseButton from "./BaseButton.vue";
+import ResponsiveImage from "./ResponsiveImage.vue";
 
 interface Props {
   project: Project;
@@ -138,18 +143,18 @@ interface Props {
 
 defineProps<Props>();
 
-// Helper function to convert absolute URLs to relative for both development and production
-const getProxyImageUrl = (url: string | null | undefined): string => {
-  if (!url) return "/placeholder-project.svg";
 
-  // Convert absolute URLs to relative for both dev and production
-  if (url.includes("app.tierrasonada.com")) {
-    return url
-      .replace("https://app.tierrasonada.com", "")
-      .replace("http://app.tierrasonada.com", "");
+// Image event handlers
+const handleImageLoad = (src: string) => {
+  if (import.meta.env.DEV) {
+    console.log('✅ ProjectCard image loaded:', src);
   }
+};
 
-  return url;
+const handleImageError = (error: Error) => {
+  if (import.meta.env.DEV) {
+    console.warn('❌ ProjectCard image error:', error.message);
+  }
 };
 
 const getTypeColorClass = (type: string): string => {

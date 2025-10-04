@@ -1,3 +1,16 @@
+// Responsive Image types
+export interface ResponsiveImageVariant {
+  url: string;
+  width: number | null;
+}
+
+export interface ResponsiveImageSet {
+  thumbnail?: ResponsiveImageVariant;
+  medium?: ResponsiveImageVariant;
+  large?: ResponsiveImageVariant;
+  original?: ResponsiveImageVariant;
+}
+
 // API Response types
 export interface ApiResponse<T> {
   data: T;
@@ -25,6 +38,9 @@ export interface Project {
   videos: string[];
   cover_image_url: string;
   gallery_urls: string[];
+  // New responsive image fields
+  cover_image_responsive?: ResponsiveImageSet;
+  gallery_responsive?: ResponsiveImageSet[];
   type_color: string;
   status_color: string;
   properties?: Property[];
@@ -57,6 +73,9 @@ export interface Property {
   cover_image_url: string;
   gallery_urls: string[];
   video_urls: string[];
+  // New responsive image fields
+  cover_image_responsive?: ResponsiveImageSet;
+  gallery_responsive?: ResponsiveImageSet[];
   agent_id: number;
   project_id: number;
   agent?: Agent;
@@ -81,6 +100,8 @@ export interface Agent {
   profile_picture_url: string;
   gallery_urls: string[];
   video_urls: string[];
+  // New responsive image fields
+  profile_picture_responsive?: ResponsiveImageSet;
   properties_count?: number;
   properties?: Property[];
   created_at: string;
@@ -161,8 +182,12 @@ export interface Blog {
   featured_image_url: string;
   gallery: string[];
   gallery_urls: string[];
+  // New responsive image fields
+  featured_image_responsive?: ResponsiveImageSet;
+  gallery_responsive?: ResponsiveImageSet[];
   author_name: string;
   author_avatar?: string;
+  author_avatar_responsive?: ResponsiveImageSet;
   category: string;
   tags: string[];
   published_at: string;
