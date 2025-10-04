@@ -20,8 +20,14 @@ export const useContactStore = defineStore("contact", () => {
       lastLeadId.value = response.lead_id;
       return response;
     } catch (err: any) {
-      error.value =
-        err.response?.data?.message || "Error al enviar el formulario";
+      console.error("Contact store error:", err);
+      console.error("Error response:", err.response?.data);
+      
+      if (err.response?.status === 500) {
+        error.value = "Error interno del servidor. Inténtalo más tarde.";
+      } else {
+        error.value = err.response?.data?.message || "Error al enviar el formulario";
+      }
       throw err;
     } finally {
       loading.value = false;

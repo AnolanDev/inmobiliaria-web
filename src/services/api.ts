@@ -154,8 +154,24 @@ class ApiService {
   async submitContact(
     data: ContactForm,
   ): Promise<{ message: string; lead_id: number }> {
-    const response = await this.client.post("/public/contact", data);
-    return response.data;
+    console.log("📤 Sending contact data:", data);
+    try {
+      const response = await this.client.post("/public/contact", data);
+      console.log("✅ Contact response:", response.data);
+      return response.data;
+    } catch (error: any) {
+      console.error("❌ Contact API error:", {
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        data: error.response?.data,
+        config: {
+          url: error.config?.url,
+          method: error.config?.method,
+          headers: error.config?.headers
+        }
+      });
+      throw error;
+    }
   }
 
   // Appointments API

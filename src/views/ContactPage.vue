@@ -802,8 +802,19 @@ const handleSubmit = async () => {
 
   } catch (err: any) {
     console.error("Error submitting contact form:", err);
-    error.value = err.response?.data?.message || 
-                  "Hubo un error al enviar tu mensaje. Por favor, inténtalo de nuevo o contáctanos directamente.";
+    console.error("Error details:", {
+      status: err.response?.status,
+      statusText: err.response?.statusText,
+      data: err.response?.data,
+      headers: err.response?.headers
+    });
+    
+    if (err.response?.status === 500) {
+      error.value = "Error interno del servidor. Por favor, inténtalo más tarde o contáctanos directamente por teléfono.";
+    } else {
+      error.value = err.response?.data?.message || 
+                    "Hubo un error al enviar tu mensaje. Por favor, inténtalo de nuevo o contáctanos directamente.";
+    }
   } finally {
     loading.value = false;
   }
