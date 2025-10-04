@@ -150,68 +150,20 @@ class ApiService {
     return response.data;
   }
 
-  // Contact API - Método simplificado para endpoints públicos
+  // Contact API
   async submitContact(
     data: ContactForm,
   ): Promise<{ message: string; lead_id: number }> {
-    try {
-      // Primer intento: Con cliente configurado (incluye proxy en dev)
-      const response = await this.client.post("/public/contact", data);
-      return response.data;
-    } catch (error: any) {
-      console.log('Error en primer intento:', error.response?.status, error.response?.data);
-      
-      // Si es error 419 (CSRF) o cualquier error de proxy, intentar directamente
-      if (error.response?.status === 419 || error.code === 'ECONNREFUSED') {
-        console.log('Intentando petición directa al backend...');
-        
-        const directResponse = await axios.post(
-          import.meta.env.DEV 
-            ? 'https://app.tierrasonada.com/api/public/contact'
-            : '/api/public/contact',
-          data,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json',
-              'X-Requested-With': 'XMLHttpRequest',
-            },
-            timeout: 10000,
-          }
-        );
-        return directResponse.data;
-      }
-      throw error;
-    }
+    const response = await this.client.post("/public/contact", data);
+    return response.data;
   }
 
   // Appointments API
   async scheduleAppointment(
     data: AppointmentForm,
   ): Promise<{ message: string; appointment: any }> {
-    try {
-      const response = await this.client.post("/public/appointments", data);
-      return response.data;
-    } catch (error: any) {
-      if (error.response?.status === 419 || error.code === 'ECONNREFUSED') {
-        const directResponse = await axios.post(
-          import.meta.env.DEV 
-            ? 'https://app.tierrasonada.com/api/public/appointments'
-            : '/api/public/appointments',
-          data,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json',
-              'X-Requested-With': 'XMLHttpRequest',
-            },
-            timeout: 10000,
-          }
-        );
-        return directResponse.data;
-      }
-      throw error;
-    }
+    const response = await this.client.post("/public/appointments", data);
+    return response.data;
   }
 
   // Authentication API
