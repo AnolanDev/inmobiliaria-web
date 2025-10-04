@@ -275,15 +275,26 @@ const localError = ref<string | null>(null);
 
 const agentId = computed(() => parseInt(route.params.id as string));
 
-// Helper function to convert absolute URLs to relative for development
+// Helper function to handle URLs for dev/production
 const getImageUrl = (url: string): string => {
   if (!url) return "/placeholder-agent.svg";
 
-  // In development, convert absolute URLs to relative
-  if (url.includes("app.tierrasonada.com")) {
-    return url
-      .replace("https://app.tierrasonada.com", "")
-      .replace("http://app.tierrasonada.com", "");
+  // In development, convert to relative URLs for proxy
+  if (import.meta.env.DEV) {
+    if (url.includes("app.tierrasonada.com")) {
+      return url
+        .replace("https://app.tierrasonada.com", "")
+        .replace("http://app.tierrasonada.com", "");
+    }
+  } else {
+    // In production, use absolute URLs - backend now handles CORS
+    if (url.includes("app.tierrasonada.com")) {
+      return url; // Keep absolute URL - backend API routes have CORS configured
+    }
+    // Convert relative API URLs to absolute
+    if (url.startsWith("/api/") || url.startsWith("/storage/")) {
+      return `https://app.tierrasonada.com${url}`;
+    }
   }
 
   return url;

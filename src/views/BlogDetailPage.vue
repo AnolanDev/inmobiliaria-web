@@ -370,11 +370,22 @@ const getImageUrl = computed(() => {
     if (!url)
       return "https://via.placeholder.com/800x400/f3f4f6/6b7280?text=Blog+Image";
 
-    // Convert absolute URLs to relative for proxy
-    if (url.includes("app.tierrasonada.com")) {
-      return url
-        .replace("https://app.tierrasonada.com", "")
-        .replace("http://app.tierrasonada.com", "");
+    // In development, convert to relative URLs for proxy
+    if (import.meta.env.DEV) {
+      if (url.includes("app.tierrasonada.com")) {
+        return url
+          .replace("https://app.tierrasonada.com", "")
+          .replace("http://app.tierrasonada.com", "");
+      }
+    } else {
+      // In production, use absolute URLs - backend now handles CORS
+      if (url.includes("app.tierrasonada.com")) {
+        return url; // Keep absolute URL - backend API routes have CORS configured
+      }
+      // Convert relative API URLs to absolute
+      if (url.startsWith("/api/") || url.startsWith("/storage/")) {
+        return `https://app.tierrasonada.com${url}`;
+      }
     }
 
     return url;
