@@ -1141,7 +1141,6 @@ const featuredProject = computed(() => {
     console.log('🏠 Featured project data:', {
       id: firstProject.id,
       name: firstProject.name,
-      title: firstProject.title,
       cover_image_url: firstProject.cover_image_url,
       cover_image_responsive: firstProject.cover_image_responsive
     });

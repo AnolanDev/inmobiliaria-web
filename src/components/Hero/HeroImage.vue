@@ -197,13 +197,7 @@ const hasTriedFallback = ref(false);
 watch(() => props.imageUrl, (newUrl) => {
   currentImageUrl.value = newUrl;
   hasTriedFallback.value = false;
-  // Solo ponemos loading en true si realmente hay una URL nueva diferente
-  if (newUrl && newUrl !== currentImageUrl.value) {
-    loading.value = true;
-  } else if (newUrl) {
-    // Si hay URL, no loading - dejar que la imagen se muestre
-    loading.value = false;
-  }
+  loading.value = false; // Siempre empezar sin loading para evitar problemas
 }, { immediate: true });
 
 const generateSrcSet = () => {
@@ -244,7 +238,7 @@ const handleImageError = () => {
     const unsplashUrl = generateUnsplashUrl(keywords);
     
     currentImageUrl.value = unsplashUrl;
-    loading.value = true;
+    loading.value = false; // No mostrar loading en fallbacks
   } else {
     loading.value = false;
     emit("error");
