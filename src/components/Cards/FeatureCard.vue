@@ -159,31 +159,23 @@ const emit = defineEmits<{
   'view-details': [];
 }>();
 
-// Smart URL conversion for both development and production
+// Smart URL conversion - proxy in dev, direct URLs in production
 const getImageUrl = (url: string | null | undefined): string => {
-  console.log('🔍 FeatureCard getImageUrl input:', url);
+  if (!url) return "/placeholder-project.svg";
   
-  if (!url) {
-    console.log('❌ FeatureCard: No URL, using placeholder');
-    return "/placeholder-project.svg";
-  }
-  
-  // In production, use original URLs directly
+  // In production, use direct URLs to avoid CORS issues
   if (import.meta.env.PROD) {
-    console.log('🚀 FeatureCard PRODUCTION: Using original URL:', url);
     return url;
   }
   
-  // In development, use proxy conversion
+  // In development, use proxy
   if (url.includes("app.tierrasonada.com")) {
     const convertedUrl = url
       .replace("https://app.tierrasonada.com", "")
       .replace("http://app.tierrasonada.com", "");
-    console.log('🔄 FeatureCard DEV: URL conversion:', url, '→', convertedUrl);
     return convertedUrl;
   }
   
-  console.log('✅ FeatureCard: URL unchanged:', url);
   return url;
 };
 

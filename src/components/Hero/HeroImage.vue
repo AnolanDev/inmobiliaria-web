@@ -197,7 +197,6 @@ const hasTriedFallback = ref(false);
 
 // Watch for changes in imageUrl prop
 watch(() => props.imageUrl, (newUrl) => {
-  console.log('🔍 HeroImage received imageUrl:', newUrl);
   currentImageUrl.value = newUrl;
   hasTriedFallback.value = false;
   loading.value = true;
@@ -206,18 +205,12 @@ watch(() => props.imageUrl, (newUrl) => {
 const generateSrcSet = () => {
   if (!props.imageUrl) return "";
 
-  // En producción, no generar srcset - usar imagen original
-  if (import.meta.env.PROD) {
-    console.log('🚀 HeroImage PRODUCTION: No srcset, using original image');
-    return "";
-  }
-
   // No generar srcset para URLs de desarrollo o fallback
   if (props.imageUrl.startsWith('/storage') || props.imageUrl.includes('unsplash.com')) {
     return "";
   }
 
-  // Generate srcset for different screen sizes solo en desarrollo
+  // Generate srcset for different screen sizes
   return props.baseImageSizes
     .map((size) => {
       const url = props.imageUrl!.replace(

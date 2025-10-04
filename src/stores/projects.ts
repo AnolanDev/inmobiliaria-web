@@ -22,10 +22,6 @@ export const useProjectsStore = defineStore("projects", () => {
     try {
       const response: ApiResponse<Project[]> =
         await apiService.getProjects(filters);
-      
-      console.log('🔍 Projects API Response:', response.data);
-      console.log('🔍 First project cover_image_url:', response.data[0]?.cover_image_url);
-      
       projects.value = response.data;
 
       if (response.meta) {
