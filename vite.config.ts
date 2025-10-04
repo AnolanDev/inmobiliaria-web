@@ -5,7 +5,7 @@ import { fileURLToPath, URL } from 'node:url'
 export default defineConfig({
   plugins: [vue()],
   publicDir: 'public',
-  base: './',
+  base: '/',
   server: {
     port: 3000,
     proxy: {
