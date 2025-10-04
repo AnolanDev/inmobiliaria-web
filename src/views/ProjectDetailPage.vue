@@ -563,14 +563,18 @@ const projectImages = ref<string[]>([]);
 const projectId = computed(() => parseInt(route.params.id as string));
 
 // Helper function to convert absolute URLs to relative for development
-const getImageUrl = (url: string): string => {
-  if (!url) return "/placeholder-project.svg";
+const getImageUrl = (url: string | null | undefined): string => {
+  if (!url || typeof url !== 'string') {
+    console.warn('⚠️ getImageUrl received invalid URL:', url, typeof url);
+    return "/placeholder-project.svg";
+  }
 
   // In development, convert absolute URLs to relative
   if (url.includes("app.tierrasonada.com")) {
-    return url
+    const converted = url
       .replace("https://app.tierrasonada.com", "")
       .replace("http://app.tierrasonada.com", "");
+    return converted;
   }
 
   return url;
@@ -650,12 +654,43 @@ const enhancedDescription = computed(() => {
 // Image gallery functions
 const setupImageGallery = () => {
   if (project.value) {
-    projectImages.value = [
+    const allImages = [
       project.value.cover_image_url,
       ...(project.value.gallery_urls || []),
-    ].filter(Boolean);
-    currentImage.value =
-      projectImages.value[0] || project.value.cover_image_url;
+    ];
+    
+    // Process gallery URLs - handle both string URLs and responsive image objects
+    const processedGalleryUrls = (project.value.gallery_urls || []).map(item => {
+      // If it's already a string, use it
+      if (typeof item === 'string') {
+        return item;
+      }
+      // If it's an object with URL properties, extract the best one
+      if (item && typeof item === 'object') {
+        return item.url || item.large?.url || item.medium?.url || item.original?.url || null;
+      }
+      return null;
+    }).filter(Boolean);
+    
+    // Combine cover image with processed gallery URLs
+    const finalImages = [
+      project.value.cover_image_url,
+      ...processedGalleryUrls
+    ];
+    
+    // Ensure only valid strings are included
+    projectImages.value = finalImages
+      .filter(img => img && typeof img === 'string' && img.trim().length > 0);
+    
+    if (import.meta.env.DEV) {
+      console.log('🖼️ Image gallery setup complete:', {
+        valid_images: projectImages.value.length,
+        cover_image: project.value.cover_image_url ? 'loaded' : 'missing',
+        gallery_count: processedGalleryUrls.length
+      });
+    }
+    
+    currentImage.value = projectImages.value[0] || project.value.cover_image_url || '';
     currentImageIndex.value = 0;
   }
 };

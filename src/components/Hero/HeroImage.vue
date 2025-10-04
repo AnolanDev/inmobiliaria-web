@@ -142,7 +142,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, onMounted } from "vue";
 import ResponsiveImage from "../ResponsiveImage.vue";
 import type { ResponsiveImageSet } from "@/types";
 
@@ -189,15 +189,21 @@ const emit = defineEmits<{
   error: [];
 }>();
 
-const loading = ref(true);
+const loading = ref(false);
 const currentImageUrl = ref(props.imageUrl);
 const hasTriedFallback = ref(false);
 
 // Watch for changes in imageUrl prop
 watch(() => props.imageUrl, (newUrl) => {
+  console.log('🎬 HeroImage imageUrl changed:', {
+    newUrl,
+    oldUrl: currentImageUrl.value,
+    hasTriedFallback: hasTriedFallback.value
+  });
   currentImageUrl.value = newUrl;
   hasTriedFallback.value = false;
-  loading.value = true;
+  // Set loading to false so ResponsiveImage can render and handle its own loading
+  loading.value = false;
 }, { immediate: true });
 
 const generateSrcSet = () => {
@@ -226,17 +232,31 @@ const generateSrcSet = () => {
 };
 
 const handleImageLoad = () => {
+  console.log('✅ HeroImage loaded:', currentImageUrl.value);
+  console.log('📝 HeroImage props:', {
+    imageUrl: props.imageUrl,
+    responsiveImageSet: props.responsiveImageSet,
+    currentImageUrl: currentImageUrl.value
+  });
   loading.value = false;
   emit("load");
 };
 
 const handleImageError = () => {
+  console.warn('❌ HeroImage error:', {
+    imageUrl: props.imageUrl,
+    responsiveImageSet: props.responsiveImageSet,
+    currentImageUrl: currentImageUrl.value,
+    hasTriedFallback: hasTriedFallback.value
+  });
+  
   // Intelligent fallback system
   if (!hasTriedFallback.value && currentImageUrl.value && !currentImageUrl.value.includes('unsplash.com')) {
     hasTriedFallback.value = true;
     const keywords = extractKeywords(props.alt);
     const unsplashUrl = generateUnsplashUrl(keywords);
     
+    console.log('🔄 HeroImage trying fallback:', unsplashUrl);
     currentImageUrl.value = unsplashUrl;
     loading.value = true;
   } else {
@@ -272,6 +292,27 @@ const generateUnsplashUrl = (keywords: string): string => {
   const imageId = unsplashImages[keywords as keyof typeof unsplashImages] || unsplashImages['real-estate'];
   return `${imageId}?auto=format&fit=crop&w=${width}&h=${height}&q=80`;
 };
+
+onMounted(() => {
+  console.log('🎬 HeroImage mounted with props:', {
+    imageUrl: props.imageUrl,
+    responsiveImageSet: props.responsiveImageSet,
+    alt: props.alt,
+    lazy: props.lazy,
+    loading: loading.value,
+    currentImageUrl: currentImageUrl.value
+  });
+});
+
+// Debug loading state
+watch(loading, (newLoading) => {
+  console.log('🎬 HeroImage loading changed:', {
+    loading: newLoading,
+    imageUrl: props.imageUrl,
+    currentImageUrl: currentImageUrl.value,
+    responsiveImageSet: props.responsiveImageSet
+  });
+});
 </script>
 
 <style scoped>

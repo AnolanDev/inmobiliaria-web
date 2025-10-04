@@ -13,6 +13,11 @@ export default defineConfig({
         target: 'https://app.tierrasonada.com',
         changeOrigin: true,
         secure: false,
+      },
+      '/storage': {
+        target: 'https://app.tierrasonada.com',
+        changeOrigin: true,
+        secure: false,
       }
     }
   },

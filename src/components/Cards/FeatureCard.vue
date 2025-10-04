@@ -54,7 +54,7 @@
         {{ title }}
       </h3>
 
-      <!-- Clean Description - Limited Text -->
+      <!-- Brief Description - Truncated for card -->
       <p class="text-slate-600 text-sm leading-relaxed mb-4 line-clamp-2">
         {{ truncatedDescription }}
       </p>
@@ -139,6 +139,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import HeroImage from "../Hero/HeroImage.vue";
+import { ApiService } from "@/services/api";
 
 interface Props {
   title: string;
@@ -159,24 +160,10 @@ const emit = defineEmits<{
   'view-details': [];
 }>();
 
-// Smart URL conversion - proxy in dev, direct URLs in production
+// Use API service for consistent URL processing
 const getImageUrl = (url: string | null | undefined): string => {
-  if (!url) return "/placeholder-project.svg";
-  
-  // In production, use direct URLs to avoid CORS issues
-  if (import.meta.env.PROD) {
-    return url;
-  }
-  
-  // In development, use proxy
-  if (url.includes("app.tierrasonada.com")) {
-    const convertedUrl = url
-      .replace("https://app.tierrasonada.com", "")
-      .replace("http://app.tierrasonada.com", "");
-    return convertedUrl;
-  }
-  
-  return url;
+  const processed = ApiService.getProxyImageUrl(url);
+  return processed || "/placeholder-project.svg";
 };
 
 // Professional badge styling based on project type
@@ -196,8 +183,9 @@ const getBadgeStyle = (type: string | undefined): string => {
   }
 };
 
-// Truncate description to maintain clean layout
+// Truncate description to maintain clean card layout
 const truncatedDescription = computed(() => {
+  if (!props.description) return '';
   if (props.description.length <= 120) return props.description;
   return props.description.substring(0, 120).trim() + '...';
 });
@@ -209,11 +197,14 @@ const formatPrice = (price: string): string => {
 
 // Optimized event handlers
 const handleImageLoad = () => {
-  // Image loaded successfully
+  console.log('✅ FeatureCard image loaded:', getImageUrl(props.projectImage));
 };
 
 const handleImageError = () => {
-  // Handle image error if needed
+  console.warn('❌ FeatureCard image error:', {
+    original: props.projectImage,
+    processed: getImageUrl(props.projectImage)
+  });
 };
 </script>
 

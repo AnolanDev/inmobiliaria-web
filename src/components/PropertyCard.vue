@@ -6,9 +6,9 @@
     <BaseCard hover class="h-full">
       <template #image>
         <ResponsiveImage
-          :src="property.cover_image_responsive || property.cover_image_url"
+          :src="processedCoverImage || processedImageUrl"
           :alt="property.title"
-          :fallback="property.cover_image_url || '/placeholder-property.svg'"
+          :fallback="processedImageUrl || '/placeholder-property.svg'"
           container-class="relative"
           image-class="w-full h-48 sm:h-52"
           :enable-hover-zoom="true"
@@ -123,32 +123,59 @@
 
 <script setup lang="ts">
 import { RouterLink } from "vue-router";
+import { computed } from "vue";
 import type { Property } from "@/types";
 import BaseCard from "./BaseCard.vue";
 import BaseButton from "./BaseButton.vue";
 import ResponsiveImage from "./ResponsiveImage.vue";
+import { ApiService } from "@/services/api";
 
 interface Props {
   property: Property;
 }
 
-defineProps<Props>();
+const props = defineProps<Props>();
 
 const formatPrice = (price: number): string => {
   return new Intl.NumberFormat("es-ES").format(price);
 };
 
+// Process image URLs using API service
+const processedCoverImage = computed(() => {
+  const responsive = props.property.cover_image_responsive;
+  if (responsive) {
+    return ApiService.processResponsiveImageSet(responsive);
+  }
+  return null;
+});
+
+const processedImageUrl = computed(() => {
+  return ApiService.getProxyImageUrl(props.property.cover_image_url);
+});
+
 // Image event handlers
 const handleImageLoad = (src: string) => {
-  if (import.meta.env.DEV) {
-    console.log('✅ PropertyCard image loaded:', src);
-  }
+  console.log('✅ PropertyCard image loaded:', src);
+  console.log('🏠 Property data:', {
+    id: props.property.id,
+    title: props.property.title,
+    original_url: props.property.cover_image_url,
+    processed_url: processedImageUrl.value,
+    responsive_set: props.property.cover_image_responsive,
+    processed_responsive: processedCoverImage.value
+  });
 };
 
 const handleImageError = (error: Error) => {
-  if (import.meta.env.DEV) {
-    console.warn('❌ PropertyCard image error:', error.message);
-  }
+  console.warn('❌ PropertyCard image error:', error.message);
+  console.log('🏠 Property data on error:', {
+    id: props.property.id,
+    title: props.property.title,
+    original_url: props.property.cover_image_url,
+    processed_url: processedImageUrl.value,
+    responsive_set: props.property.cover_image_responsive,
+    processed_responsive: processedCoverImage.value
+  });
 };
 </script>
 

@@ -6,9 +6,9 @@
     <BaseCard hover class="h-full">
       <template #image>
         <ResponsiveImage
-          :src="project.cover_image_responsive || project.cover_image_url"
+          :src="processedCoverImage || processedImageUrl"
           :alt="project.name"
-          :fallback="project.cover_image_url || '/placeholder-project.svg'"
+          :fallback="processedImageUrl || '/placeholder-project.svg'"
           container-class="relative"
           image-class="w-full h-48 sm:h-52"
           :enable-hover-zoom="true"
@@ -132,29 +132,55 @@
 
 <script setup lang="ts">
 import { RouterLink } from "vue-router";
+import { computed } from "vue";
 import type { Project } from "@/types";
 import BaseCard from "./BaseCard.vue";
 import BaseButton from "./BaseButton.vue";
 import ResponsiveImage from "./ResponsiveImage.vue";
+import { ApiService } from "@/services/api";
 
 interface Props {
   project: Project;
 }
 
-defineProps<Props>();
+const props = defineProps<Props>();
 
+// Process image URLs using API service
+const processedCoverImage = computed(() => {
+  const responsive = props.project.cover_image_responsive;
+  if (responsive) {
+    return ApiService.processResponsiveImageSet(responsive);
+  }
+  return null;
+});
+
+const processedImageUrl = computed(() => {
+  return ApiService.getProxyImageUrl(props.project.cover_image_url);
+});
 
 // Image event handlers
 const handleImageLoad = (src: string) => {
-  if (import.meta.env.DEV) {
-    console.log('✅ ProjectCard image loaded:', src);
-  }
+  console.log('✅ ProjectCard image loaded:', src);
+  console.log('🏢 Project data:', {
+    id: props.project.id,
+    name: props.project.name,
+    original_url: props.project.cover_image_url,
+    processed_url: processedImageUrl.value,
+    responsive_set: props.project.cover_image_responsive,
+    processed_responsive: processedCoverImage.value
+  });
 };
 
 const handleImageError = (error: Error) => {
-  if (import.meta.env.DEV) {
-    console.warn('❌ ProjectCard image error:', error.message);
-  }
+  console.warn('❌ ProjectCard image error:', error.message);
+  console.log('🏢 Project data on error:', {
+    id: props.project.id,
+    name: props.project.name,
+    original_url: props.project.cover_image_url,
+    processed_url: processedImageUrl.value,
+    responsive_set: props.project.cover_image_responsive,
+    processed_responsive: processedCoverImage.value
+  });
 };
 
 const getTypeColorClass = (type: string): string => {

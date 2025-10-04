@@ -181,6 +181,19 @@ class ApiService {
     return response.data;
   }
 
+  // Health check for API availability
+  async checkHealth(): Promise<boolean> {
+    try {
+      const response = await this.client.get('/public/projects?limit=1');
+      return response.status === 200;
+    } catch (error) {
+      if (import.meta.env.DEV) {
+        console.error('API health check failed:', error);
+      }
+      return false;
+    }
+  }
+
   // Utility method to convert backend URLs to proxy URLs
   static getProxyImageUrl(backendUrl: string | null | undefined): string | null {
     if (!backendUrl) return null;
@@ -195,16 +208,35 @@ class ApiService {
       // Extraer solo la parte /storage/... de la URL completa
       const match = backendUrl.match(/\/storage\/.*$/);
       if (match) {
-        const proxyUrl = match[0];
-        console.log(`🔄 Convertiendo URL de imagen:`);
-        console.log(`   📍 Original: ${backendUrl}`);
-        console.log(`   🎯 Proxy: ${proxyUrl}`);
-        return proxyUrl;
+        return match[0];
       }
     }
     
     // Si es otra URL (como Unsplash), devolverla tal como está
     return backendUrl;
+  }
+
+  // Process responsive image set
+  static processResponsiveImageSet(responsiveSet: any): any {
+    if (!responsiveSet) return null;
+
+    const processed = { ...responsiveSet };
+    
+    // Process each variant
+    if (processed.thumbnail?.url) {
+      processed.thumbnail.url = this.getProxyImageUrl(processed.thumbnail.url);
+    }
+    if (processed.medium?.url) {
+      processed.medium.url = this.getProxyImageUrl(processed.medium.url);
+    }
+    if (processed.large?.url) {
+      processed.large.url = this.getProxyImageUrl(processed.large.url);
+    }
+    if (processed.original?.url) {
+      processed.original.url = this.getProxyImageUrl(processed.original.url);
+    }
+
+    return processed;
   }
 }
 

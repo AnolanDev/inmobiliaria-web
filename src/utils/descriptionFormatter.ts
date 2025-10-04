@@ -144,15 +144,11 @@ function extractAmenities(description: string): { category: string; items: strin
 }
 
 /**
- * Extrae un resumen de la descripción original (solo información real)
+ * Retorna la descripción completa sin truncar
  */
 function generateSummary(description: string, projectName: string): string {
-  // Extraer primera oración significativa
-  const sentences = description.split(/[.!]/).filter(s => s.trim().length > 20);
-  const firstSentence = sentences[0]?.trim() || '';
-  
-  // Retornar solo el contenido original, sin agregar información
-  return firstSentence;
+  // Retornar la descripción completa, solo limpia
+  return description.trim();
 }
 
 /**

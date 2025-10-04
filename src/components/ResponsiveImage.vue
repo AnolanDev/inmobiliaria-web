@@ -230,22 +230,45 @@ const debugInfo = computed(() => {
 
 // Load image when source changes
 const loadImageSource = async () => {
+  if (import.meta.env.DEV) {
+    console.log('📸 ResponsiveImage loadImageSource called with:', {
+      src: props.src,
+      fallback: props.fallback,
+      srcType: typeof props.src
+    })
+  }
+
   if (!props.src) {
     currentSrc.value = getOptimizedImageSrc(null, props.fallback)
+    if (import.meta.env.DEV) {
+      console.log('📸 No src provided, using fallback:', currentSrc.value)
+    }
     return
   }
 
   try {
     emit('loadStart')
+    if (import.meta.env.DEV) {
+      console.log('📸 Starting image load...')
+    }
     currentSrc.value = await loadImage(props.src, props.fallback)
+    if (import.meta.env.DEV) {
+      console.log('📸 Image loaded successfully:', currentSrc.value)
+    }
     retryCount.value = 0
   } catch (error) {
-    console.warn('ResponsiveImage: Failed to load image', error)
+    console.warn('📸 ResponsiveImage: Failed to load image', error)
     if (props.enableRetry && retryCount.value < maxRetries) {
       retryCount.value++
+      if (import.meta.env.DEV) {
+        console.log(`📸 Retrying (attempt ${retryCount.value}/${maxRetries})...`)
+      }
       setTimeout(loadImageSource, 1000 * retryCount.value)
     } else {
       currentSrc.value = getOptimizedImageSrc(null, props.fallback)
+      if (import.meta.env.DEV) {
+        console.log('📸 All retries exhausted, using final fallback:', currentSrc.value)
+      }
       emit('error', error as Error)
     }
   }

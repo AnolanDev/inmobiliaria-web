@@ -215,6 +215,7 @@
 import { computed } from "vue";
 import HeroImage from "../Hero/HeroImage.vue";
 import type { Project } from "@/types";
+import { ApiService } from "@/services/api";
 
 interface Props {
   project: Project;
@@ -272,21 +273,10 @@ const galleryCount = computed(() => {
   return props.project.gallery_urls ? props.project.gallery_urls.length : 0;
 });
 
-// Helper function to convert absolute URLs to relative for development - same as ProjectsPage
+// Use API service for URL processing
 const getImageUrl = (url: string | null | undefined): string => {
-  if (!url) return "/placeholder-project.svg";
-
-  // Convert absolute URLs to relative
-  if (url.includes("app.tierrasonada.com")) {
-    const convertedUrl = url
-      .replace("https://app.tierrasonada.com", "")
-      .replace("http://app.tierrasonada.com", "");
-    
-    console.log(`🔄 Convirtiendo URL ProjectCard: ${url} → ${convertedUrl}`);
-    return convertedUrl;
-  }
-
-  return url;
+  const processed = ApiService.getProxyImageUrl(url);
+  return processed || "/placeholder-project.svg";
 };
 
 const handleImageLoad = () => {

@@ -103,7 +103,7 @@ export function useResponsiveImages(options: UseResponsiveImagesOptions = {}) {
 
   // Proxy URL conversion helper
   const convertToProxyUrl = (url: string): string => {
-    if (!config.enableProxy || !url) return url
+    if (!url) return url
 
     // Convert absolute URLs to relative for development proxy
     if (url.includes('app.tierrasonada.com')) {
@@ -236,21 +236,34 @@ export function useResponsiveImages(options: UseResponsiveImagesOptions = {}) {
     responsiveSet: ResponsiveImageSet | string | null,
     fallbackSrc?: string
   ): string => {
+    console.log('🎯 getOptimizedImageSrc called with:', {
+      responsiveSet,
+      fallbackSrc,
+      type: typeof responsiveSet
+    })
+
     // Handle string URLs (legacy support)
     if (typeof responsiveSet === 'string') {
-      return convertToProxyUrl(responsiveSet) || fallbackSrc || config.fallbackUrl
+      const result = convertToProxyUrl(responsiveSet) || fallbackSrc || config.fallbackUrl
+      console.log('🎯 String URL result:', result)
+      return result
     }
 
     // Handle responsive image sets
     if (responsiveSet) {
       const bestVariant = getBestImageVariant(responsiveSet)
+      console.log('🎯 Best variant found:', bestVariant)
       if (bestVariant) {
-        return convertToProxyUrl(bestVariant.url)
+        const result = convertToProxyUrl(bestVariant.url)
+        console.log('🎯 Responsive set result:', result)
+        return result
       }
     }
 
     // Fallback chain
-    return convertToProxyUrl(fallbackSrc || '') || config.fallbackUrl
+    const result = convertToProxyUrl(fallbackSrc || '') || config.fallbackUrl
+    console.log('🎯 Fallback result:', result)
+    return result
   }
 
   // Image loading state management
