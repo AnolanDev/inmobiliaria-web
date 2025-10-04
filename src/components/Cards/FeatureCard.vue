@@ -59,8 +59,8 @@
         {{ truncatedDescription }}
       </p>
 
-      <!-- Professional 2x2 Key Data Grid -->
-      <div class="grid grid-cols-2 gap-3 mb-6">
+      <!-- Professional Key Data Grid -->
+      <div class="grid gap-3 mb-6" :class="getGridCols()">
         <!-- Location - MapPin Icon -->
         <div class="flex items-start space-x-2">
           <div class="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -77,31 +77,17 @@
           </div>
         </div>
 
-        <!-- Price - DollarSign Icon -->
-        <div class="flex items-start space-x-2">
-          <div class="w-8 h-8 bg-emerald-50 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-            <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <!-- Properties Count - Building Icon -->
+        <div v-if="properties" class="flex items-start space-x-2">
+          <div class="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
+            <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
             </svg>
           </div>
           <div class="flex-1 min-w-0">
-            <div class="text-xs text-slate-500 font-medium uppercase tracking-wide">Desde</div>
-            <div class="text-sm font-semibold text-slate-900 truncate">{{ formatPrice(averagePrice) }}</div>
-          </div>
-        </div>
-
-        <!-- Area - Ruler Icon -->
-        <div class="flex items-start space-x-2">
-          <div class="w-8 h-8 bg-amber-50 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5">
-            <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                    d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
-            </svg>
-          </div>
-          <div class="flex-1 min-w-0">
-            <div class="text-xs text-slate-500 font-medium uppercase tracking-wide">Área</div>
-            <div class="text-sm font-semibold text-slate-900">{{ areaFrom ? areaFrom + ' m²' : '-' }}</div>
+            <div class="text-xs text-slate-500 font-medium uppercase tracking-wide">Propiedades</div>
+            <div class="text-sm font-semibold text-slate-900">{{ properties }}</div>
           </div>
         </div>
 
@@ -205,6 +191,17 @@ const truncatedDescription = computed(() => {
 // Clean price formatting
 const formatPrice = (price: string): string => {
   return price.replace(/^\$/, '$').replace(/M$/, 'M');
+};
+
+// Dynamic grid columns based on available data
+const getGridCols = () => {
+  const hasData = [
+    props.location,
+    props.properties
+  ].filter(Boolean).length;
+  
+  if (hasData === 1) return 'grid-cols-1';
+  return 'grid-cols-2';
 };
 
 // Optimized event handlers

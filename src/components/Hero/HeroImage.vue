@@ -35,10 +35,10 @@
 
     <!-- Main Image Container -->
     <ResponsiveImage
-      v-if="!loading && (responsiveImageSet || imageUrl)"
-      :src="responsiveImageSet || imageUrl"
+      v-if="!loading && (responsiveImageSet || currentImageUrl)"
+      :src="responsiveImageSet || currentImageUrl"
       :alt="alt"
-      :fallback="imageUrl"
+      :fallback="currentImageUrl"
       :container-class="[
         'relative overflow-hidden',
         aspectRatio === 'square' ? 'aspect-square' : 
@@ -189,7 +189,7 @@ const emit = defineEmits<{
   error: [];
 }>();
 
-const loading = ref(true);
+const loading = ref(false);
 const currentImageUrl = ref(props.imageUrl);
 const hasTriedFallback = ref(false);
 
@@ -197,7 +197,13 @@ const hasTriedFallback = ref(false);
 watch(() => props.imageUrl, (newUrl) => {
   currentImageUrl.value = newUrl;
   hasTriedFallback.value = false;
-  loading.value = true;
+  // Solo ponemos loading en true si realmente hay una URL nueva diferente
+  if (newUrl && newUrl !== currentImageUrl.value) {
+    loading.value = true;
+  } else if (newUrl) {
+    // Si hay URL, no loading - dejar que la imagen se muestre
+    loading.value = false;
+  }
 }, { immediate: true });
 
 const generateSrcSet = () => {

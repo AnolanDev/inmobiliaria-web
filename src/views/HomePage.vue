@@ -189,7 +189,6 @@
                   <HeroStats
                     :projects-count="projects.length"
                     :experts-count="agents.length"
-                    :departments-count="3"
                   />
                 </div>
               </div>
@@ -205,18 +204,16 @@
               >
                 <FeatureCard
                   v-if="featuredProject"
-                  :title="featuredProject.title || featuredProject.name"
+                  :title="featuredProject.name"
                   :description="featuredProject.description"
                   :project-image="featuredProject.cover_image_url"
-                  :project-type="featuredProject.type || ''"
-                  :properties="
-                    featuredProject.property_count || projects.length || 0
-                  "
-                  :location="featuredProject.location || ''"
-                  :region="featuredProject.department || ''"
-                  :delivery-date="featuredProject.delivery_date || ''"
-                  :average-price="featuredProject.price_range || ''"
-                  :area-from="featuredProject.area_from || ''"
+                  :project-type="featuredProject.type"
+                  :properties="featuredProject.property_count"
+                  :location="featuredProject.location || (featuredProject.city ? `${featuredProject.city}${featuredProject.state ? ', ' + featuredProject.state : ''}` : '')"
+                  :region="featuredProject.state || ''"
+                  :delivery-date="''"
+                  :average-price="''"
+                  :area-from="''"
                   @view-details="() => handleProjectClick(featuredProject.id)"
                 />
                 <!-- Loading placeholder -->
@@ -329,8 +326,8 @@
                         </div>
                       </div>
 
-                      <!-- Properties Count -->
-                      <div class="flex items-center space-x-2">
+                      <!-- Properties Count - Only show if data exists -->
+                      <div v-if="project.property_count" class="flex items-center space-x-2">
                         <div class="w-8 h-8 bg-emerald-50 rounded-lg flex items-center justify-center">
                           <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
@@ -339,7 +336,7 @@
                         </div>
                         <div class="min-w-0">
                           <div class="text-xs text-slate-500 font-medium">Unidades</div>
-                          <div class="text-sm font-semibold text-slate-900">{{ project.property_count || 25 }}</div>
+                          <div class="text-sm font-semibold text-slate-900">{{ project.property_count }}</div>
                         </div>
                       </div>
                     </div>
@@ -831,8 +828,7 @@
               </h2>
 
               <p class="text-lg lg:text-xl text-neutral-600 max-w-3xl mx-auto">
-                Miles de familias han encontrado su hogar perfecto con nosotros
-                en la Costa Caribe.
+                Conoce las experiencias de nuestros clientes en la Costa Caribe.
               </p>
             </div>
 
@@ -971,40 +967,20 @@
               </div>
             </div>
 
-            <!-- Stats Section -->
-            <div class="mt-20 grid grid-cols-2 md:grid-cols-4 gap-8">
-              <div class="text-center">
-                <div
-                  class="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-caribbean-600 to-aqua-600 bg-clip-text text-transparent mb-2"
-                >
-                  500+
-                </div>
-                <div class="text-neutral-600 font-medium">Familias Felices</div>
-              </div>
-              <div class="text-center">
-                <div
-                  class="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-nature-600 to-caribbean-600 bg-clip-text text-transparent mb-2"
-                >
-                  98%
-                </div>
-                <div class="text-neutral-600 font-medium">Satisfacción</div>
-              </div>
-              <div class="text-center">
-                <div
-                  class="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-aqua-600 to-nature-600 bg-clip-text text-transparent mb-2"
-                >
-                  15+
-                </div>
-                <div class="text-neutral-600 font-medium">Años Experiencia</div>
-              </div>
-              <div class="text-center">
-                <div
-                  class="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-coral-500 to-sand-500 bg-clip-text text-transparent mb-2"
-                >
-                  3
-                </div>
-                <div class="text-neutral-600 font-medium">Departamentos</div>
-              </div>
+            <!-- Simple CTA Section -->
+            <div class="mt-20 text-center">
+              <p class="text-lg text-neutral-600 mb-6">
+                Descubre nuestros proyectos inmobiliarios y encuentra tu hogar ideal
+              </p>
+              <button
+                @click="router.push('/proyectos')"
+                class="inline-flex items-center px-8 py-4 bg-gradient-to-r from-caribbean-500 to-aqua-500 hover:from-caribbean-600 hover:to-aqua-600 text-white font-semibold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+              >
+                Ver Todos los Proyectos
+                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </button>
             </div>
           </div>
         </section>
@@ -1100,7 +1076,6 @@ import AppLayout from "@/components/AppLayout.vue";
 import HeroStats from "@/components/Hero/HeroStats.vue";
 import HeroImage from "@/components/Hero/HeroImage.vue";
 import FeatureCard from "@/components/Cards/FeatureCard.vue";
-import ProjectCard from "@/components/Cards/ProjectCard.vue";
 import IconComponent from "@/components/UI/IconComponent.vue";
 import { useProjectsStore } from "@/stores/projects";
 import { useAgentsStore } from "@/stores/agents";
@@ -1121,34 +1096,23 @@ const loadData = async () => {
     isLoading.value = true;
     localError.value = null;
 
-    // Load projects and agents in parallel
-    const [projectsResult, agentsResult] = await Promise.allSettled([
-      projectsStore.fetchProjects(),
-      agentsStore.fetchAgents(),
-    ]);
-
-    // Handle projects
-    if (projectsResult.status === "fulfilled") {
+    // Load projects first (priority)
+    try {
+      await projectsStore.fetchProjects();
       projects.value = projectsStore.projects;
-    } else {
-      console.error("Error loading projects:", projectsResult.reason);
+    } catch (error) {
+      console.error("Error loading projects:", error);
+      localError.value = "Error al cargar el contenido. Por favor, intenta de nuevo.";
+      return;
     }
 
-    // Handle agents
-    if (agentsResult.status === "fulfilled") {
+    // Load agents in background (non-blocking)
+    agentsStore.fetchAgents().then(() => {
       agents.value = agentsStore.agents;
-    } else {
-      console.error("Error loading agents:", agentsResult.reason);
-    }
+    }).catch(error => {
+      console.error("Error loading agents:", error);
+    });
 
-    // Show error only if both failed
-    if (
-      projectsResult.status === "rejected" &&
-      agentsResult.status === "rejected"
-    ) {
-      localError.value =
-        "Error al cargar el contenido. Por favor, intenta de nuevo.";
-    }
   } catch (error) {
     console.error("Error loading homepage data:", error);
     localError.value =

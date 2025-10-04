@@ -8,6 +8,8 @@ export const useProjectsStore = defineStore("projects", () => {
   const currentProject = ref<Project | null>(null);
   const loading = ref(false);
   const error = ref<string | null>(null);
+  const lastFetch = ref<number>(0);
+  const CACHE_TIME = 5 * 60 * 1000; // 5 minutes cache
   const pagination = ref({
     current_page: 1,
     last_page: 1,
@@ -15,7 +17,13 @@ export const useProjectsStore = defineStore("projects", () => {
     total: 0,
   });
 
-  const fetchProjects = async (filters?: ProjectFilters) => {
+  const fetchProjects = async (filters?: ProjectFilters, forceRefresh = false) => {
+    // Return cached data if available and not forcing refresh
+    const now = Date.now();
+    if (!forceRefresh && projects.value.length > 0 && (now - lastFetch.value) < CACHE_TIME) {
+      return Promise.resolve(projects.value);
+    }
+
     loading.value = true;
     error.value = null;
 
@@ -23,13 +31,17 @@ export const useProjectsStore = defineStore("projects", () => {
       const response: ApiResponse<Project[]> =
         await apiService.getProjects(filters);
       projects.value = response.data;
+      lastFetch.value = now;
 
       if (response.meta) {
         pagination.value = response.meta;
       }
+      
+      return projects.value;
     } catch (err: any) {
       error.value = err.response?.data?.message || "Error al cargar proyectos";
       console.error("Error fetching projects:", err);
+      throw err;
     } finally {
       loading.value = false;
     }

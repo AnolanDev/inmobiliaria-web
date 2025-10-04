@@ -297,92 +297,10 @@
           <h2 class="section-title">Sobre {{ project.name }}</h2>
           <div class="description-content">
             <!-- Párrafos organizados -->
-            <!-- Enhanced Professional Description -->
-            <div v-if="enhancedDescription" class="enhanced-description">
-              
-              <!-- Summary Section -->
-              <div v-if="enhancedDescription.summary" class="description-summary">
-                <h3 class="text-xl font-bold text-gray-900 mb-3 flex items-center">
-                  🌟 Descripción Principal
-                </h3>
-                <p class="text-lg text-gray-700 leading-relaxed mb-6 bg-gradient-to-r from-blue-50 to-green-50 p-4 rounded-lg border-l-4 border-blue-500">
-                  {{ enhancedDescription.summary }}
-                </p>
-              </div>
-
-              <!-- Location Highlight -->
-              <div v-if="enhancedDescription.location" class="description-location">
-                <h3 class="text-xl font-bold text-gray-900 mb-3 flex items-center">
-                  📍 Ubicación Privilegiada
-                </h3>
-                <p class="text-lg font-semibold text-gray-800 mb-6 bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-500">
-                  {{ enhancedDescription.location }}
-                </p>
-              </div>
-
-              <!-- Key Features -->
-              <div v-if="enhancedDescription.features.length > 0" class="description-features">
-                <h3 class="text-xl font-bold text-gray-900 mb-3 flex items-center">
-                  🏠 Características Principales
-                </h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
-                  <div 
-                    v-for="(feature, index) in enhancedDescription.features" 
-                    :key="index"
-                    class="flex items-center space-x-2 text-gray-700 bg-gray-50 p-3 rounded-lg"
-                  >
-                    <span class="font-medium">{{ feature }}</span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Amenities by Category -->
-              <div v-if="enhancedDescription.amenities.length > 0" class="description-amenities">
-                <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center">
-                  ✨ Amenidades y Espacios
-                </h3>
-                <div class="space-y-6">
-                  <div 
-                    v-for="(category, index) in enhancedDescription.amenities" 
-                    :key="index"
-                    class="amenity-category"
-                  >
-                    <h4 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
-                      {{ category.category }}
-                    </h4>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-                      <div 
-                        v-for="(item, itemIndex) in category.items" 
-                        :key="itemIndex"
-                        class="flex items-center space-x-2 text-gray-700 bg-white p-3 rounded-lg shadow-sm border"
-                      >
-                        <span>{{ item }}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Call to Action -->
-              <div v-if="enhancedDescription.cta" class="description-cta">
-                <div class="bg-gradient-to-r from-blue-500 to-green-500 text-white p-6 rounded-lg mt-8">
-                  <p class="text-lg font-medium" v-html="enhancedDescription.cta.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')"></p>
-                </div>
-              </div>
-
-            </div>
-
-            <!-- Fallback to simple description -->
-            <div v-else class="description-paragraphs">
-              <p
-                v-for="(paragraph, index) in formatDescription(
-                  project.description,
-                )"
-                :key="index"
-                class="description-paragraph"
-                :class="{ 'first-paragraph': index === 0 }"
-              >
-                {{ paragraph }}
+            <!-- Simple description as it comes from API -->
+            <div class="description-paragraphs">
+              <p class="text-lg text-gray-700 leading-relaxed">
+                {{ project.description }}
               </p>
             </div>
           </div>
@@ -563,8 +481,28 @@ const projectImages = ref<string[]>([]);
 const projectId = computed(() => parseInt(route.params.id as string));
 
 // Helper function to convert absolute URLs to relative for development
-const getImageUrl = (url: string): string => {
-  if (!url) return "/placeholder-project.svg";
+const getImageUrl = (url: string | null | undefined | any): string => {
+  if (!url) {
+    return "/placeholder-project.svg";
+  }
+
+  // If it's an object with responsive image sizes, get the original or url
+  if (typeof url === 'object') {
+    if (url.original) {
+      url = url.original;
+      // If original is also an object, extract its url property
+      if (typeof url === 'object' && url.url) {
+        url = url.url;
+      }
+    } else if (url.url) {
+      url = url.url;
+    }
+  }
+
+  // If it's still not a string, return placeholder
+  if (typeof url !== 'string') {
+    return "/placeholder-project.svg";
+  }
 
   // In development, convert absolute URLs to relative
   if (url.includes("app.tierrasonada.com")) {
@@ -654,6 +592,7 @@ const setupImageGallery = () => {
       project.value.cover_image_url,
       ...(project.value.gallery_urls || []),
     ].filter(Boolean);
+    
     currentImage.value =
       projectImages.value[0] || project.value.cover_image_url;
     currentImageIndex.value = 0;
@@ -987,8 +926,9 @@ watch(
 .project-main-image {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
+  background: #f8f9fa;
 }
 
 .image-nav-btn {
@@ -1073,7 +1013,8 @@ watch(
 .thumbnail-item img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  background: #f8f9fa;
 }
 
 .project-info-section {
@@ -1500,7 +1441,8 @@ watch(
 .property-image {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  background: #f8f9fa;
   transition: transform 0.3s ease;
 }
 
