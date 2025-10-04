@@ -155,6 +155,7 @@ class ApiService {
     data: ContactForm,
   ): Promise<{ message: string; lead_id: number }> {
     console.log("📤 Sending contact data:", data);
+    
     try {
       const response = await this.client.post("/public/contact", data);
       console.log("✅ Contact response:", response.data);
@@ -170,6 +171,32 @@ class ApiService {
           headers: error.config?.headers
         }
       });
+      
+      // Si es error 419 CSRF, intentar petición directa sin proxy
+      if (error.response?.status === 419) {
+        console.log("🔄 Retrying with direct request (bypassing proxy)...");
+        
+        try {
+          const directResponse = await axios.post(
+            'https://app.tierrasonada.com/api/public/contact',
+            data,
+            {
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+              },
+              timeout: 15000,
+            }
+          );
+          console.log("✅ Direct request successful:", directResponse.data);
+          return directResponse.data;
+        } catch (directError: any) {
+          console.error("❌ Direct request also failed:", directError.response?.data);
+          throw directError;
+        }
+      }
+      
       throw error;
     }
   }
