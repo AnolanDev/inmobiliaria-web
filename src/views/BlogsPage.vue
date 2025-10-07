@@ -231,7 +231,7 @@
           </div>
 
           <!-- Actual Content -->
-          <div v-else class="blogs-grid">
+          <div v-else :class="gridClasses">
             <BlogCard
               v-for="blog in displayedBlogs"
               :key="blog.id"
@@ -383,6 +383,19 @@ const displayedBlogs = computed(() => {
   return result;
 });
 
+// Computed para las clases dinámicas del grid
+const gridClasses = computed(() => {
+  const count = displayedBlogs.value.length;
+  
+  return {
+    'blogs-grid': true,
+    'single-blog': count === 1,
+    'two-blogs': count === 2,
+    'three-blogs': count === 3,
+    'multiple-blogs': count > 3
+  };
+});
+
 const visiblePages = computed(() => {
   const current = pagination.value.currentPage;
   const last = pagination.value.lastPage;
@@ -526,12 +539,15 @@ onMounted(async () => {
       .fetchBlogCategories()
       .catch((err) => console.warn("Failed to load categories:", err));
 
-    // Delay featured blogs load by 1 second
+    // Delay featured blogs load by 1 second to prevent layout shift
     setTimeout(() => {
       blogStore
         .fetchFeaturedBlogs()
         .catch((err) => console.warn("Failed to load featured blogs:", err));
     }, 1000);
+    
+    // Apply grid classes after initial render to prevent flash
+    await nextTick();
   } catch (err) {
     console.error("Failed to load blogs:", err);
   }
@@ -897,32 +913,66 @@ onMounted(async () => {
 
 .blogs-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: clamp(1.5rem, 4vw, 2rem);
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
+  /* Fixed grid for single blog to prevent layout shift */
+  grid-template-columns: 1fr;
+  /* Smooth transitions for layout changes */
+  transition: all 0.3s ease-in-out;
 }
 
-/* Responsive adjustments to match ProjectsPage */
+/* Single blog layout - always centered and fixed width */
+.blogs-grid.single-blog {
+  grid-template-columns: 1fr;
+  max-width: 400px !important;
+  margin: 0 auto;
+}
+
+/* Two blogs layout */
+.blogs-grid.two-blogs {
+  grid-template-columns: repeat(2, 1fr);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Three blogs layout */
+.blogs-grid.three-blogs {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* Multiple blogs layout */
+.blogs-grid.multiple-blogs {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+/* Responsive adjustments for multiple blogs */
 @media (min-width: 640px) {
-  .blogs-grid {
+  .blogs-grid.multiple-blogs {
     grid-template-columns: repeat(2, 1fr);
     max-width: 680px;
+  }
+  
+  .blogs-grid.three-blogs {
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 1020px;
   }
 }
 
 @media (min-width: 1024px) {
-  .blogs-grid {
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  .blogs-grid.multiple-blogs {
+    grid-template-columns: repeat(3, 1fr);
     max-width: 1200px;
     gap: clamp(2rem, 3vw, 2.5rem);
   }
 }
 
 @media (min-width: 1280px) {
-  .blogs-grid {
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  .blogs-grid.multiple-blogs {
+    grid-template-columns: repeat(4, 1fr);
     max-width: 1400px;
   }
 }
