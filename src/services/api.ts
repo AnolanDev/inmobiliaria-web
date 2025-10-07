@@ -19,17 +19,21 @@ class ApiService {
   private client: AxiosInstance;
 
   constructor() {
+    const isProduction = import.meta.env.PROD;
+    const baseURL = import.meta.env.VITE_API_BASE_URL;
+    
     this.client = axios.create({
-      baseURL: import.meta.env.VITE_API_BASE_URL,
+      baseURL,
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
         "X-Requested-With": "XMLHttpRequest", // Importante para Laravel
       },
-      withCredentials: true,
+      // En producción usamos las URLs directas sin cookies, en desarrollo usamos proxy con cookies
+      withCredentials: !isProduction,
     });
 
-    // Request interceptor for auth token and CSRF
+    // Request interceptor for auth token
     this.client.interceptors.request.use(async (config) => {
       const token = localStorage.getItem("auth_token");
       if (token) {
@@ -172,22 +176,24 @@ class ApiService {
         }
       });
       
-      // Si es error 419 CSRF, intentar petición directa sin proxy
-      if (error.response?.status === 419) {
-        console.log("🔄 Retrying with direct request (bypassing proxy)...");
+      // Si es error 419 CSRF en producción, intentar petición directa
+      if (error.response?.status === 419 && import.meta.env.PROD) {
+        console.log("🔄 CSRF Error - Retrying with direct request...");
         
         try {
-          const directResponse = await axios.post(
-            'https://app.tierrasonada.com/api/public/contact',
-            data,
-            {
-              headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest',
-              },
-              timeout: 15000,
-            }
+          const directClient = axios.create({
+            timeout: 15000,
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+              'X-Requested-With': 'XMLHttpRequest',
+            },
+            withCredentials: false,
+          });
+          
+          const directResponse = await directClient.post(
+            `${import.meta.env.VITE_API_BASE_URL}/public/contact`,
+            data
           );
           console.log("✅ Direct request successful:", directResponse.data);
           return directResponse.data;

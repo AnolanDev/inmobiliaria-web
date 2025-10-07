@@ -187,7 +187,7 @@
             </p>
           </div>
 
-          <form @submit.prevent="handleSubmit" class="space-y-6">
+          <form @submit.prevent="handleSubmit" class="space-y-6" novalidate>
             <!-- Name Field -->
             <div>
               <label
@@ -201,6 +201,9 @@
                 v-model="formData.name"
                 type="text"
                 required
+                autocomplete="name"
+                :aria-invalid="!!errors.name"
+                :aria-describedby="errors.name ? 'name-error' : undefined"
                 :class="[
                   'w-full px-4 py-3 rounded-xl border-2 transition-all duration-200 bg-neutral-50 focus:bg-white',
                   errors.name
@@ -213,7 +216,9 @@
               />
               <p
                 v-if="errors.name"
+                id="name-error"
                 class="mt-2 text-sm text-coral-600 flex items-center"
+                role="alert"
               >
                 <svg
                   class="w-4 h-4 mr-1"
@@ -243,6 +248,9 @@
                 v-model="formData.email"
                 type="email"
                 required
+                autocomplete="email"
+                :aria-invalid="!!errors.email"
+                :aria-describedby="errors.email ? 'email-error' : undefined"
                 :class="[
                   'w-full px-4 py-3 rounded-xl border-2 transition-all duration-200 bg-neutral-50 focus:bg-white',
                   errors.email
@@ -255,7 +263,9 @@
               />
               <p
                 v-if="errors.email"
+                id="email-error"
                 class="mt-2 text-sm text-coral-600 flex items-center"
+                role="alert"
               >
                 <svg
                   class="w-4 h-4 mr-1"
@@ -285,19 +295,24 @@
                 v-model="formData.phone"
                 type="tel"
                 required
+                autocomplete="tel"
+                :aria-invalid="!!errors.phone"
+                :aria-describedby="errors.phone ? 'phone-error' : undefined"
                 :class="[
                   'w-full px-4 py-3 rounded-xl border-2 transition-all duration-200 bg-neutral-50 focus:bg-white',
                   errors.phone
                     ? 'border-coral-300 focus:border-coral-500 focus:ring-coral-200'
                     : 'border-neutral-200 focus:border-caribbean-500 focus:ring-caribbean-200',
                 ]"
-                placeholder="+57 300 123 4567"
+                placeholder="311 659 8438 o +57 300 123 4567"
                 @input="clearError('phone')"
                 @blur="validateField('phone', formData.phone)"
               />
               <p
                 v-if="errors.phone"
+                id="phone-error"
                 class="mt-2 text-sm text-coral-600 flex items-center"
+                role="alert"
               >
                 <svg
                   class="w-4 h-4 mr-1"
@@ -428,12 +443,12 @@
                 class="w-full px-4 py-3 rounded-xl border-2 border-neutral-200 bg-neutral-50 focus:bg-white focus:border-caribbean-500 focus:ring-caribbean-200 transition-all duration-200"
               >
                 <option value="">Selecciona un rango</option>
-                <option value="0-100000000">Hasta $100M</option>
-                <option value="100000000-200000000">$100M - $200M</option>
-                <option value="200000000-300000000">$200M - $300M</option>
-                <option value="300000000-500000000">$300M - $500M</option>
-                <option value="500000000-1000000000">$500M - $1.000M</option>
-                <option value="1000000000+">Más de $1.000M</option>
+                <option value="0-100">Hasta $100M</option>
+                <option value="100-200">$100M - $200M</option>
+                <option value="200-300">$200M - $300M</option>
+                <option value="300-500">$300M - $500M</option>
+                <option value="500-1000">$500M - $1.000M</option>
+                <option value="1000+">Más de $1.000M</option>
               </select>
             </div>
 
@@ -450,6 +465,8 @@
                 v-model="formData.message"
                 required
                 rows="5"
+                :aria-invalid="!!errors.message"
+                :aria-describedby="errors.message ? 'message-error' : undefined"
                 :class="[
                   'w-full px-4 py-3 rounded-xl border-2 transition-all duration-200 bg-neutral-50 focus:bg-white resize-none',
                   errors.message
@@ -462,7 +479,9 @@
               ></textarea>
               <p
                 v-if="errors.message"
+                id="message-error"
                 class="mt-2 text-sm text-coral-600 flex items-center"
+                role="alert"
               >
                 <svg
                   class="w-4 h-4 mr-1"
@@ -483,13 +502,14 @@
             <div class="pt-4">
               <button
                 type="submit"
-                :disabled="loading"
+                :disabled="loading || Object.keys(errors).length > 0"
                 :class="[
                   'w-full px-6 py-4 rounded-xl font-semibold text-lg transition-all duration-200 focus:outline-none focus:ring-4',
-                  loading
+                  loading || Object.keys(errors).length > 0
                     ? 'bg-neutral-400 text-neutral-200 cursor-not-allowed'
                     : 'bg-gradient-to-r from-caribbean-600 to-caribbean-700 hover:from-caribbean-700 hover:to-caribbean-800 text-white shadow-lg hover:shadow-xl focus:ring-caribbean-200 transform hover:scale-[1.02]',
                 ]"
+                :aria-label="loading ? 'Enviando mensaje...' : 'Enviar mensaje de contacto'"
               >
                 <span v-if="loading" class="flex items-center justify-center">
                   <svg
@@ -522,7 +542,9 @@
           <!-- Success Message -->
           <div
             v-if="success"
-            class="success-message mt-6 p-6 bg-gradient-to-r from-nature-50 to-caribbean-50 border-2 border-nature-200 rounded-xl shadow-lg"
+            class="success-message mt-6 p-6 bg-gradient-to-r from-nature-50 to-caribbean-50 border-2 border-nature-200 rounded-xl shadow-lg animate-fade-in"
+            role="alert"
+            aria-live="polite"
           >
             <div class="flex items-start">
               <div class="flex-shrink-0">
@@ -551,7 +573,9 @@
           <!-- Error Message -->
           <div
             v-if="error"
-            class="mt-6 p-6 bg-gradient-to-r from-coral-50 to-orange-50 border-2 border-coral-200 rounded-xl shadow-lg"
+            class="mt-6 p-6 bg-gradient-to-r from-coral-50 to-orange-50 border-2 border-coral-200 rounded-xl shadow-lg animate-fade-in"
+            role="alert"
+            aria-live="polite"
           >
             <div class="flex items-start">
               <div class="flex-shrink-0">
@@ -685,10 +709,12 @@ const validateForm = (): boolean => {
 
   if (!formData.phone.trim()) {
     newErrors.phone = "El teléfono es requerido";
-  } else if (
-    !/^\+?[\d\s\-\(\)]{10,}$/.test(formData.phone.replace(/\s/g, ""))
-  ) {
-    newErrors.phone = "Por favor ingresa un teléfono válido";
+  } else {
+    // Regex más específica para números colombianos
+    const cleanPhone = formData.phone.replace(/[\s\-\(\)]/g, "");
+    if (!/^(\+?57)?[3][0-9]{9}$/.test(cleanPhone) && !/^(\+?57)?[1-8][0-9]{6,7}$/.test(cleanPhone)) {
+      newErrors.phone = "Ingresa un número válido (ej: +57 300 123 4567 o 311 659 8438)";
+    }
   }
 
   if (!formData.message.trim()) {
@@ -733,10 +759,13 @@ const validateField = (field: string, value: string) => {
     case 'phone':
       if (!value.trim()) {
         errors.phone = "El teléfono es requerido";
-      } else if (!/^\+?[\d\s\-\(\)]{10,}$/.test(value.replace(/\s/g, ""))) {
-        errors.phone = "Por favor ingresa un teléfono válido";
       } else {
-        delete errors.phone;
+        const cleanPhone = value.replace(/[\s\-\(\)]/g, "");
+        if (!/^(\+?57)?[3][0-9]{9}$/.test(cleanPhone) && !/^(\+?57)?[1-8][0-9]{6,7}$/.test(cleanPhone)) {
+          errors.phone = "Ingresa un número válido (ej: +57 300 123 4567)";
+        } else {
+          delete errors.phone;
+        }
       }
       break;
     
@@ -785,7 +814,9 @@ const handleSubmit = async () => {
       phone: formData.phone.trim(),
       message: formData.message.trim(),
       preferred_contact: formData.preferred_contact,
-      budget_range: formData.budget_range || undefined,
+      budget_range: formData.budget_range || null,
+      property_id: null,
+      project_id: null,
     });
 
     // Success

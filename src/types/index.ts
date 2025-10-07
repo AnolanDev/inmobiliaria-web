@@ -131,10 +131,10 @@ export interface ContactForm {
   email: string;
   phone: string;
   message: string;
-  property_id?: number;
-  project_id?: number;
+  property_id?: number | null;
+  project_id?: number | null;
   preferred_contact?: "email" | "phone" | "whatsapp";
-  budget_range?: string;
+  budget_range?: string | null;
 }
 
 export interface AppointmentForm {
