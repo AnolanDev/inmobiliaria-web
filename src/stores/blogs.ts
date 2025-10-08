@@ -58,6 +58,40 @@ export const useBlogStore = defineStore("blogs", () => {
       .slice(0, 6),
   );
 
+  // Helper function to process blog image URLs
+  const processBlogImages = (blog: Blog): Blog => {
+    const processedBlog = { ...blog };
+    
+    // Try to find a valid image from different possible fields (updated based on actual backend structure)
+    const possibleImageFields = [
+      'cover_image_url',
+      'featured_image_url',
+      'featured_image', 
+      'cover_image',
+      'image',
+      'banner',
+      'cover',
+      'thumbnail'
+    ];
+    
+    let foundImageUrl = null;
+    for (const field of possibleImageFields) {
+      const value = (blog as any)[field];
+      if (value && value !== 'null' && value !== 'undefined' && typeof value === 'string') {
+        foundImageUrl = value;
+        break;
+      }
+    }
+    
+    // Set the featured_image_url to the first valid image found
+    if (foundImageUrl) {
+      processedBlog.featured_image_url = foundImageUrl;
+      processedBlog.featured_image = foundImageUrl;
+    }
+    
+    return processedBlog;
+  };
+
   // Cache helper functions
   const getCacheKey = (filters: BlogFilters, page: number) => {
     return JSON.stringify({ filters, page });
@@ -90,18 +124,22 @@ export const useBlogStore = defineStore("blogs", () => {
       const response: ApiResponse<Blog[]> = await apiService.getBlogs({
         ...finalFilters,
         page,
-        with: "media,image,featured_image", // Laravel eager loading
-        include: "featured_image,gallery,media,image", // Alternative include format
+        with: "media,image,featured_image,banner,cover,thumbnail", // Laravel eager loading
+        include: "featured_image,gallery,media,image,banner,cover,thumbnail", // Alternative include format
         fields: "*", // Request all fields
+        expand: "featured_image_url,gallery_urls", // Request expanded URLs
       });
+
+      // Process blogs to fix image URLs
+      const processedBlogs = response.data.map(processBlogImages);
 
       // Only log in development
       if (import.meta.env.DEV) {
-        console.log("BlogStore: Loaded", response.data.length, "more blogs");
+        console.log("BlogStore: Loaded", processedBlogs.length, "more blogs");
       }
 
       // Agregar nuevos blogs al array existente
-      blogs.value = [...blogs.value, ...response.data];
+      blogs.value = [...blogs.value, ...processedBlogs];
 
       if (response.meta) {
         pagination.value = {
@@ -150,30 +188,21 @@ export const useBlogStore = defineStore("blogs", () => {
       const response: ApiResponse<Blog[]> = await apiService.getBlogs({
         ...finalFilters,
         page,
-        with: "media,image,featured_image", // Laravel eager loading
-        include: "featured_image,gallery,media,image", // Alternative include format
+        with: "media,image,featured_image,banner,cover,thumbnail", // Laravel eager loading
+        include: "featured_image,gallery,media,image,banner,cover,thumbnail", // Alternative include format
         fields: "*", // Request all fields
+        expand: "featured_image_url,gallery_urls", // Request expanded URLs
       });
+
+      // Process blogs to fix image URLs
+      const processedBlogs = response.data.map(processBlogImages);
 
       // Only log in development
       if (import.meta.env.DEV) {
-        console.log("BlogStore: Loaded", response.data.length, "blogs");
-        if (response.data[0]) {
-          console.log("BlogStore: First blog in list:", {
-            id: response.data[0].id,
-            title: response.data[0].title,
-            featured_image: response.data[0].featured_image,
-            featured_image_url: response.data[0].featured_image_url,
-            image: (response.data[0] as any).image,
-            banner: (response.data[0] as any).banner,
-            cover: (response.data[0] as any).cover,
-            thumbnail: (response.data[0] as any).thumbnail,
-            allFields: Object.keys(response.data[0]),
-          });
-        }
+        console.log("BlogStore: Loaded", processedBlogs.length, "blogs");
       }
 
-      blogs.value = response.data;
+      blogs.value = processedBlogs;
 
       if (response.meta) {
         pagination.value = {
@@ -238,12 +267,16 @@ export const useBlogStore = defineStore("blogs", () => {
       error.value = null;
 
       const featured = await apiService.getFeaturedBlogs();
+      
+      // Process featured blogs to fix image URLs
+      const processedFeatured = featured.map(processBlogImages);
+      
       if (import.meta.env.DEV) {
-        console.log("BlogStore: Loaded", featured.length, "featured blogs");
+        console.log("BlogStore: Loaded", processedFeatured.length, "featured blogs");
       }
-      featuredBlogs.value = featured;
+      featuredBlogs.value = processedFeatured;
 
-      return featured;
+      return processedFeatured;
     } catch (err: any) {
       error.value =
         err.response?.data?.message || "Error al cargar blogs destacados";
@@ -301,6 +334,62 @@ export const useBlogStore = defineStore("blogs", () => {
     );
   };
 
+  // Optimized function to load all initial data in one batch
+  const initializeBlogsPage = async () => {
+    try {
+      isLoading.value = true;
+      error.value = null;
+
+      // Load all data in parallel
+      const [blogsResponse, featuredResponse, categoriesResponse] = await Promise.allSettled([
+        apiService.getBlogs({
+          per_page: 6,
+          with: "media,image,featured_image",
+          include: "featured_image,gallery,media,image",
+          fields: "*",
+        }),
+        apiService.getFeaturedBlogs(),
+        apiService.getBlogCategories()
+      ]);
+
+      // Process blogs
+      if (blogsResponse.status === 'fulfilled') {
+        const processedBlogs = blogsResponse.value.data.map(processBlogImages);
+        blogs.value = processedBlogs;
+        
+        if (blogsResponse.value.meta) {
+          pagination.value = {
+            currentPage: blogsResponse.value.meta.current_page,
+            lastPage: blogsResponse.value.meta.last_page,
+            perPage: blogsResponse.value.meta.per_page,
+            total: blogsResponse.value.meta.total,
+          };
+        }
+      }
+
+      // Process featured blogs
+      if (featuredResponse.status === 'fulfilled') {
+        const processedFeatured = featuredResponse.value.map(processBlogImages);
+        featuredBlogs.value = processedFeatured;
+      }
+
+      // Process categories
+      if (categoriesResponse.status === 'fulfilled') {
+        categories.value = categoriesResponse.value;
+      }
+
+      if (import.meta.env.DEV) {
+        console.log("BlogStore: Initialized with", blogs.value.length, "blogs,", featuredBlogs.value.length, "featured, and", categories.value.length, "categories");
+      }
+
+    } catch (err: any) {
+      error.value = err.response?.data?.message || "Error al cargar los datos de blogs";
+      console.error("Error initializing blogs page:", err);
+    } finally {
+      isLoading.value = false;
+    }
+  };
+
   return {
     // State
     blogs,
@@ -327,6 +416,7 @@ export const useBlogStore = defineStore("blogs", () => {
     fetchFeaturedBlogs,
     fetchBlogCategories,
     fetchBlogTags,
+    initializeBlogsPage,
     setFilters,
     clearFilters,
     clearError,

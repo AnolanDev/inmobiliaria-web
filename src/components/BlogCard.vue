@@ -7,9 +7,9 @@
       <template #image>
         <ResponsiveImage
           v-if="hasValidImage"
-          :src="blog.featured_image_responsive || blog.featured_image_url"
+          :src="imageUrl"
           :alt="blog.title"
-          :fallback="blog.featured_image_url"
+          :fallback="imageUrl"
           container-class="relative bg-gray-100"
           image-class="w-full h-48 sm:h-52 md:h-56"
           :enable-hover-zoom="true"
@@ -210,15 +210,6 @@ interface Props {
 
 const props = defineProps<Props>();
 
-// Debug logging (simplified)
-if (import.meta.env.DEV && props.blog.featured_image_url) {
-  console.log(
-    "BlogCard: Found image for blog",
-    props.blog.id,
-    props.blog.featured_image_url,
-  );
-}
-
 // State
 const imageError = ref(false);
 const imageLoaded = ref(false);
@@ -226,6 +217,7 @@ const imageLoaded = ref(false);
 // Computed
 const hasValidImage = computed(() => {
   const blog = props.blog as any;
+  
   // Check if we have either responsive image set or fallback URL
   const hasResponsiveImage = !!(blog.featured_image_responsive);
   const hasFallbackImage = !!(
@@ -236,14 +228,45 @@ const hasValidImage = computed(() => {
     !imageError.value
   );
 
-  const hasImage = hasResponsiveImage || hasFallbackImage;
+  // Also check other possible image fields from backend (based on actual structure)
+  const hasAlternativeImage = !!(
+    (blog.cover_image_url && blog.cover_image_url !== "null" && blog.cover_image_url !== "undefined") ||
+    (blog.cover_image && blog.cover_image !== "null" && blog.cover_image !== "undefined") ||
+    (blog.image && blog.image !== "null" && blog.image !== "undefined") ||
+    (blog.banner && blog.banner !== "null" && blog.banner !== "undefined") ||
+    (blog.cover && blog.cover !== "null" && blog.cover !== "undefined") ||
+    (blog.thumbnail && blog.thumbnail !== "null" && blog.thumbnail !== "undefined")
+  );
 
-  // Log only if we have an image
-  if (import.meta.env.DEV && hasImage) {
-    console.log("BlogCard: Valid image found for blog", blog.id);
-  }
+  const hasImage = hasResponsiveImage || hasFallbackImage || hasAlternativeImage;
 
   return hasImage;
+});
+
+// Get the best available image URL
+const imageUrl = computed(() => {
+  const blog = props.blog as any;
+  
+  // Priority order for image sources (based on actual backend structure)
+  const possibleSources = [
+    blog.cover_image_url,
+    blog.featured_image_responsive?.original?.url,
+    blog.featured_image_url,
+    blog.featured_image,
+    blog.cover_image,
+    blog.image,
+    blog.banner,
+    blog.cover,
+    blog.thumbnail
+  ];
+  
+  for (const source of possibleSources) {
+    if (source && source !== "null" && source !== "undefined" && source.trim() !== "") {
+      return source;
+    }
+  }
+  
+  return null;
 });
 
 

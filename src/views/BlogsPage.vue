@@ -523,28 +523,8 @@ watch([searchQuery, selectedCategory], () => {
 // Lifecycle
 onMounted(async () => {
   try {
-    // Fetch only first page with smaller limit for faster initial load
-    await blogStore.fetchBlogs(
-      {
-        per_page: 6,
-        with: "media,image,featured_image",
-        include: "featured_image,gallery,media,image",
-        fields: "*",
-      },
-      1,
-    );
-
-    // Load categories immediately for filters
-    blogStore
-      .fetchBlogCategories()
-      .catch((err) => console.warn("Failed to load categories:", err));
-
-    // Delay featured blogs load by 1 second to prevent layout shift
-    setTimeout(() => {
-      blogStore
-        .fetchFeaturedBlogs()
-        .catch((err) => console.warn("Failed to load featured blogs:", err));
-    }, 1000);
+    // Use optimized single call to load all data and prevent multiple re-renders
+    await blogStore.initializeBlogsPage();
     
     // Apply grid classes after initial render to prevent flash
     await nextTick();
