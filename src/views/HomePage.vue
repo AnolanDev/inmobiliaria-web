@@ -638,15 +638,28 @@
               >
                 <!-- Agent Image -->
                 <div class="relative h-80 overflow-hidden">
-                  <img
-                    :src="getImageUrl(agent.profile_picture_url)"
+                  <ResponsiveImage
+                    :src="agent.profile_picture_url"
                     :alt="agent.name"
-                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                    container-class="relative bg-gray-100"
+                    image-class="w-full h-80 object-cover group-hover:scale-110 transition-transform duration-700"
                     loading="lazy"
-                    crossorigin="anonymous"
-                    @error="() => {}"
-                    @load="() => {}"
-                  />
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    @load="() => handleImageLoad(agent)"
+                    @error="() => handleImageError(agent)"
+                  >
+                    <!-- Custom fallback for agents -->
+                    <template #fallback>
+                      <div class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-coral-100 to-coral-200">
+                        <div class="text-center">
+                          <svg class="w-16 h-16 text-coral-400 mx-auto mb-2" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                          </svg>
+                          <span class="text-coral-600 text-sm font-medium">{{ agent.name.split(' ')[0] }}</span>
+                        </div>
+                      </div>
+                    </template>
+                  </ResponsiveImage>
 
                   <!-- Gradient Overlay -->
                   <div
@@ -1077,6 +1090,7 @@ import HeroStats from "@/components/Hero/HeroStats.vue";
 import HeroImage from "@/components/Hero/HeroImage.vue";
 import FeatureCard from "@/components/Cards/FeatureCard.vue";
 import IconComponent from "@/components/UI/IconComponent.vue";
+import ResponsiveImage from "@/components/ResponsiveImage.vue";
 import { useProjectsStore } from "@/stores/projects";
 import { useAgentsStore } from "@/stores/agents";
 import { useScrollAnimation } from "@/composables/useScrollAnimation";
@@ -1109,6 +1123,17 @@ const loadData = async () => {
     // Load agents in background (non-blocking)
     agentsStore.fetchAgents().then(() => {
       agents.value = agentsStore.agents;
+      if (import.meta.env.DEV) {
+        console.log("HomePage: Agents loaded:", agents.value.length);
+        if (agents.value[0]) {
+          console.log("HomePage: First agent:", {
+            id: agents.value[0].id,
+            name: agents.value[0].name,
+            profile_picture_url: agents.value[0].profile_picture_url,
+            processed_url: getImageUrl(agents.value[0].profile_picture_url)
+          });
+        }
+      }
     }).catch(error => {
       console.error("Error loading agents:", error);
     });
@@ -1204,6 +1229,21 @@ const getBadgeStyle = (type: string | undefined): string => {
   return typeMap[type] || 'bg-gray-100 text-gray-800';
 };
 
+// Image error handling for agents
+const handleImageError = (agent: any) => {
+  if (import.meta.env.DEV) {
+    console.warn("Failed to load agent image:", {
+      agent: agent.name,
+      original_url: agent.profile_picture_url
+    });
+  }
+};
+
+const handleImageLoad = (agent: any) => {
+  if (import.meta.env.DEV) {
+    console.log("Agent image loaded successfully:", agent.name);
+  }
+};
 
 onMounted(() => {
   loadData();

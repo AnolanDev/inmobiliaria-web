@@ -96,7 +96,7 @@
               'bg-clip-text text-transparent'
             ]"
           >
-            10
+            5
             <span 
               :class="[
                 'font-bold',

@@ -14,6 +14,8 @@
           image-class="w-full h-48 sm:h-52 md:h-56"
           :enable-hover-zoom="true"
           loading="lazy"
+          decoding="async"
+          fetchpriority="low"
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           @load="handleImageLoad"
           @error="handleImageErrorResponsive"

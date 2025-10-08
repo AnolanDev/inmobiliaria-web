@@ -12,11 +12,15 @@
       </div>
     </section>
 
-    <!-- Loading State -->
-    <div v-if="isLoading && blogs.length === 0" class="loading-container">
-      <div class="loading-content">
-        <div class="loading-spinner"></div>
-        <p class="loading-text">Cargando blogs...</p>
+    <!-- Fast Loading State with Skeleton -->
+    <div v-if="isLoading && blogs.length === 0" class="main-content">
+      <div class="container">
+        <!-- Quick skeleton without filters -->
+        <div class="blogs-section">
+          <div class="blogs-grid">
+            <BlogCardSkeleton v-for="n in 6" :key="`skeleton-${n}`" />
+          </div>
+        </div>
       </div>
     </div>
 

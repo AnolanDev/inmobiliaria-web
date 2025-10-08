@@ -124,10 +124,8 @@ export const useBlogStore = defineStore("blogs", () => {
       const response: ApiResponse<Blog[]> = await apiService.getBlogs({
         ...finalFilters,
         page,
-        with: "media,image,featured_image,banner,cover,thumbnail", // Laravel eager loading
-        include: "featured_image,gallery,media,image,banner,cover,thumbnail", // Alternative include format
-        fields: "*", // Request all fields
-        expand: "featured_image_url,gallery_urls", // Request expanded URLs
+        // Minimal fields for better performance
+        fields: "id,title,slug,excerpt,cover_image_url,featured_image_url,author,category,tags,status,published_at,views_count,reading_time,is_featured",
       });
 
       // Process blogs to fix image URLs
@@ -188,10 +186,8 @@ export const useBlogStore = defineStore("blogs", () => {
       const response: ApiResponse<Blog[]> = await apiService.getBlogs({
         ...finalFilters,
         page,
-        with: "media,image,featured_image,banner,cover,thumbnail", // Laravel eager loading
-        include: "featured_image,gallery,media,image,banner,cover,thumbnail", // Alternative include format
-        fields: "*", // Request all fields
-        expand: "featured_image_url,gallery_urls", // Request expanded URLs
+        // Minimal fields for better performance
+        fields: "id,title,slug,excerpt,cover_image_url,featured_image_url,author,category,tags,status,published_at,views_count,reading_time,is_featured",
       });
 
       // Process blogs to fix image URLs
@@ -340,47 +336,50 @@ export const useBlogStore = defineStore("blogs", () => {
       isLoading.value = true;
       error.value = null;
 
-      // Load all data in parallel
-      const [blogsResponse, featuredResponse, categoriesResponse] = await Promise.allSettled([
-        apiService.getBlogs({
-          per_page: 6,
-          with: "media,image,featured_image",
-          include: "featured_image,gallery,media,image",
-          fields: "*",
-        }),
+      // Load essential data first (blogs only) for faster initial render
+      const blogsResponse = await apiService.getBlogs({
+        per_page: 6,
+        // Minimal fields for faster loading
+        fields: "id,title,slug,excerpt,cover_image_url,featured_image_url,author,category,tags,status,published_at,views_count,reading_time,is_featured",
+        // Remove heavy includes that slow down the API
+      });
+
+      // Process and show blogs immediately
+      const processedBlogs = blogsResponse.data.map(processBlogImages);
+      blogs.value = processedBlogs;
+      
+      if (blogsResponse.meta) {
+        pagination.value = {
+          currentPage: blogsResponse.meta.current_page,
+          lastPage: blogsResponse.meta.last_page,
+          perPage: blogsResponse.meta.per_page,
+          total: blogsResponse.meta.total,
+        };
+      }
+
+      // Load secondary data in background (non-blocking)
+      Promise.allSettled([
         apiService.getFeaturedBlogs(),
         apiService.getBlogCategories()
-      ]);
-
-      // Process blogs
-      if (blogsResponse.status === 'fulfilled') {
-        const processedBlogs = blogsResponse.value.data.map(processBlogImages);
-        blogs.value = processedBlogs;
-        
-        if (blogsResponse.value.meta) {
-          pagination.value = {
-            currentPage: blogsResponse.value.meta.current_page,
-            lastPage: blogsResponse.value.meta.last_page,
-            perPage: blogsResponse.value.meta.per_page,
-            total: blogsResponse.value.meta.total,
-          };
+      ]).then(([featuredResponse, categoriesResponse]) => {
+        // Process featured blogs
+        if (featuredResponse.status === 'fulfilled') {
+          const processedFeatured = featuredResponse.value.map(processBlogImages);
+          featuredBlogs.value = processedFeatured;
         }
-      }
 
-      // Process featured blogs
-      if (featuredResponse.status === 'fulfilled') {
-        const processedFeatured = featuredResponse.value.map(processBlogImages);
-        featuredBlogs.value = processedFeatured;
-      }
+        // Process categories
+        if (categoriesResponse.status === 'fulfilled') {
+          categories.value = categoriesResponse.value;
+        }
 
-      // Process categories
-      if (categoriesResponse.status === 'fulfilled') {
-        categories.value = categoriesResponse.value;
-      }
+        if (import.meta.env.DEV) {
+          console.log("BlogStore: Secondary data loaded -", featuredBlogs.value.length, "featured blogs,", categories.value.length, "categories");
+        }
+      }).catch(err => {
+        console.warn("Error loading secondary blog data:", err);
+      });
 
-      if (import.meta.env.DEV) {
-        console.log("BlogStore: Initialized with", blogs.value.length, "blogs,", featuredBlogs.value.length, "featured, and", categories.value.length, "categories");
-      }
 
     } catch (err: any) {
       error.value = err.response?.data?.message || "Error al cargar los datos de blogs";

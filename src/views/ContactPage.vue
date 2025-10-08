@@ -162,11 +162,11 @@
                 </div>
                 <div class="flex justify-between">
                   <span>Sábados:</span>
-                  <span class="font-medium">9:00 AM - 4:00 PM</span>
+                  <span class="font-medium">9:00 AM - 6:00 PM</span>
                 </div>
                 <div class="flex justify-between">
                   <span>Domingos:</span>
-                  <span class="font-medium">Cerrado</span>
+                  <span class="font-medium">9:00 AM - 6:00 PM</span>
                 </div>
               </div>
             </div>
